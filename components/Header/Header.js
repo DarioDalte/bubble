@@ -1,8 +1,9 @@
 import classes from "./Header.module.scss";
 
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import SearchBar from "material-ui-search-bar";
+
 import Container from "@mui/material/Container";
+import SearchBar from "../../UI/SearchBar/SearchBar";
 
 function Header() {
   return (
@@ -14,9 +15,8 @@ function Header() {
           <ShoppingCartOutlinedIcon />
         </div>
       </header>
-      <Container maxWidth="sm">
-        <SearchBar className={classes['search-bar']} /> {/** PER I VALORI https://www.npmjs.com/package/material-ui-search-bar, INOLTRE CERCA FOCUS  */}
-        
+      <Container maxWidth="sm" className={classes.container}>
+        <SearchBar/>       
       </Container>
       
     </>

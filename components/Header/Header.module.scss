@@ -28,4 +28,12 @@
 .search-bar{
     box-shadow: none !important;
     background: #f6f5f5 !important;
+  
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
 }

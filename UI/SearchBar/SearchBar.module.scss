@@ -1,0 +1,24 @@
+.input {
+  height: 100%;
+  padding: 0 1rem;
+  width: 60%;
+  border: none;
+  outline: none;
+  background: rgb(219, 219, 219);
+  border-radius: 8px 0 0 8px;
+}
+.container {
+  height: 100%;
+  width: 40px;
+  background: rgb(219, 219, 219);
+  padding: 0 0.5rem;
+  border-radius: 0 8px 8px 0;
+  border-left: 1px solid rgb(179, 179, 179);
+
+  .icon {
+    height: 100%;
+    width: 100%;
+
+    color: rgb(85, 84, 84);
+  }
+}
