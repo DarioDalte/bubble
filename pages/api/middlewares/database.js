@@ -6,7 +6,7 @@ module.exports = async function () {
 
   const uri = `mongodb+srv://${dbName}:${dbPassword}@cluster0.j9ybu.mongodb.net/marketplace?retryWrites=true&w=majority`;
 
-  const client = await MongoClient.connect(uri);
+  const client = new MongoClient(uri);
 
 
   return client;
