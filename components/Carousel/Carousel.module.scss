@@ -1,0 +1,27 @@
+.carousel{
+    width: 80%;
+    margin: auto;
+    border-radius: 14px;
+}
+
+.container {
+  background: url(/parigi.jpg);
+  height: 100%;
+  background-size: cover;
+
+
+  .item {
+    height: 100%;
+    width: 65%;
+    background: red;
+    border-radius: 0 50% 50% 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .text {
+      color: black;
+    }
+  }
+}
