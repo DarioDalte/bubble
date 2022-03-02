@@ -9,10 +9,12 @@ export default async function handler(req, res) {
     try {
 
         await client.connect();
+   
         
         let data = req.body; //Prendo il body della http request
-        data = JSON.parse(data);
-        console.log(data);
+
+        
+        // console.log(typeof(data));
 
      
   

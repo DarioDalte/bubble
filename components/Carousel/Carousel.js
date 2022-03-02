@@ -5,19 +5,29 @@ import classes from "./Carousel.module.scss";
 
 function myCarousel() {
   return (
-    <Carousel showThumbs={false} showStatus={false} autoPlay={false} width={"100%"} className={classes.carousel}>
-      <div className={classes.container}>
-        <div className={classes.item}>
+    <Carousel
+      infiniteLoop={true}
+      showThumbs={false}
+      showStatus={false}
+      autoPlay={true}
+      className={classes.carousel}
+    >
+      <div
+        className={classes.container}
+        style={{ backgroundImage: `url('/parigi.jpg')` }}
+      >
+        <div className={classes["left-item"]}>
           <p className={classes.text}>Legend 1</p>
         </div>
       </div>
-      <div>
-        <img src="/parigi.jpg" />
-        <p className="legeand">Legend 2</p>
-      </div>
-      <div>
-        <img src="/parigi.jpg" />
-        <p className="legend">Legend 3</p>
+
+      <div
+        className={`${classes.container} ${classes["left-container"]}`}
+        style={{ backgroundImage: `url('/parigi.jpg')` }}
+      >
+        <div className={classes["right-item"]}>
+          <p className={classes.text}>Legend 1</p>
+        </div>
       </div>
     </Carousel>
   );

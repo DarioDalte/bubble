@@ -7,6 +7,8 @@ export default async function handler(req, res) {
 
     const client = await databaseConnection(); //Mi connetto al db
 
+    await client.connect();
+
     const db = client.db(); //Boh
 
     const meetupsCollection = db.collection("meetups"); //Seleziono la collection

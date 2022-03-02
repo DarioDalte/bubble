@@ -4,3 +4,13 @@
   box-sizing: border-box;
 }
 
+.carousel{
+  border-radius: 14px;
+ 
+  width: 90% !important;
+  max-width: 1200px;
+}
+
+.slider-wrapper, .slider{
+  height: 100%;
+}
