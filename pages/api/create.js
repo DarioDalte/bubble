@@ -1,37 +1,25 @@
-const databaseConnection = require('./middlewares/database.js')
-
-
+const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
+  const client = await databaseConnection(); //Mi connetto al db
 
-    const client = await databaseConnection(); //Mi connetto al db
+  try {
+    await client.connect();
 
-    try {
+    let data = req.body; //Prendo il body della http request
+    console.log(data);
 
-        await client.connect();
-   
-        
-        let data = req.body; //Prendo il body della http request
+    const db = client.db(); //Boh
 
-        
-        // console.log(typeof(data));
-
-     
-  
-        const db = client.db(); //Boh
-
-        const collection = db.collection("users"); //Seleziono la collection
-        const result = await collection.insertMany(data); //Inserisco nella collection
-        console.log("info inserite");
-
-     
-    } finally {
-        // Close the connection to the MongoDB cluster
-        await client.close();
-        res.status(201).json({message: 'funzia!'})
-    }
-
-
+    const collection = db.collection("users"); //Seleziono la collection
+    const result = await collection.insertMany(data); //Inserisco nella collection
+    console.log("info inserite");
+  } catch (err) {
+    //... handle it locally
+    console.log(err.message);
+  } finally {
+    // Close the connection to the MongoDB cluster
+    await client.close();
+    res.json({ message: "funzia!" });
+  }
 }
-
-handler().catch(console.error);
