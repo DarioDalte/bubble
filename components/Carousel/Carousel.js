@@ -11,6 +11,7 @@ function myCarousel() {
       showStatus={false}
       autoPlay={true}
       className={classes.carousel}
+      interval={6000}
     >
       <div
         className={classes.container}
@@ -26,7 +27,7 @@ function myCarousel() {
         style={{ backgroundImage: `url('/parigi.jpg')` }}
       >
         <div className={classes["right-item"]}>
-          <p className={classes.text}>Legend 1</p>
+          <p className={classes.text}>Legend 2</p>
         </div>
       </div>
     </Carousel>

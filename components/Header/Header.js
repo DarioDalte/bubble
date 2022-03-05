@@ -15,7 +15,7 @@ function Header() {
           <ShoppingCartOutlinedIcon />
         </div>
       </header>
-      <Container maxWidth="sm" className={classes.container}>
+      <Container maxWidth="md" className={classes.container}>
         <SearchBar/>       
       </Container>
       

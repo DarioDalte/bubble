@@ -1,18 +1,35 @@
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    .text{
-     font-size: 1.2rem;
-    }
+  .text {
+    font-size: 1.2rem;
+  }
 }
 
-.categories{
-    display: flex;
+.container {
 
-    .icon{
-        width: 2rem;
-        height: 2rem;
+
+    height: 110px;
+    overflow: hidden;
+
+
+
+  .categories {
+    display: flex;
+    
+    overflow: auto;
+
+    white-space: nowrap;
+
+    .icon {
+      width: 2.2rem;
+      height: 2.2rem;
     }
+    padding-bottom: 1.3rem;
+
+
+ 
+  }
 }
