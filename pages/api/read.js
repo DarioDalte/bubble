@@ -8,13 +8,41 @@ export default async function handler(req, res) {
 
     const data = req.body; //Prendo il body della http request
 
-    var nome = data[0]["name"];
+    // var nome = data[0]["name"];
 
     const db = client.db(); //Boh
 
-    const collection = db.collection("users"); //Seleziono la collection
+    //const result = await db.collection("products").find({}).toArray(); //Tutti i prodotti
+    // const result = await db.collection("products").aggregate([
+    //   {$match: {_id: {$in }}},
+    //   {$group: {_id: "$name"}}
+    // ]).toArray() //Tutti i prodotti
 
-    const result = await findOneListingByName(client, nome);
+    const result = await db
+      .collection("products")
+      .aggregate([
+        {
+          $lookup: {
+            from: "orders",
+            localField: "_id", // field in the products collection
+            foreignField: "products", // field in the orders collection
+            as: "fromItems",
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: [{ $arrayElemAt: ["$fromItems", 0] }, "$$ROOT"],
+            },
+          },
+        },
+        { $project: { fromItems: 0 } }
+      ])
+      .toArray(); //Tutti i prodotti
+
+    //const result = await db.collection("products").count({brand: 'apple'});
+
+    //const result = await findOneListingByName(client, nome);
 
     /*
         await findListingsWithMinimumBedroomsBathroomsAndMostRecentReviews(client, {
@@ -23,10 +51,11 @@ export default async function handler(req, res) {
             maximumNumberOfResults: 5
         });
         */
+    console.log(result);
+    res.status(200).json(result);
   } finally {
     // Close the connection to the MongoDB cluster
     await client.close();
-    res.status(200).json({ message: "funzia!" });
   }
 }
 
