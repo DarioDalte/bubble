@@ -1,3 +1,5 @@
+import { ConstructionOutlined } from "@mui/icons-material";
+
 const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
@@ -13,12 +15,112 @@ export default async function handler(req, res) {
     const db = client.db(); //Boh
 
     //const result = await db.collection("products").find({}).toArray(); //Tutti i prodotti
+
     // const result = await db.collection("products").aggregate([
     //   {$match: {_id: {$in }}},
     //   {$group: {_id: "$name"}}
     // ]).toArray() //Tutti i prodotti
 
-    const result = await db
+
+    var prova = await db.collection("orders").find().toArray();
+    const contatore = await db.collection("orders").countDocuments();
+    console.log("1 print");
+    console.log(prova);
+    console.log("fine print 1");
+    console.log("   ");
+    console.log("   ");
+    console.log("   ");
+    console.log("   ");
+
+
+    var i = 0;
+    var array = [];
+
+    while (i < contatore) {
+      console.log("ordine nuemro: " + i);
+      console.log("ordine: " + prova[i]);
+      var prova_1 = prova[i]["cod_prodotti"];
+      console.log("codici prodotti ordinati: " + prova_1);
+      for (var d = 0; d < prova_1.length; d++)
+      {
+         console.log("posizione array: " + d);
+         console.log("codice che sta per essere aggiunto: " + prova_1[d]);
+         array.push(prova_1[d]);
+      }
+      i++;
+
+      console.log("   ");
+      console.log("   ");
+      console.log("   ");
+      console.log("   ");
+    }
+
+    console.log(contatore);
+    console.log(array);
+
+    /*
+    console.log("entro nell'array");
+    for (var i = 0; i < array.length; i++)
+    {
+        var temp = array[i];
+        for (var i = d + 1; i < array.length; i++)
+        {
+            if(array[i] == temp)
+            {
+
+            }
+        } 
+    }
+    */
+
+
+    
+
+    function count_duplicate(a){
+    let counts = {}
+
+     for(let i =0; i < a.length; i++){ 
+         if (counts[a[i]]){
+         counts[a[i]] += 1
+         } else {
+         counts[a[i]] = 1
+         }
+        }  
+        for (let prop in counts){
+            if (counts[prop] >= 2){
+                console.log(prop + " counted: " + counts[prop] + " times.")
+            }
+        }
+      return counts;
+    }
+    
+    var best_seller = count_duplicate(array);
+    console.log(best_seller);
+    console.log(Object.keys(best_seller));
+
+    console.log("sortato");
+
+  const sortable = Object.entries(best_seller)
+      .sort(([,a],[,b]) => a-b)
+      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+  
+  console.log(sortable);
+
+
+    // → '{"a":"baz","b":"foo","c":"bar"}'
+
+
+
+    //var i = 0;
+    //while (i < contatore) {
+    //  array.push(prova[i]["cod_prodotti"]);
+    //  i++;
+    //}
+  
+    //console.log(array);
+    
+
+    /*const result = await db
       .collection("products")
       .aggregate([
         {
@@ -38,7 +140,27 @@ export default async function handler(req, res) {
         },
         { $project: { fromItems: 0 } }
       ])
-      .toArray(); //Tutti i prodotti
+      .toArray();
+      
+      */
+      
+      
+     /* const provaaa = db.orders.aggregate([
+        { $group: { cod_prodotti: , total: { $sum: "$amount" } } },
+        { $sort: { total: -1 } }
+      ])
+
+      console.log("stiamo facendo una prova");
+      console.log(prova);
+      
+      
+      */
+      
+      
+      
+      
+      
+      //Tutti i prodotti
 
     //const result = await db.collection("products").count({brand: 'apple'});
 
@@ -51,13 +173,15 @@ export default async function handler(req, res) {
             maximumNumberOfResults: 5
         });
         */
-    console.log(result);
-    res.status(200).json(result);
+    //console.log(result);
+    res.status(200).json("ciao");
   } finally {
     // Close the connection to the MongoDB cluster
     await client.close();
   }
 }
+
+
 
 async function findOneListingByName(client, nameOfListing) {
   const result = await client
