@@ -7,7 +7,6 @@ export default async function handler(req, res) {
 
     await client.connect(); //istanza mongo client
 
-    const data = req.body; //Prendo il body della http request
 
 
     const db = client.db(); //db
@@ -60,7 +59,31 @@ export default async function handler(req, res) {
       array_5_bestseller.push(last);
     }
 
-    res.status(200).json(array_5_bestseller); //response
+    var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
+    console.log(prodotti);
+    let oggetto = {};
+    console.log("entra nel while");
+    console.log(" ");
+    console.log(" ");
+    console.log(" ");
+    console.log(" ");
+    var cart = [];
+    for(var i = 0; i < prodotti.length; i++)
+    {
+      console.log(prodotti[i]);
+      oggetto.brand = prodotti[i]["brand"];
+      oggetto.name = prodotti[i]["name"];
+      oggetto.price = prodotti[i]["price"];
+
+      cart.push(oggetto);
+      console.log(cart);
+
+    }
+
+    console.log(cart);
+
+
+    res.status(200).json(cart); //response
   } finally {
     // Close the connection to the MongoDB cluster
     await client.close();
