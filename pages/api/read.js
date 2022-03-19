@@ -1,4 +1,3 @@
-import { ConstructionOutlined } from "@mui/icons-material";
 
 const databaseConnection = require("./middlewares/database.js");
 
@@ -105,6 +104,15 @@ export default async function handler(req, res) {
       .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
   
   console.log(sortable);
+  var array_5_bestseller = [];
+  for(var i = 1; i < 6; i++)
+  {
+    var last = Object.keys(sortable)[Object.keys(sortable).length-i];
+    array_5_bestseller.push(last);
+  }
+  console.log(array_5_bestseller);
+
+
 
 
     // → '{"a":"baz","b":"foo","c":"bar"}'
@@ -174,7 +182,7 @@ export default async function handler(req, res) {
         });
         */
     //console.log(result);
-    res.status(200).json("ciao");
+    res.status(200).json(array_5_bestseller);
   } finally {
     // Close the connection to the MongoDB cluster
     await client.close();
