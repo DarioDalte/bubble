@@ -49,7 +49,17 @@ function Categories(props) {
       ),
     },
     {
-      title: "Test",
+      title: "Make-Up",
+      color: "#E4F3EA",
+      icon: (
+        <SportsVolleyballOutlinedIcon
+          className={classes.icon}
+          style={{ color: "#3A9B7A" }}
+        />
+      ),
+    },
+    {
+      title: "Acessori",
       color: "#E4F3EA",
       icon: (
         <SportsVolleyballOutlinedIcon
@@ -64,7 +74,7 @@ function Categories(props) {
     <div className={props.classes}>
       <div className={classes.header}>
         <p className={classes.text}>Categorie</p>
-        <p className={classes.text}>Guarda tutte</p>
+        <p className={classes.subtext}>Mostra tutto</p>
       </div>
       <div className={classes.container}>
         <div className={classes.categories}>

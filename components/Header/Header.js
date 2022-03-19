@@ -10,7 +10,7 @@ function Header() {
     <>
       <header className={classes.header}>
         <div className={classes.logo}></div>
-        <div className={classes.title}>Marketplace</div>
+        <div className={classes.title}>Bubble</div>
         <div className={classes.activity}>
           <ShoppingCartOutlinedIcon />
         </div>

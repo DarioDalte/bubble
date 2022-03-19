@@ -26,8 +26,8 @@ function BottomNav() {
       >
         <BottomNavigationAction label="Home" icon={<HomeIcon />} />
         <BottomNavigationAction label="Wishlist" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Order" icon={<ShoppingBagIcon />} />
-        <BottomNavigationAction label="Profile" icon={<PersonIcon />} />
+        <BottomNavigationAction label="Ordini" icon={<ShoppingBagIcon />} />
+        <BottomNavigationAction label="Profilo" icon={<PersonIcon />} />
       </BottomNavigation>
   )
 }

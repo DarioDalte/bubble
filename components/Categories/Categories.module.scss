@@ -5,6 +5,16 @@
 
   .text {
     font-size: 1.2rem;
+    font-weight: 500;
+  }
+  .subtext {
+    color: #3669C9;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .subtext:hover{
+    font-weight: 600;
+
   }
 }
 
