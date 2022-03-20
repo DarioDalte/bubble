@@ -4,12 +4,13 @@ import Carousel from "./Carousel/Carousel";
 import Categories from "./Categories/Categories";
 import BestSeller from "./BestSeller/BestSeller";
 
-function Main() {
+function Main(props) {
+
   return (
     <div className={classes.container}>
       <Carousel />
       <Categories classes={classes.categories} />
-      <BestSeller/>
+      <BestSeller bestSeller={props.bestSeller}/>
     </div>
   );
 }

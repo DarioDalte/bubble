@@ -23,13 +23,6 @@ export default async function handler(req, res) {
 
     var prova = await db.collection("orders").find().toArray();
     const contatore = await db.collection("orders").countDocuments();
-    console.log("1 print");
-    console.log(prova);
-    console.log("fine print 1");
-    console.log("   ");
-    console.log("   ");
-    console.log("   ");
-    console.log("   ");
 
 
     var i = 0;

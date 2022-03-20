@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       }
       for (let prop in counts) {
         if (counts[prop] >= 2) {
-          console.log(prop + " counted: " + counts[prop] + " times.");
+          //console.log(prop + " counted: " + counts[prop] + " times.");
         }
       }
       return counts;
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       array_5_bestseller.push(last);
     }
 
-    console.log("best seller: " + array_5_bestseller);
+    //console.log("best seller: " + array_5_bestseller);
 
     var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
     //console.log(prodotti);
@@ -63,12 +63,12 @@ export default async function handler(req, res) {
 
     const cart = [];
     for (i = 0; i < array_5_bestseller.length; i++) {
-      console.log("best seller n" + i + " " + array_5_bestseller[i] + "\n");
+      //console.log("best seller n" + i + " " + array_5_bestseller[i] + "\n");
       for (var x = 0; x < prodotti.length; x++) {
         let id = prodotti[x]["_id"]
           .toString()
           .replace(/ObjectId\("(.*)"\)/, "$1");
-        console.log("id: " + id);
+        //console.log("id: " + id);
         if (id == array_5_bestseller[i]) {
           oggetto = {
             brand: prodotti[x]["brand"],
@@ -84,8 +84,11 @@ export default async function handler(req, res) {
     }
 
     //console.log("carrello: " + cart);
+    //console.log(prodotti)
 
-    console.log(cart);
+    //console.log(cart);
+
+    //console.log("Bella");
 
     res.status(200).json(cart); //response
   } finally {

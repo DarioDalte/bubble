@@ -25,9 +25,11 @@
       .title {
         color: #ffff;
         font-weight: bold;
+        margin-bottom: .4rem;
+
       }
       .subtitle {
-          margin-top: .8rem;
+          margin-top: .4rem;
         font-weight: bold;
 
         color: rgba(255, 255, 255, 0.5);
@@ -56,28 +58,37 @@
       flex-direction: column;
       border-radius: 12px;
       
+      
       //height: 75px;
-
 
       .title{
         margin-top: .8rem;
         margin-bottom: .3rem;
         margin-left: .5rem;
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 600;
       }
       .price{
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 600;
       }
       .price, .review{
         margin: .3rem .5rem;
       }
   
+      @media (min-width:35rem) {
+        margin: 0 1.5rem;
+      }
+  
     }
     &::-webkit-scrollbar {
       display: none;
     }
+
+    @media (min-width:35rem) {
+      justify-content: center;
+    }
+
   }
 
 }
