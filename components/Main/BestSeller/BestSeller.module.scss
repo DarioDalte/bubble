@@ -41,26 +41,47 @@
     }
   }
 
-  .bottom-container {
-    margin-top: 3rem;
-    height: 250px;
-    overflow: hidden;
-
-    .products {
+  .scrolling-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-top: 4rem;
+  
+    
+    .card {
+      flex: 0 0 auto;
+      margin-left: 1rem;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
       display: flex;
-      overflow: auto;
-      white-space: nowrap;
-      padding-bottom: 1.3rem;
-      height: 100%;
+      flex-direction: column;
+      border-radius: 12px;
+      
+      //height: 75px;
 
-      .product {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid black;
-        margin: 0 1rem;
-        width: 100px;
+
+      .title{
+        margin-top: .8rem;
+        margin-bottom: .3rem;
+        margin-left: .5rem;
+        font-size: 1.3rem;
+        font-weight: 600;
       }
+      .price{
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .price, .review{
+        margin: .3rem .5rem;
+      }
+  
+    }
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
+
 }
+
+
+
+

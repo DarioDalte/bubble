@@ -7,12 +7,14 @@
     font-size: 1.2rem;
     font-weight: 500;
   }
+
   .subtext {
     color: #3669C9;
     font-weight: 500;
     cursor: pointer;
   }
-  .subtext:hover{
+
+  .subtext:hover {
     font-weight: 600;
 
   }
@@ -21,25 +23,29 @@
 .container {
 
 
-    height: 110px;
-    overflow: hidden;
+  height: 110px;
+  overflow: hidden;
 
 
 
   .categories {
     display: flex;
-    
     overflow: auto;
-
     white-space: nowrap;
+
 
     .icon {
       width: 2.2rem;
       height: 2.2rem;
     }
+
     padding-bottom: 1.3rem;
 
+    @media (min-width:35rem) {
+      justify-content: center;
+    }
 
- 
+
+
   }
 }
