@@ -1,9 +1,13 @@
+import {useState} from 'react';
+
 import Image from "next/image";
 import classes from "./BestSeller.module.scss";
+import Rating from '@mui/material/Rating';
+
 
 function BestSeller(props) {
-  const bestSellers = props.bestSeller;
 
+  const bestSellers = props.bestSeller;
   const bestSeller = bestSellers[0];
 
   return (
@@ -15,13 +19,14 @@ function BestSeller(props) {
           <span className={classes.title}>{bestSeller.name}</span>
           <span className={classes.subtitle}>Compra ora</span>
         </div>
-        <div className={classes.photo}>
+        <div className={classes['photo-container']}>
           <Image
             src="/headphone.png"
             alt="Picture of the author"
-            width={150}
-            height={150}
-          ></Image>
+            layout='fill'
+
+            className={classes.photo}
+          />
         </div>
       </div>
 
@@ -36,7 +41,7 @@ function BestSeller(props) {
             ></Image>
             <span className={classes.title}>{bestSeller.name}</span>
             <span className={classes.price}>€ {bestSeller.price}</span>
-            <span className={classes.review}>Recensioni</span>
+            <Rating className={classes.star} name="half-rating-read" defaultValue={2.4} precision={0.1} readOnly />
           </div>
         ))}
       </div>

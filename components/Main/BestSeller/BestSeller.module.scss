@@ -5,10 +5,14 @@
   .text {
     font-size: 1.2rem;
     font-weight: 500;
+    @media (min-width: 47rem) {
+      font-size: 1.5rem;
+    }
   }
   .best-seller {
-    max-height: 20rem;
+   // max-height: 20rem;
     min-height: 12rem;
+    height: 12.5rem;
 
     display: flex;
     background-color: #3669c9;
@@ -26,6 +30,9 @@
         color: #ffff;
         font-weight: bold;
         margin-bottom: .4rem;
+        @media (min-width: 47rem) {
+          font-size: 1.5rem;
+        }
 
       }
       .subtitle {
@@ -33,13 +40,55 @@
         font-weight: bold;
 
         color: rgba(255, 255, 255, 0.5);
+        @media (min-width: 47rem) {
+          font-size: 1.2rem;
+        }
       }
     }
-    .photo {
+    .photo-container {
       width: 50%;
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
+
+      >span{
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+      }
+ 
+
+      .photo{
+        width: 80% !important;
+        height: 80% !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        max-width: 17rem !important;
+        max-height: 17rem !important;
+        //height: 100%;
+        position: relative !important;
+        //object-fit: cover; // Optional
+      }
+    }
+    @media (min-width: 50rem) {
+      height: 15.625rem;
+ 
+    }
+ 
+    @media (min-width: 60rem) {
+      height: 18.75rem;
+ 
+    }
+ 
+    @media (min-width: 70rem) {
+      height: 21.875rem;
+ 
+    }
+ 
+    @media (min-width: 80rem) {
+      height: 25rem;
+ 
     }
   }
 
@@ -48,7 +97,7 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     margin-top: 4rem;
-  
+    padding-bottom: 2rem;
     
     .card {
       flex: 0 0 auto;
@@ -72,8 +121,13 @@
         font-size: 1rem;
         font-weight: 600;
       }
-      .price, .review{
-        margin: .3rem .5rem;
+      .price, .review, .star{
+        margin: .7rem .5rem;
+      }
+
+      .star{
+        margin-top: 0;
+        font-size: 1.7rem;
       }
   
       @media (min-width:35rem) {

@@ -4,6 +4,9 @@
    max-width: 80rem;
     margin: auto;
    // background: #9209e0;
+   @media (min-width: 47rem){
+    margin-top: 7.5rem;
+  }
 }
 
 .categories{

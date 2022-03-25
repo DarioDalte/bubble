@@ -1,14 +1,16 @@
 import BottomNav from "../components/BottomNav/BottomNav";
 import Header from "../components/Header/Header";
 import Main from "../components/Main/Main";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function Home(props) {
+  const isMobile = useMediaQuery('(max-width:47rem)');
 
   return (
     <>
       <Header />
       <Main bestSeller={props.bestSeller}/>
-      <BottomNav />
+      {isMobile && <BottomNav />}
     </>
   );
 }
@@ -78,6 +80,8 @@ export async function getStaticProps() {
     for (i = 0; i < array_5_bestseller.length; i++) {
       //console.log("best seller n" + i + " " + array_5_bestseller[i] + "\n");
       for (var x = 0; x < prodotti.length; x++) {
+      console.log(prodotti[x])
+
         let id = prodotti[x]["_id"]
           .toString()
           .replace(/ObjectId\("(.*)"\)/, "$1");
@@ -102,6 +106,8 @@ export async function getStaticProps() {
     // Close the connection to the MongoDB cluster
     await client.close();
   }
+
+  console.log(cart);
 
   return {
     props: {

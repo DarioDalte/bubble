@@ -3,7 +3,7 @@ import classes from "./Category.module.scss";
 function Category(props) {
 
   return (
-    <div className={classes.container}>
+    <div className={`${classes.container} ${props.classes}`} >
       <div className={classes.category} style={{ background: props.color }}>
         {props.icon}
       </div>

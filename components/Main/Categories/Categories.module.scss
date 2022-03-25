@@ -6,6 +6,9 @@
   .text {
     font-size: 1.2rem;
     font-weight: 500;
+    @media (min-width: 47rem) {
+      font-size: 1.5rem;
+    }
   }
 
   .subtext {
@@ -20,32 +23,61 @@
   }
 }
 
-.container {
 
+.modal{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  background: #ffff;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
 
-  height: 110px;
-  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1.5rem 0;
 
-
-
-  .categories {
+  .modal-categories{
     display: flex;
-    overflow: auto;
-    white-space: nowrap;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 
-
-    .icon {
-      width: 2.2rem;
-      height: 2.2rem;
+    .container{
+      margin: 0 .5rem;
+      margin-top: .5rem;
+      
     }
+  }
 
-    padding-bottom: 1.3rem;
+}
 
-    @media (min-width:35rem) {
-      justify-content: center;
-    }
-
-
+.scrolling-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin-top: .5rem;
+  .container{
+    flex: 0 0 auto;
+    margin-left: .3rem;
 
   }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width:35rem) {
+    justify-content: center;
+  }
+}
+
+.icon {
+  width: 2.2rem;
+  height: 2.2rem;
 }
