@@ -1,14 +1,23 @@
+import {useSession, signOut} from 'next-auth/client'
+
 import BottomNav from "../components/BottomNav/BottomNav";
 import Header from "../components/Header/Header";
 import Main from "../components/Main/Main";
+
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function Home(props) {
   const isMobile = useMediaQuery('(max-width:47rem)');
+  const [session, loading] = useSession();
+
+  const logoutHandler = () =>{
+    signOut();
+  }
 
   return (
     <>
       <Header />
+      <button onClick={logoutHandler}>Logout</button>
       <Main bestSeller={props.bestSeller}/>
       {isMobile && <BottomNav />}
     </>

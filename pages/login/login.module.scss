@@ -2,23 +2,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 8rem;
+  margin-top: 6rem;
+  height: 100%;
+
 
   .title {
     text-align: center;
+
     span {
       color: #3669c9;
     }
   }
+
   .input-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 6rem;
+    margin-top: 3rem;
 
-    .msg-error{
+    .msg-error {
       color: #cc0000;
       font-weight: 600;
       margin-bottom: 1rem;
@@ -31,7 +35,7 @@
   }
 
   .footer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     padding: 1rem;
@@ -44,6 +48,17 @@
 }
 
 .bottom-text {
-    color: #3669c9;
-    font-size: 0.8rem;
+  color: #3669c9;
+  font-size: 0.8rem;
+
+  &:hover {
+    color: #254b92;
+    font-weight: 500;
+
   }
+}
+
+.button {
+  width: 50%;
+  margin: 1rem;
+}

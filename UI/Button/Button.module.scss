@@ -1,13 +1,14 @@
-.button{
+.button {
     padding: .7rem 1rem;
-    width: 50%;
-    margin: 1rem;
     border-radius: 10px;
     outline: none;
     border: none;
     background-color: #3669C9;
     font-weight: bold;
     color: white;
+    cursor: pointer;
 
+    &:hover {
+        background-color: #4f87f0;
+    }
 }
-

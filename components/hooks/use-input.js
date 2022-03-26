@@ -4,6 +4,7 @@ function useInput(validateValue) {
 
     const [enteredValue, setEnteredValue] = useState("");
     const [isTouched, setIsTouched] = useState(false);
+    const [focussing, setFocussing] = useState(false);
 
     const valueIsValid = validateValue(enteredValue);
     const hasError = !valueIsValid && isTouched;
@@ -16,7 +17,11 @@ function useInput(validateValue) {
 
       const inputBlur = () =>{
         setIsTouched(true);
+        setFocussing(false);
 
+      }
+      const inputFocus = () =>{
+        setFocussing(true);
       }
 
       const reset = () =>{
@@ -30,7 +35,9 @@ function useInput(validateValue) {
         hasError, 
         valueHandler,
         inputBlur,
-        reset
+        inputFocus,
+        reset,
+        focussing
     }
 }
 
