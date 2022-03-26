@@ -9,6 +9,8 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Button from "../../UI/SearchBar/Button/Button";
+import Link from "next/link";
 
 export default function index() {
   const [values, setValues] = useState({
@@ -35,11 +37,23 @@ export default function index() {
   };
   return (
     <div className={classes.container}>
-      <h1 className={classes.title}>Bentornato su <br/><span>Bubble!</span></h1>
+      <h1 className={classes.title}>
+        Bentornato su <br />
+        <span>Bubble!</span>
+      </h1>
       <div className={classes["input-container"]}>
-        <TextField id="outlined-basic" label="Email" variant="outlined" className={classes.input}/>
+        <TextField
+          id="outlined-basic"
+          label="Email"
+          variant="outlined"
+          className={classes.input}
+        />
 
-        <FormControl sx={{ width: "25ch" }} variant="outlined" className={classes.input}>
+        <FormControl
+          sx={{ width: "25ch" }}
+          variant="outlined"
+          className={classes.input}
+        >
           <InputLabel htmlFor="outlined-adornment-password">
             Password
           </InputLabel>
@@ -63,6 +77,16 @@ export default function index() {
             label="Password"
           />
         </FormControl>
+        <Button />
+      </div>
+
+      <div className={classes.footer}>
+        <Link href="http://www.google.it">
+          <span className={classes['bottom-text']}>Password dimenticata?</span>
+        </Link>
+        <Link href="http://www.google.it">
+          <span className={classes['bottom-text']}>Registrati</span>
+        </Link>
       </div>
     </div>
   );
