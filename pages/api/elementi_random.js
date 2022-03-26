@@ -10,41 +10,31 @@ export default async function handler(req, res) {
 
     const db = client.db(); //db
 
-    var array_categorie = await db.collection("categories").find().toArray();
-    const contatore_categorie = await db
-      .collection("categories")
-      .countDocuments(); //conta quanti record ci sono nella collection orders
+    var array_categorie = await db.collection("categories").find().toArray(); // inserisce nell'array le categorie
+    const contatore_categorie = await db.collection("categories").countDocuments(); //conta quanti record ci sono nella collection categorie
 
-    console.log(
-      "Il numero di categorie è: " + contatore_categorie + " e sono: "
-    );
-    console.log(array_categorie);
-    function getRandomInt(max) {
+    function getRandomInt(max) { // genera numero random
       return Math.floor(Math.random() * max);
     }
-    var temp = getRandomInt(contatore_categorie);
 
-    var array_numeri_random = [temp];
-    console.log(array_numeri_random);
+    var temp = getRandomInt(contatore_categorie);//primo numero random
+
+    var array_numeri_random = [temp];//aggiunge il primo numero random all'array
     var a = 0;
     for (var i = 0; i < 2; i++) {
-      temp = getRandomInt(contatore_categorie);
-      console.log("il numero generato è: " + temp);
-      console.log(temp);
+      temp = getRandomInt(contatore_categorie); // genera numero random e lo mette nella variabile temp
       for (var x = 0; x < array_numeri_random.length; x++) {
-        if (temp == array_numeri_random[x]) {
-          i = i - 1;
-          a = 1;
+        if (temp == array_numeri_random[x]) { //confronta il numero generato con i numeri dell'array
+          i = i - 1; // se è uguale decrementa
+          a = 1; // e assegna 1 alla variabile a
         }
       }
 
-      if (a == 0) {
+      if (a == 0) { // se la variabile è 0 significa che non è presente il numero nell'array e lo aggiunge
         array_numeri_random.push(temp);
-      } else {
-        console.log("numeri uguali cazzo: reinserire!!!");
+      } else { // altrimenti non lo aggiunge e assegna 0 alla variabile a
         a = 0;
       }
-      console.log(array_numeri_random);
     }
 
     console.log(array_numeri_random);
@@ -52,30 +42,23 @@ export default async function handler(req, res) {
     var array_con_id_categoria = [];
     for (var i = 0; i < array_categorie.length; i++) {
       var fa = array_categorie[i]["_id"];
-      console.log("id: " + fa);
-      console.log("posizione: " + i);
 
       for (var z = 0; z < array_numeri_random.length; z++) {
-        console.log(array_numeri_random[z]);
         if (i == array_numeri_random[z]) {
-          console.log("Aggiunto");
           array_con_id_categoria.push(fa);
         }
       }
     }
- 
 
+
+    console.log("sono qui \n");
     var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
     const contatore = await db.collection("products").countDocuments(); //conta quanti record ci sono nella collection orders
     console.log(contatore);
     console.log(prodotti);
+    //sconsole.log(array_con_id_categoria);
+    console.log("\n\n\n\n\n");
 
-    console.log(array_con_id_categoria);
-    console.log("        ");
-    console.log("        ");
-    console.log("        ");
-    console.log("        ");
-    console.log("        ");
     var i = 0; //dichiaro e inizializo la varibile i
     var array = []; //dichiaro e inizializzo l'array
    
@@ -85,20 +68,18 @@ export default async function handler(req, res) {
       console.log("        ");
       for (var d = 0; d < array_con_id_categoria.length; d++) {
         var asdas = array_con_id_categoria[d];
+        asdas = String(asdas);
         console.log("id categoria confrontato è: " + asdas);
         
         if (prova_1 == asdas) {
             console.log("sono dentro");
             array.push(prova_1[d]); //aggiunge all'array ogni elemento dell'array prova_1
         }else{
-            console.log("non è entratp");
+            console.log("non è entrato");
         }
       }
       i++;
-      console.log("        ");
-      console.log("        ");
-      console.log("        ");
-      console.log("        ");
+      console.log("\n\n\n\n\n\n\n\n");
 
     }
 
