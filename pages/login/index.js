@@ -79,6 +79,8 @@ export default function Login() {
         .then((res) => {
           if (res.data.success) {
             console.log(res.data.message);
+            console.log(enteredEmail);
+            console.log(res.data.extra.name);
           } else {
             setMsgError(res.data.message);
           }
