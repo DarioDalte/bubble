@@ -50,20 +50,24 @@ export default async function handler(req, res) {
       }
     }
 
+    console.log(array_con_id_categoria);
+
 
     console.log("sono qui \n");
     var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
-    const contatore = await db.collection("products").countDocuments(); //conta quanti record ci sono nella collection orders
-    console.log(contatore);
+    const contatore = await db.collection("products").countDocuments(); //conta quanti record ci sono nella collection orders 
     console.log(prodotti);
     //sconsole.log(array_con_id_categoria);
     console.log("\n\n\n\n\n");
 
     var i = 0; //dichiaro e inizializo la varibile i
     var array = []; //dichiaro e inizializzo l'array
-   
+    let oggetto = {};
+
+    const cart = [];
     while (i < contatore) {
       var prova_1 = prodotti[i]["category"]; //prendo il campo cod_prodotti(che è un array) e lo metto nella variabile prova_1
+      console.log(prodotti[i]);
       console.log("id categoria del prodotto è: " + prova_1);
       console.log("        ");
       for (var d = 0; d < array_con_id_categoria.length; d++) {
@@ -73,7 +77,14 @@ export default async function handler(req, res) {
         
         if (prova_1 == asdas) {
             console.log("sono dentro");
-            array.push(prova_1[d]); //aggiunge all'array ogni elemento dell'array prova_1
+            oggetto = {
+              brand: prodotti[i]["brand"],
+              name: prodotti[i]["name"],
+              price: prodotti[i]["price"],
+            };
+            cart.push(oggetto);
+            break;
+            
         }else{
             console.log("non è entrato");
         }
@@ -83,8 +94,9 @@ export default async function handler(req, res) {
 
     }
 
-    console.log(array);
+    console.log(cart);
 
+    
     res.status(200).json("ciao"); //response
   } finally {
     // Close the connection to the MongoDB cluster
