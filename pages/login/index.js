@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { signIn } from "next-auth/client";
 
 import useInput from "../../components/hooks/use-input";
-import Button from "../../UI/SearchBar/Button/Button";
+import Button from "../../UI/Button/Button";
 
 import classes from "./login.module.scss";
 
@@ -15,16 +18,20 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Loading from "../../UI/loading/Loading";
+import useAuth from "../../components/hooks/use-auth";
 
 export default function Login() {
   const [values, setValues] = useState({ showPassword: false });
+  const [isLoading, setIsLoading] = useState(false);
   const [msgError, setMsgError] = useState("");
   const regExpL = /[a-zA-Z]/g;
   const regExpN = /[0-9]/g;
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const isLogged = useSelector((state) => state.isLogged);
+  const userEmail = useSelector((state) => state.email);
 
   const handleClickShowPassword = () => {
     setValues({
@@ -63,35 +70,30 @@ export default function Login() {
       email.includes("@") && email.includes(".") && email.trim().length > 6
   );
 
-  const loginHandler = (e) => {
+  const loginHandler = async (e) => {
     e.preventDefault();
     emailBlurHandler();
     passwordBlurHandler();
+    setIsLoading(true);
 
     if (passwordIsValid && emailIsValid) {
-      let data = {
+      const result = await signIn("credentials", {
+        redirect: false,
         email: enteredEmail,
-        password: enteredPassword,
-      };
+        password: enteredPassword
+      });
 
-      axios
-        .post("../api/login", data)
-        .then((res) => {
-          if (res.data.success) {
-            console.log(res.data.message);
-            console.log(enteredEmail);
-            console.log(res.data.extra.name);
-          } else {
-            setMsgError(res.data.message);
-          }
-        })
-        .catch((error) => {
-          setMsgError(error.response.data.message);
-        });
+      if(!result.error){
+
+      }else{
+        setMsgError(result.error);
+      }
     }
+    setIsLoading(false);
   };
   return (
     <div className={classes.container}>
+      <Loading open={isLoading} />
       <h1 className={classes.title}>
         Bentornato su <br />
         <span>Bubble!</span>
