@@ -7,7 +7,7 @@ import classes from "./login.module.scss";
 import useInput from "../../components/hooks/use-input";
 import Button from "../../UI/Button/Button";
 import PasswordTextField from "../../UI/PasswordTextField/PasswordTextField";
-import Loading from "../../UI/loading/Loading";
+import Loading from "../../UI/Loading/Loading";
 
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
