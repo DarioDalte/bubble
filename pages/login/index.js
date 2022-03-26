@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
 
 import useInput from "../../components/hooks/use-input";
 import Button from "../../UI/SearchBar/Button/Button";
@@ -66,14 +67,25 @@ export default function Login() {
     e.preventDefault();
     emailBlurHandler();
     passwordBlurHandler();
-    console.log("mmh mica giusto");
 
     if (passwordIsValid && emailIsValid) {
-      console.log("tutto giusto");
       let data = {
         email: enteredEmail,
         password: enteredPassword,
       };
+
+      axios
+        .post("../api/login", data)
+        .then((res) => {
+          if (res.data.success) {
+            console.log(res.data.message);
+          } else {
+            setMsgError(res.data.message);
+          }
+        })
+        .catch((error) => {
+          setMsgError(error.response.data.message);
+        });
     }
   };
   return (
@@ -83,6 +95,7 @@ export default function Login() {
         <span>Bubble!</span>
       </h1>
       <div className={classes["input-container"]}>
+        {msgError && <h3 className={classes["msg-error"]}>{msgError}</h3>}
         <TextField
           id="outlined-basic"
           label="Email"
@@ -94,11 +107,11 @@ export default function Login() {
           error={emailHasError}
         />
 
-        <FormControl
-          variant="outlined"
-          className={classes.input}
-        >
-          <InputLabel htmlFor="outlined-adornment-password" error={passwordHasError}>
+        <FormControl variant="outlined" className={classes.input}>
+          <InputLabel
+            htmlFor="outlined-adornment-password"
+            error={passwordHasError}
+          >
             Password
           </InputLabel>
           <OutlinedInput
