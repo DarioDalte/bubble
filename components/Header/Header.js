@@ -16,7 +16,7 @@ function Header() {
           {isMobile ? 'Bubble' : <SearchBar />}
         </div>
         <div className={classes.activity}>
-          <ShoppingCartOutlinedIcon />
+          <ShoppingCartOutlinedIcon className={classes.cart}/>
         </div>
       </header>
 
