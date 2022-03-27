@@ -99,42 +99,7 @@
     margin-top: 4rem;
     padding: 2rem 0;
     
-    .card {
-      flex: 0 0 auto;
-      margin-left: 1rem;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-      display: flex;
-      flex-direction: column;
-      border-radius: 12px;
-      
-      
-      //height: 75px;
-
-      .title{
-        margin-top: .8rem;
-        margin-bottom: .3rem;
-        margin-left: .5rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-      }
-      .price{
-        font-size: 1rem;
-        font-weight: 600;
-      }
-      .price, .review, .star{
-        margin: .7rem .5rem;
-      }
-
-      .star{
-        margin-top: 0;
-        font-size: 1.7rem;
-      }
-  
-      @media (min-width:35rem) {
-        margin: 0 1.5rem;
-      }
-  
-    }
+ 
     &::-webkit-scrollbar {
       display: none;
     }

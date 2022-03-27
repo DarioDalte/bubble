@@ -31,10 +31,7 @@ export default function Login() {
     focussing: passwordFocussing
   } = useInput(
     (password) =>
-      password.trim().length >= 6 &&
-      regExpN.test(password) &&
-      regExpL.test(password)
-  );
+      password.trim().length >= 1);
 
   const {
     value: enteredEmail,
@@ -64,18 +61,20 @@ export default function Login() {
       });
 
       if (!result.error) {
+        setMsgError("");
         router.push("../");
       } else {
         setMsgError(result.error);
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
+    
   };
 
 
 
   return (
-    <div className={classes.container}>
+    <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
       <Loading open={isLoading} />
 
       <h1 className={classes.title}>
@@ -108,7 +107,10 @@ export default function Login() {
         <Button className={classes.button} onClick={loginHandler} />
       </div>
 
-      {isMobile && !emailFocussing && !passwordFocussing && (
+      {console.log(isMobile && !emailFocussing && !passwordFocussing || !isMobile)}
+      {console.log(isMobile && !emailFocussing && !passwordFocussing)}
+
+      {(isMobile ? !emailFocussing : true) && (isMobile ? !passwordFocussing : true) && (
         <div className={classes.footer}>
           <Link href="http://www.google.it">
             <a className={classes["bottom-text"]}>Password dimenticata?</a>

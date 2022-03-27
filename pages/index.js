@@ -10,6 +10,7 @@ export default function Home(props) {
   const isMobile = useMediaQuery('(max-width:47rem)');
   const [session, loading] = useSession();
 
+
   const logoutHandler = () =>{
     signOut();
   }
@@ -17,12 +18,15 @@ export default function Home(props) {
   return (
     <>
       <Header />
-      <button onClick={logoutHandler}>Logout</button>
+      {session && <button onClick={logoutHandler}>Logout</button>}
       <Main bestSeller={props.bestSeller}/>
       {isMobile && <BottomNav />}
     </>
   );
 }
+
+
+
 
 export async function getStaticProps() {
   const databaseConnection = require("./api/middlewares/database.js");
