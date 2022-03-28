@@ -28,10 +28,8 @@ export default function Login() {
     inputBlur: passwordBlurHandler,
     inputFocus: passwordFocusHandler,
     reset: passwordReset,
-    focussing: passwordFocussing
-  } = useInput(
-    (password) =>
-      password.trim().length >= 1);
+    focussing: passwordFocussing,
+  } = useInput((password) => password.trim().length >= 1);
 
   const {
     value: enteredEmail,
@@ -41,7 +39,7 @@ export default function Login() {
     inputBlur: emailBlurHandler,
     inputFocus: emailFocusHandler,
     reset: emailReset,
-    focussing: emailFocussing
+    focussing: emailFocussing,
   } = useInput(
     (email) =>
       email.includes("@") && email.includes(".") && email.trim().length > 6
@@ -68,10 +66,7 @@ export default function Login() {
         setIsLoading(false);
       }
     }
-    
   };
-
-
 
   return (
     <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
@@ -107,19 +102,17 @@ export default function Login() {
         <Button className={classes.button} onClick={loginHandler} />
       </div>
 
-      {console.log(isMobile && !emailFocussing && !passwordFocussing || !isMobile)}
-      {console.log(isMobile && !emailFocussing && !passwordFocussing)}
-
-      {(isMobile ? !emailFocussing : true) && (isMobile ? !passwordFocussing : true) && (
-        <div className={classes.footer}>
-          <Link href="http://www.google.it">
-            <a className={classes["bottom-text"]}>Password dimenticata?</a>
-          </Link>
-          <Link href="http://www.google.it">
-            <a className={classes["bottom-text"]}>Registrati</a>
-          </Link>
-        </div>
-      )}
+      {(isMobile ? !emailFocussing : true) &&
+        (isMobile ? !passwordFocussing : true) && (
+          <div className={classes.footer}>
+            <Link href="http://www.google.it">
+              <a className={classes["bottom-text"]}>Password dimenticata?</a>
+            </Link>
+            <Link href="http://www.google.it">
+              <a className={classes["bottom-text"]}>Registrati</a>
+            </Link>
+          </div>
+        )}
     </div>
   );
 }

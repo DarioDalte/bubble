@@ -20,8 +20,8 @@ function Card(props) {
       <Image
         src={props.path}
         alt="Picture of the author"
-        width={120}
-        height={150}
+        width={'100%'}
+        height={'100%'}
       ></Image>
       <div className={classes.container}>
         <span className={classes.title}>{props.name}</span>

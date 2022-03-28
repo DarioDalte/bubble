@@ -35,7 +35,7 @@ function BestSeller(props) {
             price={bestSeller.price}
             brand={bestSeller.brand}
             star={2.5}
-            path={"/headphone.png"}
+            path={"/airpods.png"}
           />
         ))}
       </div>
