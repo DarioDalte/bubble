@@ -57,7 +57,24 @@ export default async function handler(req, res) {
     //console.log("best seller: " + array_5_bestseller);
 
     var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
-    //console.log(prodotti);
+    var recensioni = await db.collection("reviews").find().toArray();
+    var array_recensioni = [];
+    var oggetto_recensioni = {};
+    for(var i = 0; i < recensioni.length; i++){
+        let id = recensioni[i]["id_product"]
+        .toString()
+        .replace(/ObjectId\("(.*)"\)/, "$1");
+        oggetto_recensioni = {
+          id_prodotti: id,
+          value: recensioni[i]["value"]
+        }
+        array_recensioni.push(oggetto_recensioni);
+    }
+
+    console.log(array_recensioni);
+
+
+
 
     let oggetto = {};
 
@@ -68,12 +85,28 @@ export default async function handler(req, res) {
         let id = prodotti[x]["_id"]
           .toString()
           .replace(/ObjectId\("(.*)"\)/, "$1");
+
+        var somma = 0;
+        var cont = 0;
+        for(var b = 0; b < array_recensioni.length; b++)
+        {
+            var ogg = array_recensioni[b];
+            var prova_2 = ogg["id_prodotti"];
+            console.log(prova_2);
+            if(id == prova_2){
+              somma = somma + ogg["value"];
+              cont++;
+            }
+            
+        }
+        var media = somma/cont;
         //console.log("id: " + id);
         if (id == array_5_bestseller[i]) {
           oggetto = {
             brand: prodotti[x]["brand"],
             name: prodotti[x]["name"],
             price: prodotti[x]["price"],
+            recensioni : media
           };
           cart.push(oggetto);
           break;
