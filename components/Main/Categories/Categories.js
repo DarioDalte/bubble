@@ -89,6 +89,7 @@ function Categories(props) {
             title={category.title}
             color={category.color}
             icon={category.icon}
+            classes={classes.category}
           />
         );
       })}
