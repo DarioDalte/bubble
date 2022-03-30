@@ -11,6 +11,8 @@ export default function Home(props) {
   const [session, loading] = useSession();
 
 
+
+
   const logoutHandler = () =>{
     signOut();
   }
@@ -65,7 +67,7 @@ export async function getStaticProps() {
       }
       for (let prop in counts) {
         if (counts[prop] >= 2) {
-          console.log(prop + " counted: " + counts[prop] + " times.");
+          //console.log(prop + " counted: " + counts[prop] + " times.");
         }
       }
       return counts;
@@ -83,32 +85,63 @@ export async function getStaticProps() {
       array_5_bestseller.push(last);
     }
 
-    // console.log("best seller: " + array_5_bestseller);
+    //console.log("best seller: " + array_5_bestseller);
 
     var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
-    //console.log(prodotti);
+    var recensioni = await db.collection("reviews").find().toArray();
+    var array_recensioni = [];
+    var oggetto_recensioni = {};
+    for(var i = 0; i < recensioni.length; i++){
+        let id = recensioni[i]["id_product"]
+        .toString()
+        .replace(/ObjectId\("(.*)"\)/, "$1");
+        oggetto_recensioni = {
+          id_prodotti: id,
+          value: recensioni[i]["value"]
+        }
+        array_recensioni.push(oggetto_recensioni);
+    }
+
+    //console.log(array_recensioni);
 
     let oggetto = {};
+
 
     for (i = 0; i < array_5_bestseller.length; i++) {
       //console.log("best seller n" + i + " " + array_5_bestseller[i] + "\n");
       for (var x = 0; x < prodotti.length; x++) {
-      console.log(prodotti[x])
-
         let id = prodotti[x]["_id"]
           .toString()
           .replace(/ObjectId\("(.*)"\)/, "$1");
+
+        var somma = 0;
+        var cont = 0;
+        for(var b = 0; b < array_recensioni.length; b++)
+        {
+            var ogg = array_recensioni[b];
+            var prova_2 = ogg["id_prodotti"];
+            //console.log(prova_2);
+            if(id == prova_2){
+              somma = somma + ogg["value"];
+              cont++;
+            }
+            
+        }
+        var media = somma/cont;
         //console.log("id: " + id);
         if (id == array_5_bestseller[i]) {
           oggetto = {
             brand: prodotti[x]["brand"],
             name: prodotti[x]["name"],
             price: prodotti[x]["price"],
+            star: (media ? media : 0)
           };
           cart.push(oggetto);
           break;
         }
       }
+     
+      
     }
 
     //console.log("carrello: " + cart);
@@ -120,7 +153,7 @@ export async function getStaticProps() {
     await client.close();
   }
 
-  console.log(cart);
+  //console.log(cart);
 
   return {
     props: {

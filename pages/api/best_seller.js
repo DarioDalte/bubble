@@ -92,7 +92,7 @@ export default async function handler(req, res) {
         {
             var ogg = array_recensioni[b];
             var prova_2 = ogg["id_prodotti"];
-            console.log(prova_2);
+            //console.log(prova_2);
             if(id == prova_2){
               somma = somma + ogg["value"];
               cont++;
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
             brand: prodotti[x]["brand"],
             name: prodotti[x]["name"],
             price: prodotti[x]["price"],
-            recensioni : media
+            star: (media ? media : 0)
           };
           cart.push(oggetto);
           break;

@@ -34,7 +34,7 @@ function BestSeller(props) {
             name={bestSeller.name}
             price={bestSeller.price}
             brand={bestSeller.brand}
-            star={2.5}
+            star={bestSeller.star}
             path={"/galaxybuds.webp"}
           />
         ))}
