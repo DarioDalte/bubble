@@ -1,3 +1,4 @@
+
 const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
