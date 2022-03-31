@@ -122,8 +122,21 @@
       display: none;
     }
 
-    @media (min-width: 35rem) {
+    
+ 
+
+    @media (min-width:78rem) {
       justify-content: center;
     }
   }
+
+  .random{
+    margin-top: 3rem;
+
+    .wrapper-random{
+      margin-top: 0;
+    }
+  
+  }
 }
+

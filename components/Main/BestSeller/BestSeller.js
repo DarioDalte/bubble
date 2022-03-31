@@ -16,7 +16,7 @@ function BestSeller(props) {
         <div className={classes["title-container"]}>
           <span className={classes.title}>{bestSeller.brand}</span>
           <span className={classes.title}>{bestSeller.name}</span>
-          <div className={classes['subtitle-container']}>
+          <div className={classes["subtitle-container"]}>
             <span className={classes.subtitle}>Compra ora</span>
             <ArrowForwardIcon className={classes.arrowIcon} />
           </div>
@@ -43,6 +43,22 @@ function BestSeller(props) {
             path={"/galaxybuds.webp"}
           />
         ))}
+      </div>
+      <div className={classes.random}>
+        Elletrodomestici
+        <div className={`${classes['scrolling-wrapper']} ${classes['wrapper-random']}`}>
+          {bestSellers.slice(1).map((bestSeller, i) => (
+            <Card
+              className={classes.card}
+              key={i}
+              name={bestSeller.name}
+              price={bestSeller.price}
+              brand={bestSeller.brand}
+              star={bestSeller.star}
+              path={"/galaxybuds.webp"}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
