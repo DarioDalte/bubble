@@ -6,8 +6,6 @@
   margin-top: 6rem;
   width: 70%;
   max-width: 35rem;
-  
-
 
   .title {
     text-align: center;
@@ -46,11 +44,10 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-
   }
 }
 
-.desktop{
+.desktop {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   padding: 4rem 3rem;
   border-radius: 12px;
@@ -64,11 +61,25 @@
   &:hover {
     color: #254b92;
     font-weight: 500;
-
   }
 }
 
 .button {
   width: 50%;
+  
   margin: 1rem;
+}
+
+.arrow {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  color: #3669c9;
+  font-size: 2rem;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+    color: #254b92;
+  }
 }

@@ -28,6 +28,16 @@
   .activity {
     display: flex;
     justify-content: flex-end;
+    gap: 1.5rem;
+
+    .cart, .person{
+      transition: all .3s;
+      font-size: 1.8rem;
+      cursor: pointer;
+      &:hover{
+        transform: scale(1.2);
+      }
+    }
   }
 
   @media (min-width: 47rem){

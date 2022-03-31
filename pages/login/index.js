@@ -11,6 +11,7 @@ import Loading from "../../UI/Loading/Loading";
 
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function Login() {
   const [msgError, setMsgError] = useState("");
@@ -69,51 +70,56 @@ export default function Login() {
   };
 
   return (
-    <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
-      <Loading open={isLoading} />
+    <>
+      <Link href={'../'}>
+        <ArrowBackIcon className={classes.arrow} />
+      </Link>
 
-      <h1 className={classes.title}>
-        Bentornato su <br />
-        <span>Bubble!</span>
-      </h1>
+      <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
+        <Loading open={isLoading} />
+        <h1 className={classes.title}>
+          Bentornato su <br />
+          <span>Bubble!</span>
+        </h1>
 
-      <div className={classes["input-container"]}>
-        {msgError && <h3 className={classes["msg-error"]}>{msgError}</h3>}
-        <TextField
-          id="outlined-basic"
-          label="Email"
-          variant="outlined"
-          className={classes.input}
-          value={enteredEmail}
-          onChange={emailHandler}
-          onBlur={emailBlurHandler}
-          error={emailHasError}
-          onFocus={emailFocusHandler}
-        />
+        <div className={classes["input-container"]}>
+          {msgError && <h3 className={classes["msg-error"]}>{msgError}</h3>}
+          <TextField
+            id="outlined-basic"
+            label="Email"
+            variant="outlined"
+            className={classes.input}
+            value={enteredEmail}
+            onChange={emailHandler}
+            onBlur={emailBlurHandler}
+            error={emailHasError}
+            onFocus={emailFocusHandler}
+          />
 
-        <PasswordTextField
-          className={classes.input}
-          onChange={passwordHandler}
-          onBlur={passwordBlurHandler}
-          error={passwordHasError}
-          onFocus={passwordFocusHandler}
-        />
+          <PasswordTextField
+            className={classes.input}
+            onChange={passwordHandler}
+            onBlur={passwordBlurHandler}
+            error={passwordHasError}
+            onFocus={passwordFocusHandler}
+          />
 
-        <Button className={classes.button} onClick={loginHandler} />
+          <Button className={classes.button} onClick={loginHandler} />
+        </div>
+
+        {(isMobile ? !emailFocussing : true) &&
+          (isMobile ? !passwordFocussing : true) && (
+            <div className={classes.footer}>
+              <Link href="http://www.google.it">
+                <a className={classes["bottom-text"]}>Password dimenticata?</a>
+              </Link>
+              <Link href="http://www.google.it">
+                <a className={classes["bottom-text"]}>Registrati</a>
+              </Link>
+            </div>
+          )}
       </div>
-
-      {(isMobile ? !emailFocussing : true) &&
-        (isMobile ? !passwordFocussing : true) && (
-          <div className={classes.footer}>
-            <Link href="http://www.google.it">
-              <a className={classes["bottom-text"]}>Password dimenticata?</a>
-            </Link>
-            <Link href="http://www.google.it">
-              <a className={classes["bottom-text"]}>Registrati</a>
-            </Link>
-          </div>
-        )}
-    </div>
+    </>
   );
 }
 
