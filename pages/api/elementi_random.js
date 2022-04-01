@@ -60,10 +60,10 @@ export default async function handler(req, res) {
     console.log("\n\n");
 
     var array = []; //dichiaro e inizializzo l'array
-    let oggetto = {}; //dichiaro due oggetti e due array e una variabile prova_3
+    let oggetto2 = {}; //dichiaro due oggetti e due array e una variabile prova_3
     var oggetto_da_mandare = {}; 
     var array_da_mandare = [];
-    var cart = [];
+    var cart2 = [];
     
     var prova_3 = 0;
     for (var d = 0; d < array_con_id_categoria.length; d++) { //scansiono l'array con gli id delle categorie
@@ -82,18 +82,18 @@ export default async function handler(req, res) {
         console.log("id categoria confrontato è: " + prova_1); //printo l'id della categoria con cui verra confrontata la variabile prova_2
         if (prova_2 == prova_1) { //la confronto e solo se è uguale, quindi gli id sono identici entra nell'if
               console.log("sono dentro");
-              oggetto = {
+              oggetto2 = {
                 brand: prodotti[i]["brand"],
                 name: prodotti[i]["name"],
                 price: prodotti[i]["price"],
               }; //aggiunge all'oggetto oggetto, dichiarato precedentemente, le informazioni del prodotto
               console.log("Ecco l'oggetto che aggiungero all'array")
-              console.log(oggetto)
-              cart.push(oggetto); // e aggiunge le info del prodotto all'array cart
+              console.log(oggetto2)
+              cart2.push(oggetto2); // e aggiunge le info del prodotto all'array cart
               prova_3 = 1; //e assegna alla variabile prova_3 il valore 1, in questo modo posso sapere se è passato per questo if
               console.log("ecco l'array");
-              console.log(cart);
-              if(cart.length == 5)
+              console.log(cart2);
+              if(cart2.length == 5)
               {
                 console.log("adesso esco");
                 break;
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
           prova_3 = 0;
           oggetto_da_mandare = {
             cateoria : nome_categoria,
-            prodotti: cart
+            prodotti: cart2
           }
           console.log("loggetto che aggiungo all'array è questo: ");
           console.log(oggetto_da_mandare);
@@ -122,8 +122,8 @@ export default async function handler(req, res) {
 
        }
        console.log("svuotiamo il cart: ");
-       cart = [];
-       console.log(cart);
+       cart2 = [];
+       console.log(cart2);
 
        console.log("\n\n\n");
     }
