@@ -106,6 +106,7 @@ export default async function handler(req, res) {
             brand: prodotti[x]["brand"],
             name: prodotti[x]["name"],
             price: prodotti[x]["price"],
+            image : prodotti[x]["image"],
             star: (media ? media : 0)
           };
           cart.push(oggetto);
