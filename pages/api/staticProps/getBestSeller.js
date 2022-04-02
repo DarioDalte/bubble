@@ -1,18 +1,11 @@
-const databaseConnection = require("./middlewares/database.js");
-
-export default async function handler(req, res) {
-  const client = await databaseConnection(); //Mi connetto al db
-
+module.exports = async function (db) {
   try {
-    await client.connect(); //istanza mongo client
-
-    const db = client.db(); //db
-
     var prova = await db.collection("orders").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
     const contatore = await db.collection("orders").countDocuments(); //conta quanti record ci sono nella collection orders
 
     var i = 0; //dichiaro e inizializo la varibile i
     var array = []; //dichiaro e inizializzo l'array
+    const cart = [];
 
     while (i < contatore) {
       var prova_1 = prova[i]["cod_prodotti"]; //prendo il campo cod_prodotti(che è un array) e lo metto nella variabile prova_1
@@ -60,25 +53,21 @@ export default async function handler(req, res) {
     var recensioni = await db.collection("reviews").find().toArray();
     var array_recensioni = [];
     var oggetto_recensioni = {};
-    for(var i = 0; i < recensioni.length; i++){
-        let id = recensioni[i]["id_product"]
+    for (var i = 0; i < recensioni.length; i++) {
+      let id = recensioni[i]["id_product"]
         .toString()
         .replace(/ObjectId\("(.*)"\)/, "$1");
-        oggetto_recensioni = {
-          id_prodotti: id,
-          value: recensioni[i]["value"]
-        }
-        array_recensioni.push(oggetto_recensioni);
+      oggetto_recensioni = {
+        id_prodotti: id,
+        value: recensioni[i]["value"],
+      };
+      array_recensioni.push(oggetto_recensioni);
     }
 
-    console.log(array_recensioni);
-
-
-
+    //console.log(array_recensioni);
 
     let oggetto = {};
 
-    const cart = [];
     for (i = 0; i < array_5_bestseller.length; i++) {
       //console.log("best seller n" + i + " " + array_5_bestseller[i] + "\n");
       for (var x = 0; x < prodotti.length; x++) {
@@ -88,45 +77,34 @@ export default async function handler(req, res) {
 
         var somma = 0;
         var cont = 0;
-        for(var b = 0; b < array_recensioni.length; b++)
-        {
-            var ogg = array_recensioni[b];
-            var prova_2 = ogg["id_prodotti"];
-            //console.log(prova_2);
-            if(id == prova_2){
-              somma = somma + ogg["value"];
-              cont++;
-            }
-            
+        for (var b = 0; b < array_recensioni.length; b++) {
+          var ogg = array_recensioni[b];
+          var prova_2 = ogg["id_prodotti"];
+          //console.log(prova_2);
+          if (id == prova_2) {
+            somma = somma + ogg["value"];
+            cont++;
+          }
         }
-        var media = somma/cont;
+        var media = somma / cont;
         //console.log("id: " + id);
         if (id == array_5_bestseller[i]) {
           oggetto = {
             brand: prodotti[x]["brand"],
             name: prodotti[x]["name"],
             price: prodotti[x]["price"],
-            image : prodotti[x]["image"],
-            star: (media ? media : 0)
+            star: media ? media : 0,
           };
           cart.push(oggetto);
+
           break;
         }
       }
-     
-      
     }
 
-    //console.log("carrello: " + cart);
-    //console.log(prodotti)
-
-    //console.log(cart);
-
-    //console.log("Bella");
-
-    res.status(200).json(cart); //response
-  } finally {
+    return cart;
+  } catch (e) {
     // Close the connection to the MongoDB cluster
-    await client.close();
+    console.log("Error " + e);
   }
-}
+};
