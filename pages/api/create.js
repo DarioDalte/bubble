@@ -1,17 +1,19 @@
 const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
-  const client = await databaseConnection(); //Mi connetto al db
+  const client = await databaseConnection();
 
   try {
-    await client.connect();
+    /** 
+    *   The await operator is used to wait for a Promise
+    */
+    await client.connect();   //To connect to our cluster
 
-    let data = req.body; //Prendo il body della http request
-    console.log(data);
+    let data = req.body;    //Get data from HTTP request
 
     const db = client.db(); //Boh
 
-    const collection = db.collection("users"); //Seleziono la collection
+    const collection = collection("users"); //Seleziono la collection
     const result = await collection.insertMany(data); //Inserisco nella collection
     console.log("info inserite");
     res.json({ message: "funzia!" });
