@@ -44,22 +44,6 @@ function BestSeller(props) {
           />
         ))}
       </div>
-      <div className={classes.random}>
-        Elletrodomestici
-        <div className={`${classes['scrolling-wrapper']} ${classes['wrapper-random']}`}>
-          {bestSellers.slice(1).map((bestSeller, i) => (
-            <Card
-              className={classes.card}
-              key={i}
-              name={bestSeller.name}
-              price={bestSeller.price}
-              brand={bestSeller.brand}
-              star={bestSeller.star}
-              path={"/galaxybuds.webp"}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

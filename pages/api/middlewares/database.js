@@ -10,7 +10,8 @@ module.exports = async function () {
   const uri = `mongodb+srv://${dbName}:${dbPassword}@cluster0.j9ybu.mongodb.net/marketplace?retryWrites=true&w=majority`;
 
   //create an istance of MongoClient
-  const client = new MongoClient(uri);
+
+  const client = new MongoClient(uri);  //create istance of MongoClient
 
 
   return client; //return client
