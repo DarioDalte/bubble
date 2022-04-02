@@ -10,6 +10,8 @@ export default function Home(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
   const [session, loading] = useSession();
 
+
+
   const logoutHandler = () => {
     signOut();
   };
@@ -39,6 +41,7 @@ export async function getStaticProps() {
 
   const bestSellers = await getBestSeller(db);
   const randomEelements = await getRandomEelements(db);
+
 
   client.close();
 

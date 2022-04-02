@@ -22,7 +22,7 @@ module.exports = async function (db) {
      */
     function count_duplicate(cod_prodotti) {
       let counts = {};
-      for (let i = 0; i < a.length; i++) {
+      for (let i = 0; i < cod_prodotti.length; i++) {
         if (counts[cod_prodotti[i]]) {
           counts[cod_prodotti[i]] += 1;
         } else {
