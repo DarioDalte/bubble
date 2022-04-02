@@ -1,41 +1,47 @@
 module.exports = async function (db) {
   try {
-    var prova = await db.collection("orders").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
-    const contatore = await db.collection("orders").countDocuments(); //conta quanti record ci sono nella collection orders
+    var ordini = await db.collection("orders").find().toArray(); //Selects documents in collection orders
+    const numero_ordini = await db.collection("orders").countDocuments(); //Return the count of documents
 
-    var i = 0; //dichiaro e inizializo la varibile i
-    var array = []; //dichiaro e inizializzo l'array
-    const cart = [];
+    var i = 0;  //Declare and initialize i
+    var cod_prodotti = []; //Declare and initialize cod_prodotti
+    const cart = [];  //Declare and initialize cart
 
-    while (i < contatore) {
-      var prova_1 = prova[i]["cod_prodotti"]; //prendo il campo cod_prodotti(che è un array) e lo metto nella variabile prova_1
-      for (var d = 0; d < prova_1.length; d++) {
-        //
-        array.push(prova_1[d]); //aggiunge all'array ogni elemento dell'array prova_1
+    while (i < numero_ordini) {
+      var elenco_cod_prodotti = ordini[i]["cod_prodotti"]; //takes cod_prodotti field (which is an array)
+      for (var d = 0; d < elenco_cod_prodotti.length; d++) {
+        cod_prodotti.push(elenco_cod_prodotti[d]); //Adds the ordered products code
       }
       i++;
     }
 
-    function count_duplicate(a) {
-      // crea un dizionario
+    /**
+     * Groups the product codes
+     * @param cod_prodotti product codes passed to the function to group
+     * @returns an object with product code and number of times present in the array
+     */
+    function count_duplicate(cod_prodotti) {
       let counts = {};
-
       for (let i = 0; i < a.length; i++) {
-        if (counts[a[i]]) {
-          counts[a[i]] += 1;
+        if (counts[cod_prodotti[i]]) {
+          counts[cod_prodotti[i]] += 1;
         } else {
-          counts[a[i]] = 1;
-        }
-      }
-      for (let prop in counts) {
-        if (counts[prop] >= 2) {
-          //console.log(prop + " counted: " + counts[prop] + " times.");
+          counts[cod_prodotti[i]] = 1;
         }
       }
       return counts;
     }
 
-    var best_seller = count_duplicate(array); //richiama la funzione passando l'array
+    //!SE NON TI FUNZIA IL SITO AGGIUNGI QUESTO PRIMA DI RETURN COUNTS
+     /** for (let prop in counts) {
+        if (counts[prop] >= 2) {
+          console.log(prop + " counted: " + counts[prop] + " times.");
+        }
+      }
+       */
+    
+
+    var best_seller = count_duplicate(cod_prodotti); //Calls the function count_duplicate
 
     const sortable = Object.entries(best_seller) // ordina il dizionario per le keys
       .sort(([, a], [, b]) => a - b)
@@ -43,13 +49,13 @@ module.exports = async function (db) {
 
     var array_5_bestseller = [];
     for (var i = 1; i < 6; i++) {
-      var last = Object.keys(sortable)[Object.keys(sortable).length - i]; // Inserisce nell'array gli ultimi 5 elementi di best seller
+      var last = Object.keys(sortable)[Object.keys(sortable).length - i]; // Inserisce nell'cod_prodotti gli ultimi 5 elementi di best seller
       array_5_bestseller.push(last);
     }
 
     //console.log("best seller: " + array_5_bestseller);
 
-    var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
+    var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile ordini
     var recensioni = await db.collection("reviews").find().toArray();
     var array_recensioni = [];
     var oggetto_recensioni = {};
