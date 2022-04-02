@@ -1,107 +1,122 @@
 module.exports = async function (db) {
   try {
-    var array_categorie = await db.collection("categories").find().toArray(); // inserisce nell'array le categorie
-    const contatore_categorie = await db
-      .collection("categories")
-      .countDocuments(); //conta quanti record ci sono nella collection categorie
+    var categorie = await db.collection("categories").find().toArray(); //Selects documents from collection categories
+    const numero_categorie = await db.collection("categories").countDocuments(); //Return the count of documents
 
+    /***
+     *  Generate random numbers
+     */
     function getRandomInt(max) {
-      // genera numero random
       return Math.floor(Math.random() * max);
     }
 
-    var temp = getRandomInt(contatore_categorie); //primo numero random
+    var primo_numero_random = getRandomInt(numero_categorie); //Calls the function getRandomInt
 
-    var array_numeri_random = [temp]; //aggiunge il primo numero random all'array
+    var numeri_random = [primo_numero_random]; //Adds first random number
     var a = 0;
+
+    /***
+     * Call the fucion getRandomInt for 2 times and generate an random number
+     * flows numeri_random and check that the random number is not present in the array
+     * if it is decrease i and assing 1 to a
+     * then chek if a is 0, if it is, it means that it is a new number and so add tu numeri_random
+     * otherwise assing 0 to a and repeat
+     */
     for (var i = 0; i < 2; i++) {
-      temp = getRandomInt(contatore_categorie); // genera numero random e lo mette nella variabile temp
-      for (var x = 0; x < array_numeri_random.length; x++) {
-        if (temp == array_numeri_random[x]) {
-          //confronta il numero generato con i numeri dell'array
-          i = i - 1; // se è uguale decrementa
-          a = 1; // e assegna 1 alla variabile a
+      var numero_random = getRandomInt(numero_categorie);
+      for (var x = 0; x < numeri_random.length; x++) {
+        if (numero_random == numeri_random[x]) {
+          i = i - 1;
+          a = 1;
         }
       }
 
       if (a == 0) {
-        // se la variabile è 0 significa che non è presente il numero nell'array e lo aggiunge
-        array_numeri_random.push(temp);
+        numeri_random.push(numero_random);
       } else {
-        // altrimenti non lo aggiunge e assegna 0 alla variabile a
         a = 0;
       }
     }
 
-    var array_con_id_categoria = []; //dichiaro l'array che conterra gli id delle categorie che verranno visualizzate nella home page
-    for (var i = 0; i < array_categorie.length; i++) {
-      //scorre l'array_categorie che contiene tutte le categorie prese dal db
-      var var_id = array_categorie[i]["_id"]; // prende solo l'id e lo mette nella variabile var_id
+    var id_categorie = []; //Declare and initialize id_categorie
 
-      for (var z = 0; z < array_numeri_random.length; z++) {
-        //scorre l'array con i numeri random e lo mette nell'array con categoria id
-        if (i == array_numeri_random[z]) {
-          array_con_id_categoria.push(var_id);
+    /***
+     * flows categorie
+     * from categorie takes ID
+     * flows numeri_random
+     * compare variable i and z and if they are equals then add the cateogry id
+     */
+    for (var i = 0; i < categorie.length; i++) {
+      var id = categorie[i]["_id"];
+
+      for (var z = 0; z < numeri_random.length; z++) {
+        if (i == numeri_random[z]) {
+          id_categorie.push(id);
         }
       }
     }
 
-    var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile prova
-    const contatore2 = await db.collection("products").countDocuments(); //conta quanti record ci sono nella collection orders
-    //console.log(prodotti); //printa i prodotti presi dal db
+    var prodotti = await db.collection("products").find().toArray(); //Selects documents from collection products
+    const numero_prodotti = await db.collection("products").countDocuments(); //Selects documents from collection products
 
-    var array = []; //dichiaro e inizializzo l'array
-    let oggetto2 = {}; //dichiaro due oggetti e due array e una variabile prova_3
-    var oggetto_da_mandare = {};
-    var array_da_mandare = [];
-    var cart2 = [];
+    let oggetto = {};
 
-    var prova_3 = 0;
-    for (var d = 0; d < array_con_id_categoria.length; d++) {
-      //scansiono l'array con gli id delle categorie
+    var elementi_random = [];
+    var cart = [];
 
-      var prova_1 = array_con_id_categoria[d]; // inserisco un id alla volta nella variabile prova_1
+    var b = 0;
+
+    /***
+     *  flows id_categorie, takes the id and query the db that returns the informations of category
+     *  transform id in String
+     * if b is 1 assing 0 to b and then add the array to obj oggett_da_mandare and then add this obj
+     * in elementi_random
+     */
+    for (var d = 0; d < id_categorie.length; d++) {
+      var id_categoria = id_categorie[d];
       var nome_categoria = await db
         .collection("categories")
-        .find({ _id: prova_1 })
-        .toArray(); // inserisce nell'array le categorie
+        .find({ _id: id_categoria })
+        .toArray();
       nome_categoria = nome_categoria[0]["category"];
-      prova_1 = String(array_con_id_categoria[d]); // e la trasformo in stringa
-      var i = 0; //dichiaro e inizializo la varibile i
-      while (i < contatore2) {
-        //scorre l'array che contiene i prodotti
-        var prova_2 = prodotti[i]["category"]; //prendo il campo category e lo metto nella variabile prova_2
-        if (prova_2 == prova_1) {
-          //la confronto e solo se è uguale, quindi gli id sono identici entra nell'if
-          oggetto2 = {
+      id_categoria = String(id_categorie[d]);
+      var i = 0;
+      /***
+       * flows prodotti, takes the product category
+       * compare ids and if they are equals then add the information of product in obj oggetto
+       * and add this obj to array cart and assing 1 to b
+       */
+      while (i < numero_prodotti) {
+        var id_prod = prodotti[i]["category"];
+        if (id_prod == id_categoria) {
+          oggetto = {
             brand: prodotti[i]["brand"],
             name: prodotti[i]["name"],
             price: prodotti[i]["price"],
-          }; //aggiunge all'oggetto oggetto, dichiarato precedentemente, le informazioni del prodotto
-          cart2.push(oggetto2); // e aggiunge le info del prodotto all'array cart
-          prova_3 = 1; //e assegna alla variabile prova_3 il valore 1, in questo modo posso sapere se è passato per questo if
+          };
+          cart.push(oggetto);
+          b = 1;
 
-          if (cart2.length == 5) {
+          if (cart.length == 5) {
             break;
           }
         }
         i++;
       }
 
-      if (prova_3 == 1) {
-        // se è entrato assegan 0 alla variabile prova_3 e aggiunge l'array all'oggetto oggetto da mandare che lo pusha nell'array definitivo che verra inivato al frontend
-        prova_3 = 0;
-        oggetto_da_mandare = {
+      if (b == 1) {
+        b = 0;
+        var oggetto_da_mandare = {
           categoria: nome_categoria,
-          prodotti: cart2,
+          prodotti: cart,
         };
-        array_da_mandare.push(oggetto_da_mandare);
+        elementi_random.push(oggetto_da_mandare);
       }
-      cart2 = [];
+      cart = [];
     }
-    return array_da_mandare;
-  } catch(e) {
-    // Close the connection to the MongoDB cluster
+    return elementi_random;
+  } catch (e) {
+    //error
     console.log("Errore " + e);
   }
-}
+};

@@ -1,11 +1,11 @@
 module.exports = async function (db) {
   try {
-    var ordini = await db.collection("orders").find().toArray(); //Selects documents in collection orders
+    var ordini = await db.collection("orders").find().toArray(); //Selects documents from collection orders
     const numero_ordini = await db.collection("orders").countDocuments(); //Return the count of documents
 
-    var i = 0;  //Declare and initialize i
+    var i = 0; //Declare and initialize i
     var cod_prodotti = []; //Declare and initialize cod_prodotti
-    const cart = [];  //Declare and initialize cart
+    const cart = []; //Declare and initialize cart
 
     while (i < numero_ordini) {
       var elenco_cod_prodotti = ordini[i]["cod_prodotti"]; //takes cod_prodotti field (which is an array)
@@ -33,68 +33,85 @@ module.exports = async function (db) {
     }
 
     //!SE NON TI FUNZIA IL SITO AGGIUNGI QUESTO PRIMA DI RETURN COUNTS
-     /** for (let prop in counts) {
+    /** for (let prop in counts) {
         if (counts[prop] >= 2) {
           console.log(prop + " counted: " + counts[prop] + " times.");
         }
       }
        */
-    
 
-    var best_seller = count_duplicate(cod_prodotti); //Calls the function count_duplicate
+    var gruppo_prodotti = count_duplicate(cod_prodotti); //Calls the function count_duplicate
 
-    const sortable = Object.entries(best_seller) // ordina il dizionario per le keys
+    const sortable = Object.entries(gruppo_prodotti)
       .sort(([, a], [, b]) => a - b)
-      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+      .reduce((r, [k, v]) => ({ ...r, [k]: v }), {}); //Sort the dictionary
 
-    var array_5_bestseller = [];
+    var five_cod_products = [];
+
+    /***
+     * get the last 5 codes
+     * adds the codes to the array
+     */
     for (var i = 1; i < 6; i++) {
-      var last = Object.keys(sortable)[Object.keys(sortable).length - i]; // Inserisce nell'cod_prodotti gli ultimi 5 elementi di best seller
-      array_5_bestseller.push(last);
+      var last = Object.keys(sortable)[Object.keys(sortable).length - i];
+      five_cod_products.push(last);
     }
 
-    //console.log("best seller: " + array_5_bestseller);
+    var prodotti = await db.collection("products").find().toArray(); //Selects documents from collection products
+    var recensioni = await db.collection("reviews").find().toArray(); //Selects documents from collection reviews
+    var elenco_recensioni = []; //Declare and initialize elenco_recensioni
+    var obj_recensioni = {}; //Declare and initialize obj_recensioni
 
-    var prodotti = await db.collection("products").find().toArray(); //prende i record della collezione orders e le mette nella variabile ordini
-    var recensioni = await db.collection("reviews").find().toArray();
-    var array_recensioni = [];
-    var oggetto_recensioni = {};
+    /***
+     * from reviews takes ID and delete the special characters
+     * adds the resulting ID and the review in obj_recensioni
+     * in the end the resulting obj in elenco_recensioni
+     */
     for (var i = 0; i < recensioni.length; i++) {
       let id = recensioni[i]["id_product"]
         .toString()
         .replace(/ObjectId\("(.*)"\)/, "$1");
-      oggetto_recensioni = {
+      obj_recensioni = {
         id_prodotti: id,
         value: recensioni[i]["value"],
       };
-      array_recensioni.push(oggetto_recensioni);
+      elenco_recensioni.push(obj_recensioni);
     }
-
-    //console.log(array_recensioni);
 
     let oggetto = {};
 
-    for (i = 0; i < array_5_bestseller.length; i++) {
-      //console.log("best seller n" + i + " " + array_5_bestseller[i] + "\n");
+    /***
+     * flows five_cod_products
+     * flows prodotti and
+     * from prodotti takes ID and delete the special characters
+     * flows elenco_recensioni
+     * from elenco_recensioni takes the id of products which has been reviewed
+     * compare ids and if they are equals then add the value of review to somma_recensioni
+     * then increase the variable cont
+     * after that calculate the average
+     * then if the id are equals then add to obj oggetto the information to send
+     * and add this obj to array cart
+     * in the end the resulting obj in elenco_recensioni
+     */
+    for (i = 0; i < five_cod_products.length; i++) {
       for (var x = 0; x < prodotti.length; x++) {
-        let id = prodotti[x]["_id"]
+        let id_prodotto = prodotti[x]["_id"]
           .toString()
           .replace(/ObjectId\("(.*)"\)/, "$1");
 
-        var somma = 0;
+        var somma_recensioni = 0;
         var cont = 0;
-        for (var b = 0; b < array_recensioni.length; b++) {
-          var ogg = array_recensioni[b];
-          var prova_2 = ogg["id_prodotti"];
-          //console.log(prova_2);
-          if (id == prova_2) {
-            somma = somma + ogg["value"];
+        for (var b = 0; b < elenco_recensioni.length; b++) {
+          var singola_recensione = elenco_recensioni[b];
+          var id_prodotto_recensito = singola_recensione["id_prodotti"];
+          if (id_prodotto == id_prodotto_recensito) {
+            somma_recensioni = somma_recensioni + singola_recensione["value"];
             cont++;
           }
         }
-        var media = somma / cont;
-        //console.log("id: " + id);
-        if (id == array_5_bestseller[i]) {
+        var media = somma_recensioni / cont;
+
+        if (id_prodotto == five_cod_products[i]) {
           oggetto = {
             brand: prodotti[x]["brand"],
             name: prodotti[x]["name"],
@@ -110,7 +127,7 @@ module.exports = async function (db) {
 
     return cart;
   } catch (e) {
-    // Close the connection to the MongoDB cluster
+    //error
     console.log("Error " + e);
   }
 };
