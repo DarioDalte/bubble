@@ -1,13 +1,12 @@
 import classes from "./Card.module.scss";
 import { useState } from "react";
 
-import Rating from "@mui/material/Rating";
 import Image from "next/image";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import IconButton from "@mui/material/IconButton";
+
+import { IconButton, Rating } from '@mui/material';
 
 function Card(props) {
   const [heartClicked, setHeartClicked] = useState(false);

@@ -10,8 +10,6 @@ export default function Home(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
   const [session, loading] = useSession();
 
-
-
   const logoutHandler = () => {
     signOut();
   };
@@ -34,7 +32,6 @@ export async function getStaticProps() {
   const getBestSeller = require("./api/staticProps/getBestSeller");
   const getRandomEelements = require("./api/staticProps/getRandomEelements");
 
-
   const client = await databaseConnection(); //Mi connetto al db
   await client.connect(); //istanza mongo client
   const db = client.db(); //db
@@ -42,6 +39,7 @@ export async function getStaticProps() {
   const bestSellers = await getBestSeller(db);
   const randomEelements = await getRandomEelements(db);
 
+ 
 
   client.close();
 

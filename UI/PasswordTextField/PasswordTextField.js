@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from "react";
 
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -46,6 +46,11 @@ function PasswordTextField(props) {
           </InputAdornment>
         }
         label="Password"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            props.onEnter();
+          }
+        }}
       />
     </FormControl>
   );

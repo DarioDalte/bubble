@@ -66,20 +66,27 @@
 
 .button {
   width: 50%;
-  
+
   margin: 1rem;
 }
 
-.arrow {
+.arrow-container {
+
   margin-top: 1rem;
   margin-left: 1rem;
-  color: #3669c9;
-  font-size: 2rem;
-  transition: all 0.3s;
-  cursor: pointer;
 
-  &:hover {
-    transform: scale(1.2);
-    color: #254b92;
+
+  .arrow {
+
+    color: #3669c9;
+    font-size: 2rem;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:hover {
+
+      color: #254b92;
+    }
   }
+
 }
