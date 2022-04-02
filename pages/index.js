@@ -31,9 +31,10 @@ export async function getStaticProps() {
   const databaseConnection = require("./api/middlewares/database.js");
   const getBestSeller = require("./api/staticProps/getBestSeller");
   const getRandomEelements = require("./api/staticProps/getRandomEelements");
+
+
   const client = await databaseConnection(); //Mi connetto al db
   await client.connect(); //istanza mongo client
-
   const db = client.db(); //db
 
   const bestSellers = await getBestSeller(db);
