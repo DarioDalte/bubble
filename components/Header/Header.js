@@ -21,7 +21,7 @@ function Header() {
         </div>
         <div className={classes.activity}>
           {!isMobile && (
-            <Link href={"/profile"}>
+            <Link href={"/profile"} passHref>
               <PersonOutlineIcon className={classes.person} />
             </Link>
           )}
