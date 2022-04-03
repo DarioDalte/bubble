@@ -9,8 +9,7 @@ import Button from "../../UI/Button/Button";
 import PasswordTextField from "../../UI/PasswordTextField/PasswordTextField";
 import Loading from "../../UI/Loading/Loading";
 
-import TextField from "@mui/material/TextField";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { IconButton, useMediaQuery, TextField } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function Login() {
@@ -47,7 +46,9 @@ export default function Login() {
   );
 
   const loginHandler = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     emailBlurHandler();
     passwordBlurHandler();
 
@@ -71,9 +72,13 @@ export default function Login() {
 
   return (
     <>
-      <Link href={'../'}>
-        <ArrowBackIcon className={classes.arrow} />
+      <Link href={"/"} passHref>
+        <IconButton className={classes["arrow-container"]}>
+          <ArrowBackIcon className={classes.arrow} />
+        </IconButton>
       </Link>
+
+    
 
       <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
         <Loading open={isLoading} />
@@ -102,6 +107,7 @@ export default function Login() {
             onBlur={passwordBlurHandler}
             error={passwordHasError}
             onFocus={passwordFocusHandler}
+            onEnter={loginHandler}
           />
 
           <Button className={classes.button} onClick={loginHandler} />
@@ -124,6 +130,7 @@ export default function Login() {
 }
 
 export async function getServerSideProps(context) {
+ 
   const session = await getSession({ req: context.req });
 
   if (session) {
