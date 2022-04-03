@@ -76,6 +76,10 @@ export default function Login() {
         <ArrowBackIcon className={classes.arrow} />
       </IconButton>
 
+      <Link href={'/'}>
+      <a>test</a>
+      </Link>
+
       <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
         <Loading open={isLoading} />
         <h1 className={classes.title}>
