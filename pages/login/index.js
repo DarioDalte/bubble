@@ -46,7 +46,7 @@ export default function Login() {
   );
 
   const loginHandler = async (e) => {
-    if(e){
+    if (e) {
       e.preventDefault();
     }
     emailBlurHandler();
@@ -72,13 +72,13 @@ export default function Login() {
 
   return (
     <>
-      <IconButton className={classes["arrow-container"]} href="/">
-        <ArrowBackIcon className={classes.arrow} />
-      </IconButton>
-
-      <Link href={'/'}>
-      <a>test</a>
+      <Link href={"/"} passHref>
+        <IconButton className={classes["arrow-container"]}>
+          <ArrowBackIcon className={classes.arrow} />
+        </IconButton>
       </Link>
+
+    
 
       <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
         <Loading open={isLoading} />
@@ -109,7 +109,6 @@ export default function Login() {
             onFocus={passwordFocusHandler}
             onEnter={loginHandler}
           />
-      
 
           <Button className={classes.button} onClick={loginHandler} />
         </div>
@@ -131,6 +130,7 @@ export default function Login() {
 }
 
 export async function getServerSideProps(context) {
+ 
   const session = await getSession({ req: context.req });
 
   if (session) {
