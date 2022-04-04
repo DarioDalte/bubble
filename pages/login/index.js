@@ -10,7 +10,7 @@ import PasswordTextField from "../../UI/PasswordTextField/PasswordTextField";
 import Loading from "../../UI/Loading/Loading";
 
 import { useMediaQuery, TextField } from "@mui/material";
-import BackArrow from "../../UI/backArrow/backArrow";
+import BackArrow from "../../UI/BackArrow/BackArrow";
 
 export default function Login() {
   const [msgError, setMsgError] = useState("");
