@@ -33,7 +33,7 @@ export default async function handler(req, res) {
      * flows users
      * compare emails
      * if are equals then compare the passwords and if are equals
-     * then delete account and send message
+     * then update password
      */
     for (var i = 0; i < numero_users; i++) {
       if (users[i]["email"] == email) {
