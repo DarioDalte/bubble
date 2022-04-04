@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     if (
       !email || //Email not null
       !email.includes("@") || //Email must contain the "@" sign
-      !password || //Email not null
+      !password || //Password not null
       !password.trim().length > 7 //the password must contain at least 7 characters
     ) {
       res.status(422).json({
