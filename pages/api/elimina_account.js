@@ -30,31 +30,26 @@ export default async function handler(req, res) {
     /***
      * flows users
      * compare emails
-     * if are equals then send msg
+     * if are equals then compare the passwords and if are equals
+     * then delete account and send message
      */
     for (var i = 0; i < numero_users; i++) {
       if (users[i]["email"] == email) {
-        res.status(422).json({
-          message: "Ti sei gia registrato con questa mail",
-        });
-        return;
+        const isValid = await verifyPassword(password, users[i]["password"]);
+
+        if (isValid) {
+          const collection = db.collection("users"); //Select collection users
+
+          await collection.deleteOne({ email: email });
+          res.status(422).json({
+            message: "Account eliminato",
+          });
+          return;
+        }
       }
     }
-
-    var encrypted_password = await hashPassowrd(password); //encrypt the password
-    /**
-     * add email and password to obj oggetto
-     */
-    var oggetto = {
-      email: email,
-      password: encrypted_password,
-    };
-
-    const collection = db.collection("users"); //Select collection users
-
-    users = await collection.insertOne(oggetto); //Insert into users obj
-
-    res.json({ message: "Regsitrazione effettuata con successo" });
+    //send message if credentials are wrong
+    res.json({ message: "Credenziali errate" });
   } finally {
     // Close the connection to the MongoDB cluster
     await client.close();
