@@ -11,8 +11,8 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import classes from "./BottomNav.module.scss";
 
-function BottomNav() {
-  const [navValue, setNavValue] = useState(0);
+function BottomNav(props) {
+  const [navValue, setNavValue] = useState(props.navValue);
   //console.log(navValue);
 
   return (
@@ -27,12 +27,12 @@ function BottomNav() {
       <BottomNavigationAction label="Home" icon={<HomeIcon />} />
       <BottomNavigationAction label="Wishlist" icon={<FavoriteIcon />} />
       <BottomNavigationAction label="Ordini" icon={<ShoppingBagIcon />} />
-      <Link href={"/profile"} passHref>
-        <BottomNavigationAction
-          label="Profilo"
-          icon={<PersonIcon />}
-        />
-      </Link>
+
+      <BottomNavigationAction
+        label="Profilo"
+        icon={<PersonIcon />}
+        href="/profile"
+      />
     </BottomNavigation>
   );
 }

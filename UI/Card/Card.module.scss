@@ -3,16 +3,10 @@
   display: flex;
   flex-direction: column;
   border-radius: 12px;
-  min-width: 11rem;
-  max-width: 13rem;
+  width: 90%;
   padding: 0.6rem 0;
   cursor: pointer;
   transition: all .5s;
-
-
-  &:hover{
-      transform: scale(1.1);
-  }
 
   .image-container {
     padding: 1rem;

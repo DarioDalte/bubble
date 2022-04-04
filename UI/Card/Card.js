@@ -15,7 +15,7 @@ function Card(props) {
     setHeartClicked((heartClicked) => !heartClicked);
   };
   return (
-    <div className={classes.card}>
+    <div className={`${classes.card} ${props.className}`}>
       <Image
         src={props.path}
         alt="Picture of the author"

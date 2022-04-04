@@ -26,7 +26,7 @@ function Loading(props) {
         open={props.open}
         transparent={props.transparent}
       >
-        <CircularProgress color="inherit" />
+        <CircularProgress sx={{color: '#3669c9'}} />
       </Backdrop>
     </ThemeProvider>
   );

@@ -1,17 +1,17 @@
 import classes from "./Header.module.scss";
 import Link from "next/link";
 
-
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
 import Container from "@mui/material/Container";
 import SearchBar from "../../UI/SearchBar/SearchBar";
 
-import useMediaQuery from "@mui/material/useMediaQuery";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { IconButton, useMediaQuery } from "@mui/material";
+import ProfileMenu from "./ProfileMenu/ProfileMenu";
 
 function Header() {
   const isMobile = useMediaQuery("(max-width:47rem)");
+
   return (
     <>
       <header className={classes.header}>
@@ -21,11 +21,15 @@ function Header() {
         </div>
         <div className={classes.activity}>
           {!isMobile && (
-            <Link href={"/profile"} passHref>
-              <PersonOutlineIcon className={classes.person} />
-            </Link>
+            <ProfileMenu
+              buttonClass={classes["icon-button"]}
+              iconClass={classes.icon}
+            />
           )}
-          <ShoppingCartOutlinedIcon className={classes.cart} />
+
+          <IconButton className={classes["icon-button"]}>
+            <ShoppingCartOutlinedIcon className={classes.icon} />
+          </IconButton>
         </div>
       </header>
 

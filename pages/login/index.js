@@ -9,8 +9,8 @@ import Button from "../../UI/Button/Button";
 import PasswordTextField from "../../UI/PasswordTextField/PasswordTextField";
 import Loading from "../../UI/Loading/Loading";
 
-import { IconButton, useMediaQuery, TextField } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useMediaQuery, TextField } from "@mui/material";
+import BackArrow from "../../UI/backArrow/backArrow";
 
 export default function Login() {
   const [msgError, setMsgError] = useState("");
@@ -72,13 +72,7 @@ export default function Login() {
 
   return (
     <>
-      <Link href={"/"} passHref>
-        <IconButton className={classes["arrow-container"]}>
-          <ArrowBackIcon className={classes.arrow} />
-        </IconButton>
-      </Link>
-
-    
+      <BackArrow />
 
       <div className={`${classes.container} ${!isMobile && classes.desktop}`}>
         <Loading open={isLoading} />
@@ -119,7 +113,7 @@ export default function Login() {
               <Link href="http://www.google.it">
                 <a className={classes["bottom-text"]}>Password dimenticata?</a>
               </Link>
-              <Link href="http://www.google.it">
+              <Link href="/register">
                 <a className={classes["bottom-text"]}>Registrati</a>
               </Link>
             </div>
@@ -130,7 +124,6 @@ export default function Login() {
 }
 
 export async function getServerSideProps(context) {
- 
   const session = await getSession({ req: context.req });
 
   if (session) {

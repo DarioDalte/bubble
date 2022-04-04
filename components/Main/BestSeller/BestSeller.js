@@ -4,10 +4,12 @@ import classes from "./BestSeller.module.scss";
 import Card from "../../../UI/Card/Card";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function BestSeller(props) {
   const bestSellers = props.bestSeller;
   const bestSeller = bestSellers[0];
+  const isMobile = useMediaQuery("(max-width:47rem)");
 
   return (
     <div className={classes.container}>
@@ -34,7 +36,7 @@ function BestSeller(props) {
       <div className={classes["scrolling-wrapper"]}>
         {bestSellers.slice(1).map((bestSeller, i) => (
           <Card
-            className={classes.card}
+            className={!isMobile && classes['card-desktop']}
             key={i}
             name={bestSeller.name}
             price={bestSeller.price}

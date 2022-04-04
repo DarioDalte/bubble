@@ -9,7 +9,7 @@ import Card from "../../UI/Card/Card";
 export default function Profile() {
   return (
     <Carousel
-      arrows={false}
+      arrows
       centerMode={false}
       containerClass={classes.container}
       draggable
@@ -26,13 +26,21 @@ export default function Profile() {
             max: 3000,
             min: 1600,
           },
-          items: 4,
+          items: 6,
           partialVisibilityGutter: 100,
         },
         miniDesktop: {
           breakpoint: {
             max: 1600,
             min: 1024,
+          },
+          items: 5,
+          partialVisibilityGutter: 100,
+        },
+        miniTablet: {
+          breakpoint: {
+            max: 760,
+            min: 570,
           },
           items: 3,
           partialVisibilityGutter: 100,
@@ -45,12 +53,20 @@ export default function Profile() {
           items: 2,
           partialVisibilityGutter: 1,
         },
+        tablet3: {
+          breakpoint: {
+            max: 570,
+            min: 0,
+          },
+          items: 2,
+          partialVisibilityGutter: 1,
+        },
         tablet: {
           breakpoint: {
             max: 1024,
-            min: 464,
+            min: 760,
           },
-          items: 2,
+          items: 4,
           partialVisibilityGutter: 30,
         },
       }}

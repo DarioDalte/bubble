@@ -30,12 +30,17 @@
     justify-content: flex-end;
     gap: 1.5rem;
 
-    .cart, .person{
+    .icon-button{
       transition: all .3s;
-      font-size: 1.8rem;
+      
       cursor: pointer;
       &:hover{
-        transform: scale(1.2);
+        transform: scale(1.1);
+      }
+
+      .icon{
+        font-size: 1.8rem;
+        color: black;
       }
     }
   }
