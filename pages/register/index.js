@@ -1,10 +1,13 @@
 import BackArrow from "../../UI/BackArrow/BackArrow";
-import classes from "./register.module.scss";
+import CustomizedSteppers from "./Stepper/Stepper";
+
 
 export default function Register() {
   return (
     <>
       <BackArrow />
+      <CustomizedSteppers/>
+ 
     </>
   );
 }

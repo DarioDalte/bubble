@@ -29,7 +29,7 @@ function ProfileMenu(props) {
     content = (
       <>
         <Link href={"/profile"}>
-          <a className={classes.item}>Accedi</a>
+          <a className={classes.item}>Profilo</a>
         </Link>
         <p className={classes.item}>Carrello</p>
         <p className={classes.item}>Wishlist</p>
