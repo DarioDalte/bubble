@@ -14,8 +14,7 @@ import BackArrow from "../../UI/BackArrow/BackArrow";
 
 export default function Login() {
   const [msgError, setMsgError] = useState("");
-  const regExpL = /[a-zA-Z]/g;
-  const regExpN = /[0-9]/g;
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:47rem)");
@@ -97,6 +96,8 @@ export default function Login() {
 
           <PasswordTextField
             className={classes.input}
+            text={'Password'}
+            value={enteredPassword}
             onChange={passwordHandler}
             onBlur={passwordBlurHandler}
             error={passwordHasError}

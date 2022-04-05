@@ -1,0 +1,79 @@
+.intro-container {
+    margin: 2rem auto !important;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+}
+
+
+
+.container {
+    display: flex;
+    width: 90%;
+    margin: 2.5rem auto !important;
+    justify-content: center;
+    flex-direction: column;
+
+    .input-container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem auto;
+  
+        width: 80%;
+        .input {
+            width: 100%;
+            margin: 1rem 0;
+          }
+    
+    }
+
+    
+
+
+
+}
+
+.title {
+    color: #3669c9;
+    text-align: center;
+}
+
+.btn-container {
+
+    display: flex;
+    justify-content: center;
+
+    .red,
+    .green {
+        transition: all .3s;
+        width: 3.75rem;
+        margin-top: 3rem;
+    }
+
+    .red {
+
+        margin-right: 1rem;
+    }
+
+    .green {
+        margin-left: 1rem;
+
+    }
+}
+
+.footer{
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 3%;
+    left: 0;
+    width: 100%;
+
+}
