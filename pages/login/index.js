@@ -104,7 +104,7 @@ export default function Login() {
             onEnter={loginHandler}
           />
 
-          <Button className={classes.button} onClick={loginHandler} />
+          <Button className={classes.button} value = "Login" onClick={loginHandler} />
         </div>
 
         {(isMobile ? !emailFocussing : true) &&

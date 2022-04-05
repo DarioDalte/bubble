@@ -1,10 +1,10 @@
 import React from 'react'
-import classes from './Button.module.scss'
+import classes from './ButtonOutlined.module.scss'
 
-function Button(props) {
+function ButtonOutlined(props) {
   return (
     <input type='button' value={props.value} className={`${props.className} ${classes.button}`} onClick={props.onClick}/>
   )
 }
 
-export default Button
+export default ButtonOutlined

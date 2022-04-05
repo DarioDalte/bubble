@@ -5,9 +5,12 @@ import { signIn, getSession } from "next-auth/client";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Card from "../../UI/Card/Card";
+import Button from "../../UI/Button/Button";
+import ButtonOutlined from "../../UI/ButtonOutlined/ButtonOutlined";
 
 export default function Profile() {
   return (
+    <>
     <Carousel
       arrows
       centerMode={false}
@@ -138,6 +141,10 @@ export default function Profile() {
         path={"/galaxybuds.webp"}
       />
     </Carousel>
+
+      <ButtonOutlined value = "Dario"/>
+    
+    </>
   );
 }
 
