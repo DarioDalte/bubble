@@ -251,17 +251,17 @@ export default function CustomizedSteppers() {
         <h3 className={classes.title}>Sei un&apos;azienda?</h3>
         <div className={classes["btn-container"]}>
           <ButtonOutlined
-            value={"No"}
-            className={classes.red}
-            onClick={() => {
-              setPrivateUser(true);
-            }}
-          />
-          <ButtonOutlined
             value={"Si"}
             className={classes.green}
             onClick={() => {
               setPrivateUser(false);
+            }}
+          />
+          <ButtonOutlined
+            value={"No"}
+            className={classes.red}
+            onClick={() => {
+              setPrivateUser(true);
             }}
           />
         </div>
@@ -283,9 +283,7 @@ export default function CustomizedSteppers() {
         ))}
       </Stepper>
       {activeStep === steps.length ? (
-        <React.Fragment>
-          Dati inviati correttamente
-        </React.Fragment>
+        <React.Fragment>Dati inviati correttamente</React.Fragment>
       ) : (
         <React.Fragment>
           <div className={classes.container}>
@@ -296,7 +294,7 @@ export default function CustomizedSteppers() {
                 <>
                   <TextField
                     id="outlined-basic"
-                    label="Name"
+                    label="Nome"
                     variant="outlined"
                     className={classes.input}
                     value={enteredName}
@@ -328,7 +326,7 @@ export default function CustomizedSteppers() {
                     onFocus={passwordFocusHandler}
                   />
                   <PasswordTextField
-                    text="Conferma"
+                    text="Conferma password"
                     value={enteredVerifyPassword}
                     className={classes.input}
                     onChange={verifyPasswordHandler}
@@ -341,7 +339,7 @@ export default function CustomizedSteppers() {
 
               {activeStep === 1 && (
                 <div className={classes["input-container"]}>
-                  <CountrySelect className={classes.input}/>
+                  <CountrySelect className={classes.input} />
                 </div>
               )}
             </div>
@@ -359,14 +357,11 @@ export default function CustomizedSteppers() {
 
               <Button
                 disabled={
-                  (
-                    nameIsValid &&
-                    emailIsValid &&
-                    passwordIsValid &&
-                    verifyPasswordIsValid
-                  )
+                  nameIsValid &&
+                  emailIsValid &&
+                  passwordIsValid &&
+                  verifyPasswordIsValid
                 }
-                
                 onClick={handleNext}
               >
                 {activeStep === steps.length - 1 ? "Invia" : "Avanti"}

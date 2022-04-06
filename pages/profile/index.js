@@ -5,12 +5,27 @@ import { signIn, getSession } from "next-auth/client";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Card from "../../UI/Card/Card";
+
+import { useState } from "react";
+import Link from "next/link";
+
+
 import Button from "../../UI/Button/Button";
 import ButtonOutlined from "../../UI/ButtonOutlined/ButtonOutlined";
+import BottomNav from "../../components/BottomNav/BottomNav";
+
+
+
 
 export default function Profile() {
   return (
+
+  
     <>
+      <ButtonOutlined value = "Bottone1"/>
+      <ButtonOutlined value = "Bottone2"/>
+      <ButtonOutlined value = "Bottone3"/>
+      <ButtonOutlined value = "Bottone4"/>
     <Carousel
       arrows
       centerMode={false}
@@ -142,8 +157,7 @@ export default function Profile() {
       />
     </Carousel>
 
-      <ButtonOutlined value = "Dario"/>
-    
+        
     </>
   );
 }

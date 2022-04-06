@@ -45,7 +45,7 @@ function PasswordTextField(props) {
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
+        label={props.text}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             props.onEnter();
