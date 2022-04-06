@@ -1,5 +1,9 @@
 import { hashPassowrd, verifyPassword } from "./middlewares/auth.js";
 const databaseConnection = require("./middlewares/database.js");
+const EmailTemplate = require("email-templates").EmailTemplate;
+const nodemailer = require("nodemailer");
+const hbs = require("nodemailer-express-handlebars");
+const path = require("path");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -52,7 +56,43 @@ export default async function handler(req, res) {
 
     const collection = db.collection("users"); //Select collection users
 
-    users = await collection.insertOne(oggetto); //Insert into users obj
+    //users = await collection.insertOne(oggetto); //Insert into users obj
+
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "bubblebubbleproject@gmail.com",
+        pass: "Bubble123!",
+      },
+    });
+
+    const handlebarOptions = {
+      viewEngine: {
+        partialsDir: path.resolve("./pages/temp1/"),
+        defaultLayout: false,
+      },
+      viewPath: path.resolve("./pages/temp1"),
+    };
+    transporter.use("compile", hbs(handlebarOptions));
+
+    let mailOption = {
+      from: "bubblebubbleproject@gmail.com",
+      to: email,
+      subject: "Welcome",
+      template: "email",
+      context: {
+        name: "Adebola", // replace {{name}} with Adebola
+        company: "My Company", // replace {{company}} with My Company
+      },
+    };
+
+    transporter.sendMail(mailOption, function (err, success) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Email inviata");
+      }
+    });
 
     res.json({ message: "Regsitrazione effettuata con successo" });
   } finally {
