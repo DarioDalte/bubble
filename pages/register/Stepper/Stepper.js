@@ -102,15 +102,21 @@ export default function CustomizedSteppers() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [privateUser, setPrivateUser] = React.useState(null);
+  const [inputFocussing, setInputFocussing] = React.useState(false);
+  const isMobile = useMediaQuery("(max-width:47rem)");
   const regExpL = /[A-Z]/g;
   const regExpN = /[0-9]/g;
   const regExpM = /[a-z]/g;
   const regExpML = /[a-zA-z]/g;
 
-  let steps = ["Anagrafica", "Residenza", "Metodo di pagamento"];
+  let steps = [
+    "Anagrafica",
+    "Indirizzo di fatturazione",
+    "Metodo di pagamento",
+  ];
 
   if (!privateUser) {
-    steps = ["Anagrafica", "Dati aziendali"];
+    steps = ["Anagrafica", "Dati aziendali", "Indirizzo sede legale"];
   }
 
   const {
@@ -155,6 +161,10 @@ export default function CustomizedSteppers() {
       regExpM.test(password)
   );
 
+  const focusBlurHandler = () => {
+    setInputFocussing((focussing) => !focussing);
+  };
+
   //!Problema con:
   /**
    * password.trim().length >= 6 &&
@@ -173,6 +183,57 @@ export default function CustomizedSteppers() {
     reset: verifyPasswordReset,
     focussing: verifyPasswordFocussing,
   } = useInput((verifyPassword) => verifyPassword === enteredPassword);
+
+  const {
+    value: enteredCity,
+    valueIsValid: cityIsValid,
+    hasError: cityHasError,
+    valueHandler: cityHandler,
+    inputBlur: cityBlurHandler,
+    inputFocus: cityFocusHandler,
+    reset: cityReset,
+    focussing: cityFocussing,
+  } = useInput((city) => city.trim().length >= 4 && !regExpN.test(city));
+
+  const {
+    value: enteredCap,
+    valueIsValid: capIsValid,
+    hasError: capHasError,
+    valueHandler: capHandler,
+    inputBlur: capBlurHandler,
+    inputFocus: capFocusHandler,
+    reset: capReset,
+    focussing: capFocussing,
+  } = useInput((cap) => cap.trim().length === 5);
+
+  const {
+    value: enteredProvincia,
+    valueIsValid: provinciaIsValid,
+    hasError: provinciaHasError,
+    valueHandler: provinciaHandler,
+    inputBlur: provinciaBlurHandler,
+    inputFocus: provinciaFocusHandler,
+    reset: provinciaReset,
+    focussing: provinciaFocussing,
+  } = useInput(
+    (provincia) => provincia.trim().length >= 4 && !regExpN.test(provincia)
+  );
+
+  const {
+    value: enteredAddress,
+    valueIsValid: addressIsValid,
+    hasError: addressHasError,
+    valueHandler: addressHandler,
+    inputBlur: addressBlurHandler,
+    inputFocus: addressFocusHandler,
+    reset: addressReset,
+    focussing: addressFocussing,
+  } = useInput(
+    (address) =>
+      address.trim().length >= 5 &&
+      regExpML.test(address) &&
+      regExpN.test(address)
+  );
 
   const loginHandler = async (e) => {
     if (e) {
@@ -248,20 +309,20 @@ export default function CustomizedSteppers() {
   if (privateUser === null) {
     return (
       <div className={classes["intro-container"]}>
-        <h3 className={classes.title}>Sei un&apos;azienda?</h3>
+        <h3 className={classes.title}>Tipologia di account</h3>
         <div className={classes["btn-container"]}>
           <ButtonOutlined
-            value={"Si"}
-            className={classes.green}
-            onClick={() => {
-              setPrivateUser(false);
-            }}
-          />
-          <ButtonOutlined
-            value={"No"}
+            value={"Privato"}
             className={classes.red}
             onClick={() => {
               setPrivateUser(true);
+            }}
+          />
+          <ButtonOutlined
+            value={"Aziendale"}
+            className={classes.green}
+            onClick={() => {
+              setPrivateUser(false);
             }}
           />
         </div>
@@ -293,8 +354,7 @@ export default function CustomizedSteppers() {
               {activeStep === 0 && (
                 <>
                   <TextField
-                    id="outlined-basic"
-                    label="Nome"
+                    label={privateUser ? "Nome e cognome" : "Nome mostrato"}
                     variant="outlined"
                     className={classes.input}
                     value={enteredName}
@@ -302,10 +362,10 @@ export default function CustomizedSteppers() {
                     onBlur={nameBlurHandler}
                     error={nameHasError}
                     onFocus={nameFocusHandler}
+                    required
                   />
 
                   <TextField
-                    id="outlined-basic"
                     label="Email"
                     variant="outlined"
                     className={classes.input}
@@ -314,6 +374,7 @@ export default function CustomizedSteppers() {
                     onBlur={emailBlurHandler}
                     error={emailHasError}
                     onFocus={emailFocusHandler}
+                    required
                   />
 
                   <PasswordTextField
@@ -324,6 +385,7 @@ export default function CustomizedSteppers() {
                     onBlur={passwordBlurHandler}
                     error={passwordHasError}
                     onFocus={passwordFocusHandler}
+                    required={true}
                   />
                   <PasswordTextField
                     text="Conferma password"
@@ -333,40 +395,119 @@ export default function CustomizedSteppers() {
                     onBlur={verifyPasswordBlurHandler}
                     error={verifyPasswordHasError}
                     onFocus={verifyPasswordFocusHandler}
+                    required={true}
                   />
                 </>
               )}
 
-              {activeStep === 1 && (
-                <div className={classes["input-container"]}>
-                  <CountrySelect className={classes.input} />
+              {((activeStep === 2 && !privateUser) ||
+                (activeStep === 1 && privateUser)) && (
+                <>
+                  <CountrySelect
+                    classes={classes["input-address"]}
+                    onFocus={focusBlurHandler}
+                    onBlur={focusBlurHandler}
+                    required={!privateUser}
+
+                  />
+
+                  <div className={classes["input-same-line"]}>
+                    <TextField
+                      label={"Città"}
+                      variant="outlined"
+                      className={classes.city}
+                      value={enteredCity}
+                      onChange={cityHandler}
+                      onBlur={cityBlurHandler}
+                      error={!privateUser ? cityHasError : false}
+                      onFocus={cityFocusHandler}
+                      required={!privateUser}
+                    />
+
+                    <TextField
+                      className={classes["cap"]}
+                      label="Cap"
+                      variant="outlined"
+                      type={"number"}
+                      length={5}
+                      onInput={(e) => {
+                        e.target.value = Math.max(0, parseInt(e.target.value))
+                          .toString()
+                          .slice(0, 5);
+                      }}
+                      value={enteredCap}
+                      onChange={capHandler}
+                      onBlur={capBlurHandler}
+                      error={!privateUser ? capHasError : false}
+                      onFocus={capFocusHandler}
+                      required={!privateUser}
+                    />
+                  </div>
+                  <TextField
+                    className={classes["input-address"]}
+                    label="Provincia"
+                    variant="outlined"
+                    value={enteredProvincia}
+                    onChange={provinciaHandler}
+                    onBlur={provinciaBlurHandler}
+                    error={!privateUser ? provinciaHasError : false}
+                    onFocus={provinciaFocusHandler}
+                    required={!privateUser}
+                  />
+                  <TextField
+                    className={classes["input-address"]}
+                    label="Via e civico"
+                    variant="outlined"
+                    value={enteredAddress}
+                    onChange={addressHandler}
+                    onBlur={addressBlurHandler}
+                    error={!privateUser ? addressHasError : false}
+                    onFocus={addressFocusHandler}
+                    required={!privateUser}
+                  />
+                </>
+              )}
+            </div>
+
+            {(isMobile ? !emailFocussing : true) &&
+              (isMobile ? !passwordFocussing : true) &&
+              (isMobile ? !nameFocussing : true) &&
+              (isMobile ? !verifyPasswordFocussing : true) &&
+              (isMobile ? !cityFocussing : true) &&
+              (isMobile ? !capFocussing : true) &&
+              (isMobile ? !addressFocussing : true) &&
+              (isMobile ? !provinciaFocussing : true) &&
+              (isMobile ? !inputFocussing : true) && (
+                <div className={classes["footer"]}>
+                  <Button color="inherit" onClick={handleBack}>
+                    Indietro
+                  </Button>
+                  <Button
+                    disabled={
+                      activeStep === 0
+                        ? !(
+                            nameIsValid &&
+                            emailIsValid &&
+                            passwordIsValid &&
+                            verifyPasswordIsValid
+                          )
+                        : activeStep === 1
+                        ? false
+                        : privateUser
+                        ? false
+                        : !(
+                            cityIsValid &&
+                            capIsValid &&
+                            provinciaIsValid &&
+                            addressIsValid
+                          )
+                    }
+                    onClick={handleNext}
+                  >
+                    {activeStep === steps.length - 1 ? "Invia" : "Avanti"}
+                  </Button>
                 </div>
               )}
-            </div>
-
-            <div className={classes["footer"]}>
-              <Button color="inherit" onClick={handleBack}>
-                Indietro
-              </Button>
-
-              {privateUser && isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Salta
-                </Button>
-              )}
-
-              <Button
-                disabled={
-                  nameIsValid &&
-                  emailIsValid &&
-                  passwordIsValid &&
-                  verifyPasswordIsValid
-                }
-                onClick={handleNext}
-              >
-                {activeStep === steps.length - 1 ? "Invia" : "Avanti"}
-              </Button>
-            </div>
           </div>
         </React.Fragment>
       )}

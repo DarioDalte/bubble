@@ -5,9 +5,9 @@ import { IconButton} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 
-function BackArrow() {
+function BackArrow(props) {
   return (
-    <Link href={'/'} passHref>
+    <Link href={props.path ? props.path : '/'} passHref>
         <IconButton className={classes["arrow-container"]}>
           <ArrowBackIcon className={classes.arrow} />
         </IconButton>

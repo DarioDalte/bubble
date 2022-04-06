@@ -22,11 +22,10 @@ function PasswordTextField(props) {
   };
   return (
     <FormControl variant="outlined" className={props.className}>
-      <InputLabel htmlFor="outlined-adornment-password" error={props.error}>
+      <InputLabel htmlFor="outlined-adornment-password" error={props.error} required={props.required}>
         {props.text}
       </InputLabel>
       <OutlinedInput
-        id="outlined-adornment-password"
         type={values.showPassword ? "text" : "password"}
         value={props.value}
         onChange={props.onChange}

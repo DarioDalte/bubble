@@ -7,7 +7,10 @@ export default function CountrySelect(props) {
   return (
     <Autocomplete
       id="country-select-demo"
-      sx={{ width: '120%' }}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
+      className={props.classes}
+      
       options={countries}
       autoHighlight
       getOptionLabel={(option) => option.label}
@@ -31,6 +34,7 @@ export default function CountrySelect(props) {
             ...params.inputProps,
             autoComplete: 'new-password', // disable autocomplete and autofill
           }}
+          required={props.required}
         />
       )}
     />
