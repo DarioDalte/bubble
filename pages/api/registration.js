@@ -56,7 +56,7 @@ export default async function handler(req, res) {
 
     const collection = db.collection("users"); //Select collection users
 
-    //users = await collection.insertOne(oggetto); //Insert into users obj
+    users = await collection.insertOne(oggetto); //Insert into users obj
 
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -68,10 +68,10 @@ export default async function handler(req, res) {
 
     const handlebarOptions = {
       viewEngine: {
-        partialsDir: path.resolve("./pages/temp1/"),
+        partialsDir: path.resolve("./pages/welcome/"),
         defaultLayout: false,
       },
-      viewPath: path.resolve("./pages/temp1"),
+      viewPath: path.resolve("./pages/welcome"),
     };
     transporter.use("compile", hbs(handlebarOptions));
 
