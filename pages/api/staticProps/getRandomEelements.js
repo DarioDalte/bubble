@@ -97,7 +97,7 @@ module.exports = async function (db) {
           cart.push(oggetto);
           b = 1;
 
-          if (cart.length == 5) {
+          if (cart.length == 8) {
             break;
           }
         }

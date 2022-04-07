@@ -1,5 +1,8 @@
 import { hashPassowrd, verifyPassword } from "./middlewares/auth.js";
 const databaseConnection = require("./middlewares/database.js");
+const nodemailer = require("nodemailer");
+const hbs = require("nodemailer-express-handlebars");
+const path = require("path");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -47,6 +50,42 @@ export default async function handler(req, res) {
         var myquery = { email: data.email };
         var newvalues = { $set: { password: encrypted_password } };
         await collection.updateOne(myquery, newvalues);
+
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "bubblebubbleproject@gmail.com",
+            pass: "Bubble123!",
+          },
+        });
+
+        const handlebarOptions = {
+          viewEngine: {
+            partialsDir: path.resolve("./pages/modificare_dati/"),
+            defaultLayout: false,
+          },
+          viewPath: path.resolve("./pages/modificare_dati"),
+        };
+        transporter.use("compile", hbs(handlebarOptions));
+
+        let mailOption = {
+          from: "bubblebubbleproject@gmail.com",
+          to: users[0]["email"],
+          subject: "Modifica",
+          template: "email",
+          context: {
+            name: users[0]["name"], // replace {{name}} with Adebola
+            company: "Bubble", // replace {{company}} with My Company
+          },
+        };
+
+        transporter.sendMail(mailOption, function (err, success) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("Email inviata");
+          }
+        });
 
         res.status(422).json({
           message: "Account modificato",
