@@ -1,6 +1,8 @@
 import classes from "./Stepper.module.scss";
 import * as React from "react";
 import PropTypes from "prop-types";
+import axios from 'axios'
+
 import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Stepper from "@mui/material/Stepper";
@@ -161,6 +163,31 @@ export default function CustomizedSteppers() {
       regExpM.test(password)
   );
 
+  const {
+    value: enteredRagioneSociale,
+    valueIsValid: ragioneSocialeIsValid,
+    hasError: ragioneSocialeHasError,
+    valueHandler: ragioneSocialeHandler,
+    inputBlur: ragioneSocialeBlurHandler,
+    inputFocus: ragioneSocialeFocusHandler,
+    reset: ragioneSocialeReset,
+    focussing: ragioneSocialeFocussing,
+  } = useInput(
+    (ragioneSociale) =>
+      regExpML.test(ragioneSociale) && ragioneSociale.trim().length >= 5
+  );
+
+  const {
+    value: enteredPIva,
+    valueIsValid: pIvaIsValid,
+    hasError: pIvaHasError,
+    valueHandler: pIvaHandler,
+    inputBlur: pIvaBlurHandler,
+    inputFocus: pIvaFocusHandler,
+    reset: pIvaReset,
+    focussing: pIvaFocussing,
+  } = useInput((pIva) => regExpN.test(pIva) && pIva.trim().length === 11);
+
   const focusBlurHandler = () => {
     setInputFocussing((focussing) => !focussing);
   };
@@ -270,13 +297,32 @@ export default function CustomizedSteppers() {
 
   const handleNext = () => {
     let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
+    console.log("TEST");
+    if (activeStep === steps.length - 1) {
+      let data = {};
+      if (privateUser) {
+        data = {
+          name: enteredName,
+          password: enteredPassword,
+          email: enteredEmail,
+        };
+      }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+        axios.post(`/api/registration`, data)
+          .then(res => {
+            console.log(res.data);
+          })
+      
+
+    } else {
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
+
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+    }
   };
 
   const handleBack = () => {
@@ -400,6 +446,41 @@ export default function CustomizedSteppers() {
                 </>
               )}
 
+              {activeStep == 1 && !privateUser && (
+                <>
+                  {" "}
+                  <TextField
+                    className={classes["input-address"]}
+                    label="Ragione sociale"
+                    variant="outlined"
+                    value={enteredRagioneSociale}
+                    onChange={ragioneSocialeHandler}
+                    onBlur={ragioneSocialeBlurHandler}
+                    error={!privateUser ? ragioneSocialeHasError : false}
+                    onFocus={ragioneSocialeFocusHandler}
+                    required={!privateUser}
+                  />
+                  <TextField
+                    className={classes["input-address"]}
+                    label="Partita Iva"
+                    variant="outlined"
+                    value={enteredPIva}
+                    onChange={pIvaHandler}
+                    onBlur={pIvaBlurHandler}
+                    error={!privateUser ? pIvaHasError : false}
+                    onFocus={pIvaFocusHandler}
+                    required={!privateUser}
+                    type={"number"}
+                    length={5}
+                    onInput={(e) => {
+                      e.target.value = Math.max(0, parseInt(e.target.value))
+                        .toString()
+                        .slice(0, 11);
+                    }}
+                  />
+                </>
+              )}
+
               {((activeStep === 2 && !privateUser) ||
                 (activeStep === 1 && privateUser)) && (
                 <>
@@ -408,7 +489,6 @@ export default function CustomizedSteppers() {
                     onFocus={focusBlurHandler}
                     onBlur={focusBlurHandler}
                     required={!privateUser}
-
                   />
 
                   <div className={classes["input-same-line"]}>
@@ -492,15 +572,17 @@ export default function CustomizedSteppers() {
                             verifyPasswordIsValid
                           )
                         : activeStep === 1
-                        ? false
-                        : privateUser
-                        ? false
-                        : !(
+                        ? !privateUser
+                          ? !(ragioneSocialeIsValid && pIvaIsValid)
+                          : false
+                        : activeStep === 2 && !privateUser
+                        ? !(
                             cityIsValid &&
                             capIsValid &&
                             provinciaIsValid &&
                             addressIsValid
                           )
+                        : false
                     }
                     onClick={handleNext}
                   >
