@@ -58,6 +58,23 @@ module.exports = async function (db) {
 
     var prodotti = await db.collection("products").find().toArray(); //Selects documents from collection products
     const numero_prodotti = await db.collection("products").countDocuments(); //Selects documents from collection products
+    var recensioni = await db.collection("reviews").find().toArray(); //Selects documents from collection reviews
+    var elenco_recensioni = []; //Declare and initialize elenco_recensioni
+    var obj_recensioni = {}; //Declare and initialize obj_recensioni
+
+    for (var i = 0; i < recensioni.length; i++) {
+      let id = recensioni[i]["id_product"]
+        .toString()
+        .replace(/ObjectId\("(.*)"\)/, "$1");
+      obj_recensioni = {
+        id_prodotti: id,
+        value: recensioni[i]["value"],
+      };
+      elenco_recensioni.push(obj_recensioni);
+    }
+
+    console.log("ELENCO ReCENSIONI");
+    console.log(elenco_recensioni);
 
     let oggetto = {};
 
@@ -72,6 +89,7 @@ module.exports = async function (db) {
      * if b is 1 assing 0 to b and then add the array to obj oggett_da_mandare and then add this obj
      * in elementi_random
      */
+    console.log("ciao");
     for (var d = 0; d < id_categorie.length; d++) {
       var id_categoria = id_categorie[d];
       var nome_categoria = await db
@@ -81,18 +99,41 @@ module.exports = async function (db) {
       nome_categoria = nome_categoria[0]["category"];
       id_categoria = String(id_categorie[d]);
       var i = 0;
+      var t = 0;
       /***
        * flows prodotti, takes the product category
        * compare ids and if they are equals then add the information of product in obj oggetto
        * and add this obj to array cart and assing 1 to b
        */
+      var media;
+      var somma_recensioni = 0;
+      var cont = 0;
+      console.log("ciao");
+      while (t < numero_prodotti) {
+        console.log("ciao");
+        var id_prod = prodotti[t]["category"];
+        if (id_prod == id_categoria) {
+          for (var b = 0; b < elenco_recensioni.length; b++) {
+            var singola_recensione = elenco_recensioni[b];
+            var id_prodotto_recensito = singola_recensione["id_prodotti"];
+            if (id_prodotto == id_prodotto_recensito) {
+              somma_recensioni = somma_recensioni + singola_recensione["value"];
+              cont++;
+            }
+          }
+          media = somma_recensioni / cont;
+        }
+      }
+
       while (i < numero_prodotti) {
         var id_prod = prodotti[i]["category"];
+
         if (id_prod == id_categoria) {
           oggetto = {
             brand: prodotti[i]["brand"],
             name: prodotti[i]["name"],
             price: prodotti[i]["price"],
+            star: media ? media : 0,
           };
           cart.push(oggetto);
           b = 1;
