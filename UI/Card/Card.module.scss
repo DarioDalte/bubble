@@ -22,18 +22,28 @@
   .title {
     font-size: 1.1rem;
     font-weight: 600;
+
+    @media (max-width: 25rem) {
+      font-size: .9rem;
+    }
   }
 
   .subtitle {
     margin-top: 0.1rem;
     margin-bottom: 0.5rem;
     color: #0000009f;
+    @media (max-width: 25rem) {
+      font-size: .7rem;
+    }
   }
 
   .price {
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.3rem;
+    @media (max-width: 25rem) {
+      font-size: .9rem;
+    }
   }
 
   @media (min-width: 35rem) {
@@ -54,12 +64,31 @@
       .star {
         margin: 0 !important;
         font-size: 1.4rem;
+
+
+
+        @media (max-width: 25rem) {
+          font-size: 1.1rem;
+        }
+
+        @media (max-width: 21rem) {
+          font-size: 0.8rem;
+        }
       }
 
       .heart {
         color: #3669c9;
         cursor: pointer;
         //transition: all .3s;
+
+
+        @media (max-width: 25rem) {
+          font-size: 1.3rem;
+        }
+
+        @media (max-width: 21rem) {
+          font-size: 1.1rem;
+        }
       }
     }
   }

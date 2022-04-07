@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
 
   try {
-    var data = req.body; //Inserts the request data into the variable data
+    const data = req.body; //Inserts the request data into the variable data
     data.email = data.email.toLowerCase(); //Changes email to lowercase
 
     if (
@@ -27,16 +27,15 @@ export default async function handler(req, res) {
 
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    var users = await db
+    var user = await db
       .collection("users")
-      .find({ email: data.email })
-      .toArray(); //Selects documents from collection users
-    if (users.length == 0) {
-      data.password = await hashPassowrd(data.password); //encrypt the password
+      .findOne({ email: data.email })
 
+    if (!user) {
+      data.password = await hashPassowrd(data.password); //encrypt the password
       const collection = db.collection("users"); //Select collection users
 
-      users = await collection.insertOne(data); //Insert into users obj
+      await collection.insertOne(data); //Insert into users obj
 
       let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -74,10 +73,12 @@ export default async function handler(req, res) {
         }
       });
 
-      res.json({ message: "Regsitrazione effettuata con successo" });
+      res
+        .status(201)
+        .json({ message: "Registrazione effettuata con successo", status: 1 });
       return;
     } else {
-      res.json({ message: "Utente gia registrato" });
+      res.status(200).json({ message: "Utente già registrato!", status: 0 });
     }
   } finally {
     // Close the connection to the MongoDB cluster

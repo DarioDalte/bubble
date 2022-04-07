@@ -5,6 +5,7 @@ import Card from "../../../UI/Card/Card";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Carousel from "../../../UI/Carousel/Carousel";
 
 function BestSeller(props) {
   const bestSellers = props.bestSeller;
@@ -33,10 +34,10 @@ function BestSeller(props) {
         </div>
       </div>
 
-      <div className={classes["scrolling-wrapper"]}>
+      <Carousel>
         {bestSellers.slice(1).map((bestSeller, i) => (
           <Card
-            className={!isMobile && classes['card-desktop']}
+            className={!isMobile && classes["card-desktop"]}
             key={i}
             name={bestSeller.name}
             price={bestSeller.price}
@@ -45,7 +46,9 @@ function BestSeller(props) {
             path={"/galaxybuds.webp"}
           />
         ))}
-      </div>
+      </Carousel>
+
+
     </div>
   );
 }

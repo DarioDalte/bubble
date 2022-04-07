@@ -1,7 +1,7 @@
 import BackArrow from "../../UI/BackArrow/BackArrow";
 import CustomizedSteppers from "./Stepper/Stepper";
 
-import { signIn, getSession } from "next-auth/client";
+import {getSession } from "next-auth/client";
 
 
 export default function Register(props) {
@@ -10,7 +10,6 @@ export default function Register(props) {
     <>
       <BackArrow path={props.prevPath} />
       <CustomizedSteppers/>
- 
     </>
   );
 }

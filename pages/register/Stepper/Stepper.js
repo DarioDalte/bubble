@@ -1,29 +1,30 @@
 import classes from "./Stepper.module.scss";
+
 import * as React from "react";
 import PropTypes from "prop-types";
-import axios from 'axios'
+import axios from "axios";
+import { signIn } from "next-auth/client";
+import { useRouter } from "next/router";
 
 import { styled } from "@mui/material/styles";
-import Stack from "@mui/material/Stack";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import {
+  Stack,
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
+  useMediaQuery,
+  TextField,
+} from "@mui/material";
 import Check from "@mui/icons-material/Check";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-
-import useInput from "../../../components/hooks/use-input";
-import ButtonFilled from "../../../UI/Button/Button";
-import PasswordTextField from "../../../UI/PasswordTextField/PasswordTextField";
-import Loading from "../../../UI/Loading/Loading";
-import ButtonOutlined from "../../../UI/ButtonOutlined/ButtonOutlined";
-
-import { useMediaQuery, TextField } from "@mui/material";
-
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
+
+import useInput from "../../../components/hooks/use-input";
+import PasswordTextField from "../../../UI/PasswordTextField/PasswordTextField";
+import Loading from "../../../UI/Loading/Loading";
+import ButtonOutlined from "../../../UI/ButtonOutlined/ButtonOutlined";
 import CountrySelect from "../../../UI/CountrySelector/CountrySelectro";
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
@@ -103,8 +104,11 @@ QontoStepIcon.propTypes = {
 export default function CustomizedSteppers() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [msgError, setMsgError] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const [privateUser, setPrivateUser] = React.useState(null);
   const [inputFocussing, setInputFocussing] = React.useState(false);
+  const router = useRouter();
   const isMobile = useMediaQuery("(max-width:47rem)");
   const regExpL = /[A-Z]/g;
   const regExpN = /[0-9]/g;
@@ -262,28 +266,19 @@ export default function CustomizedSteppers() {
       regExpN.test(address)
   );
 
-  const loginHandler = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    emailBlurHandler();
-    passwordBlurHandler();
+  const login = async () => {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: enteredEmail,
+      password: enteredPassword,
+    });
 
-    if (passwordIsValid && emailIsValid) {
-      setIsLoading(true);
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: enteredEmail,
-        password: enteredPassword,
-      });
-
-      if (!result.error) {
-        setMsgError("");
-        router.push("../");
-      } else {
-        setMsgError(result.error);
-        setIsLoading(false);
-      }
+    if (!result.error) {
+      setMsgError("");
+      router.push("../");
+    } else {
+      setMsgError(result.error);
+      setIsLoading(false);
     }
   };
 
@@ -297,23 +292,45 @@ export default function CustomizedSteppers() {
 
   const handleNext = () => {
     let newSkipped = skipped;
-    console.log("TEST");
+
     if (activeStep === steps.length - 1) {
+      setIsLoading(true);
       let data = {};
+      let address = {};
       if (privateUser) {
+        address = {
+          city: enteredCity,
+          cap: enteredCap,
+          province: enteredProvincia,
+          street: enteredAddress,
+        };
+
+        address = Object.fromEntries(
+          Object.entries(address).filter(([_, v]) => v != "")
+        );
+
         data = {
           name: enteredName,
           password: enteredPassword,
           email: enteredEmail,
+          address: address,
         };
       }
 
-        axios.post(`/api/registration`, data)
-          .then(res => {
-            console.log(res.data);
-          })
-      
-
+      data = Object.fromEntries(
+        Object.entries(data).filter(
+          ([_, v]) => v != "" && JSON.stringify(v) != "{}"
+        )
+      );
+      axios.post(`/api/registration`, data).then((res) => {
+        if (!res.data.status) {
+          setMsgError(res.data.message);
+          setActiveStep(0);
+          setIsLoading(false);
+        } else {
+          login();
+        }
+      });
     } else {
       if (isStepSkipped(activeStep)) {
         newSkipped = new Set(newSkipped.values());
@@ -394,13 +411,17 @@ export default function CustomizedSteppers() {
       ) : (
         <React.Fragment>
           <div className={classes.container}>
-            <h3 className={classes.title}>{steps[activeStep]}</h3>
+            <Loading open={isLoading} />
+            <h2 className={classes.title}>{steps[activeStep]}</h2>
+            {msgError && activeStep === 0 && (
+              <h3 className={classes.error}>{msgError}</h3>
+            )}
 
             <div className={classes["input-container"]}>
               {activeStep === 0 && (
                 <>
                   <TextField
-                    label={privateUser ? "Nome e cognome" : "Nome mostrato"}
+                    label={privateUser ? "Nome completo" : "Nome mostrato"}
                     variant="outlined"
                     className={classes.input}
                     value={enteredName}
