@@ -18,23 +18,44 @@
     margin: 2.5rem auto !important;
     justify-content: center;
     flex-direction: column;
+    max-width: 40rem;
 
-    .input-container{
+    .input-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin: 1rem auto;
-  
-        width: 80%;
+        margin: 2rem auto;
+        gap: 2rem;
+        width: 100%;
+
         .input {
-            width: 100%;
-            margin: 1rem 0;
-          }
-    
+            width: 90%;
+        }
+
+        .input-address {
+            width: 90%;
+        }
+
+
+
+        .input-same-line {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+
+            .city {
+                width: 60%;
+            }
+
+            .cap {
+                width: 33% !important;
+            }
+        }
+
     }
 
-    
+
 
 
 
@@ -49,30 +70,38 @@
 
     display: flex;
     justify-content: center;
+    gap: 2rem;
 
     .red,
     .green {
         transition: all .3s;
-        width: 3.75rem;
         margin-top: 3rem;
+        width: 30%;
+
+        max-width: 115px;
     }
 
-    .red {
-        margin-left: 1rem;
-    }
 
-    .green {
-        margin-right: 1rem;
 
-    }
+
 }
 
-.footer{
+.footer {
     display: flex;
     justify-content: center;
     position: fixed;
-    bottom: 3%;
     left: 0;
+
     width: 100%;
+
+    @media (min-width: 30rem) {
+        bottom: 20%;
+
+    }
+
+    @media (max-height: 49rem) {
+        bottom: 2%;
+
+    }
 
 }
