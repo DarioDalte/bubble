@@ -12,7 +12,7 @@ const RandomElements = (props) => {
       {props.randomElements.map((category, i) => (
         <div key={i} className={classes["category-container"]}>
           <span className={classes.text}>{category.categoria}</span>
-          <Carousel>
+          <Carousel isMobile={isMobile}>
             {category.prodotti.map((element, i) => {
               console.log(i);
               return (

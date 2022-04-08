@@ -24,7 +24,7 @@ function BottomNav(props) {
         setNavValue(newValue);
       }}
     >
-      <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+      <BottomNavigationAction label="Home" icon={<HomeIcon />} href="/" />
       <BottomNavigationAction label="Wishlist" icon={<FavoriteIcon />} />
       <BottomNavigationAction label="Ordini" icon={<ShoppingBagIcon />} />
 

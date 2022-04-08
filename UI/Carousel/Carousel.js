@@ -17,6 +17,7 @@ function Carousel(props) {
       renderButtonGroupOutside={true}
       renderDotsOutside={false}
       itemClass={classes.item}
+      removeArrowOnDeviceType={["mobile"]}
       responsive={{
         desktop: {
           breakpoint: {
@@ -42,7 +43,7 @@ function Carousel(props) {
           items: 3,
           slidesToSlide: 3
         },
-        tablet3: {
+        mobile: {
           breakpoint: {
             max: 570,
             min: 0,

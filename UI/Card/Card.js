@@ -24,8 +24,8 @@ function Card(props) {
         layout='responsive'
       ></Image>
       <div className={classes.container}>
-        <span className={classes.title}>{props.name}</span>
-        <span className={classes.subtitle}>{props.brand}</span>
+        <span className={classes.title}>{props.name.charAt(0).toUpperCase() + props.name.slice(1)}</span>
+        <span className={classes.subtitle}>{props.brand.charAt(0).toUpperCase() + props.brand.slice(1)}</span>
         <span className={classes.price}>€ {props.price}</span>
         <div className={classes.footer}>
           <Rating

@@ -1,25 +1,19 @@
 import classes from "./profile.module.scss";
-import { useRouter } from "next/router";
-import { signIn, getSession } from "next-auth/client";
-
+import { useState, useEffect } from "react";
+import { getSession } from "next-auth/client";
 
 import "react-multi-carousel/lib/styles.css";
-import Card from "../../UI/Card/Card";
-
-import { useState, useEffect} from "react";
-import Link from "next/link";
-
-import Button from "../../UI/Button/Button";
-import ButtonOutlined from "../../UI/ButtonOutlined/ButtonOutlined";
 import BottomNav from "../../components/BottomNav/BottomNav";
 
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-
+import Link from "next/link";
 
 export default function Profile() {
+  const isMobile = useMediaQuery("(max-width:47rem)");
 
-  const [publishableKey, setPublishableKey] = useState('');
+  /** 
+  const [publishableKey, setPublishableKey] = useState("");
   useEffect(() => {
     fetch("api/keys", {
       method: "GET",
@@ -31,19 +25,21 @@ export default function Profile() {
       });
   }, []);
 
-  if(!publishableKey){
-    return 'Loading...';
+  if (!publishableKey) {
+    return "Loading...";
   }
 
-  const stripe = loadStripe(publishableKey);
+  const stripe = loadStripe(publishableKey);*/
   return (
     <>
-      
-      asd
+      {isMobile && <BottomNav navValue={3} />}
+      <Link href={'/'}>
+        <a>test</a>
+      </Link>
     </>
   );
 }
-
+/** 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
@@ -56,4 +52,4 @@ export async function getServerSideProps(context) {
     };
   }
   return { props: {} };
-}
+}*/
