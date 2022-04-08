@@ -18,9 +18,14 @@ const RandomElements = (props) => {
                 <Card
                   className={!isMobile && classes["card-desktop"]}
                   key={i}
-                  name={element.name}
+                  name={
+                    element.name.charAt(0).toUpperCase() + element.name.slice(1)
+                  }
                   price={element.price}
-                  brand={element.brand}
+                  brand={
+                    element.brand.charAt(0).toUpperCase() +
+                    element.brand.slice(1)
+                  }
                   star={0}
                   path={"/galaxybuds.webp"}
                 />

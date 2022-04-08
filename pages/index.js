@@ -1,3 +1,5 @@
+import { getSession } from "next-auth/client";
+
 import Header from "../components/Header/Header";
 import Main from "../components/Main/Main";
 import BottomNav from "../components/BottomNav/BottomNav";
@@ -9,7 +11,7 @@ export default function Home(props) {
 
   return (
     <>
-      <Header />
+      <Header session={props.session} />
 
       <Main
         bestSeller={props.bestSeller}
@@ -20,10 +22,11 @@ export default function Home(props) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   const databaseConnection = require("./api/middlewares/database.js");
   const getBestSeller = require("./api/staticProps/getBestSeller");
   const getRandomEelements = require("./api/staticProps/getRandomEelements");
+  const session = await getSession({ req: context.req });
 
   const client = await databaseConnection(); //Mi connetto al db
   await client.connect(); //istanza mongo client
@@ -38,6 +41,7 @@ export async function getStaticProps() {
     props: {
       bestSeller: bestSellers,
       randomElements: randomEelements,
+      session: session,
     }, // will be passed to the page component as props
   };
 }

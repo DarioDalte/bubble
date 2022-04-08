@@ -1,0 +1,52 @@
+.title {}
+
+.container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        width: 100%;
+    }
+
+
+}
+
+.button {
+    width: 40%;
+    max-width: 160px;
+}
+
+.body {
+
+    .title,
+    .subtitle {
+        color: #3669c9;
+        text-align: center;
+    }
+
+    .title{
+        font-size: 2.3rem;
+        margin-bottom: 2rem;
+    }
+
+    .subtitle{
+        font-weight: 600;
+    }
+
+    @media (min-width: 70rem) {
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        padding: 6rem 0;
+
+        border-radius: 12px;
+        width: 40%;
+        margin: 4rem auto;
+    }
+}

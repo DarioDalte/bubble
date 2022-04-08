@@ -25,7 +25,7 @@ function Carousel(props) {
             min: 1600,
           },
           items: 4,
-          slidesToSlide: 6
+          slidesToSlide: 2
         },
         miniDesktop: {
           breakpoint: {
@@ -33,7 +33,7 @@ function Carousel(props) {
             min: 1024,
           },
           items: 4,
-          slidesToSlide: 4
+          slidesToSlide: 2
         },
         miniTablet: {
           breakpoint: {

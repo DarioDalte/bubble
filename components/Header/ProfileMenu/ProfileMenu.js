@@ -11,12 +11,14 @@ function ProfileMenu(props) {
   const [session, status] = useSession();
 
 
+
+
   const logoutHandler = () => {
     signOut();
 
   };
 
-  //TODO: BORDER RADIUS primo e ultimo elemento del menu
+
   let content = (
     <>
       <Link href={"/login"}>
@@ -31,8 +33,8 @@ function ProfileMenu(props) {
   if (session) {
     content = (
       <>
-        <Link href={"/profile"}>
-          <a className={classes.item}>Profilo</a>
+        <Link href={"/account"}>
+          <a className={classes.item}>Account</a>
         </Link>
         <p className={classes.item}>Carrello</p>
         <p className={classes.item}>Wishlist</p>

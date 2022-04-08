@@ -19,16 +19,25 @@ export default NextAuth({
           email: credentials.email,
         });
 
-        if (!user) {
+        const companiesCollection = client.db().collection("companies");
+        const company = await companiesCollection.findOne({
+          email: credentials.email,
+        });
+
+        if (!user && !company) {
           client.close();
           throw new Error("Email o password errata!");
         }
 
-
-        const isValid = await verifyPassword(
-          credentials.password,
-          user.password
-        );
+        let isValid;
+        if (user) {
+          isValid = await verifyPassword(credentials.password, user.password);
+        } else {
+          isValid = await verifyPassword(
+            credentials.password,
+            company.password
+          );
+        }
 
         if (!isValid) {
           client.close();
@@ -36,7 +45,15 @@ export default NextAuth({
         }
 
         client.close();
-        return { email: user.email, name: user.name };
+        if (user) {
+          return { email: user.email, name: user.name };
+        } else {
+          return {
+            email: company.email,
+            name: company.name,
+            image: true,
+          };
+        }
       },
     }),
   ],

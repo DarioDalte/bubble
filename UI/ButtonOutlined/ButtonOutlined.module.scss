@@ -1,20 +1,18 @@
 .button {
-    padding: 0.7rem 1rem !important;
-    border-radius: 10px;
-    border: solid 2px #3669c9;;
+  padding: 0.7rem 1rem !important;
+  border-radius: 10px;
+  border: solid 2px #3669c9;
 
-    background-color: #ffffff;
-    font-weight: bold;
-    color: #3669c9;
-    cursor: pointer;
+  background-color: #ffffff;
+  font-weight: bold;
+  color: #3669c9;
+  cursor: pointer;
+  transition: all .5s;
 
-    gap: 0.5rem;
-  
-  
-  
-    &:hover {
-      background-color: #3669c9;
-      color: white;
-    }
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: #3669c9;
+    color: white;
   }
-  
+}

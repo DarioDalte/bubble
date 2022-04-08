@@ -2,6 +2,7 @@ import classes from "./Header.module.scss";
 import Link from "next/link";
 
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import AddIcon from "@mui/icons-material/Add";
 
 import Container from "@mui/material/Container";
 import SearchBar from "../../UI/SearchBar/SearchBar";
@@ -9,7 +10,7 @@ import SearchBar from "../../UI/SearchBar/SearchBar";
 import { IconButton, useMediaQuery } from "@mui/material";
 import ProfileMenu from "./ProfileMenu/ProfileMenu";
 
-function Header() {
+function Header(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
 
   return (
@@ -26,10 +27,16 @@ function Header() {
               iconClass={classes.icon}
             />
           )}
-
-          <IconButton className={classes["icon-button"]}>
-            <ShoppingCartOutlinedIcon className={classes.icon} />
-          </IconButton>
+          {(!props.session || !props.session.user.image) && (
+            <IconButton className={classes["icon-button"]}>
+              <ShoppingCartOutlinedIcon className={classes.icon} />
+            </IconButton>
+          )}
+          {props.session && props.session.user.image && (
+            <IconButton className={classes["icon-button"]}>
+              <AddIcon className={classes.icon} />
+            </IconButton>
+          )}
         </div>
       </header>
 

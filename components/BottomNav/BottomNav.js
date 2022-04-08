@@ -31,7 +31,7 @@ function BottomNav(props) {
       <BottomNavigationAction
         label="Profilo"
         icon={<PersonIcon />}
-        href="/profile"
+        href="/account"
       />
     </BottomNavigation>
   );
