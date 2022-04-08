@@ -297,31 +297,42 @@ export default function CustomizedSteppers() {
       setIsLoading(true);
       let data = {};
       let address = {};
-      if (privateUser) {
-        address = {
-          city: enteredCity,
-          cap: enteredCap,
-          province: enteredProvincia,
-          street: enteredAddress,
-        };
+      address = {
+        city: enteredCity,
+        cap: enteredCap,
+        province: enteredProvincia,
+        street: enteredAddress,
+      };
 
-        address = Object.fromEntries(
-          Object.entries(address).filter(([_, v]) => v != "")
-        );
+      address = Object.fromEntries(
+        Object.entries(address).filter(([_, v]) => v != "")
+      );
 
-        data = {
-          name: enteredName,
-          password: enteredPassword,
-          email: enteredEmail,
-          address: address,
-        };
-      }
 
       data = Object.fromEntries(
         Object.entries(data).filter(
           ([_, v]) => v != "" && JSON.stringify(v) != "{}"
         )
       );
+      if (privateUser) {
+        data = {
+          name: enteredName,
+          password: enteredPassword,
+          email: enteredEmail,
+          address: address,
+        };
+      } else {
+        data = {
+          name: enteredName,
+          password: enteredPassword,
+          email: enteredEmail,
+          ragione_sociale: enteredRagioneSociale,
+          partita_iva: enteredPIva,
+          address: address,
+          company: true
+        };
+      }
+
       axios.post(`/api/registration`, data).then((res) => {
         if (!res.data.status) {
           setMsgError(res.data.message);

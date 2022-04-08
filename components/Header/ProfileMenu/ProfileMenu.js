@@ -1,6 +1,7 @@
 import classes from "./ProfileMenu.module.scss";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/client";
+import { useEffect } from "react";
 
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 
@@ -8,9 +9,11 @@ import { IconButton } from "@mui/material";
 
 function ProfileMenu(props) {
   const [session, status] = useSession();
-  console.log(session);
+
+
   const logoutHandler = () => {
     signOut();
+
   };
 
   //TODO: BORDER RADIUS primo e ultimo elemento del menu

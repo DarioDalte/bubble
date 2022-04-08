@@ -14,7 +14,6 @@ const RandomElements = (props) => {
           <span className={classes.text}>{category.categoria}</span>
           <Carousel isMobile={isMobile}>
             {category.prodotti.map((element, i) => {
-              console.log(i);
               return (
                 <Card
                   className={!isMobile && classes["card-desktop"]}
