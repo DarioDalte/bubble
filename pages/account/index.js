@@ -11,14 +11,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
 
-export default function Account() {
+export default function Account(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
-  const [session, loading] = useSession();
-  if (session) {
-    const [name, surname] = session.user.name.split(" ");
-  }
 
-  console.log(session);
+  const [name, surname] = props.session.user.name.split(" ");
 
   /** 
   const [publishableKey, setPublishableKey] = useState("");
@@ -72,5 +68,5 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  return { props: {} };
+  return { props: { session: session } };
 }
