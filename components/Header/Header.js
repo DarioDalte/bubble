@@ -25,6 +25,7 @@ function Header(props) {
             <ProfileMenu
               buttonClass={classes["icon-button"]}
               iconClass={classes.icon}
+              session={props.session}
             />
           )}
           {(!props.session || !props.session.user.image) && (

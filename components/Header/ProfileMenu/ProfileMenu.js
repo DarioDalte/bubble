@@ -8,16 +8,11 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { IconButton } from "@mui/material";
 
 function ProfileMenu(props) {
-  const [session, status] = useSession();
-
-
-
-
   const logoutHandler = () => {
     signOut();
-
   };
 
+  console.log(props.session);
 
   let content = (
     <>
@@ -30,7 +25,7 @@ function ProfileMenu(props) {
     </>
   );
 
-  if (session) {
+  if (props.session && !props.session.user.image) {
     content = (
       <>
         <Link href={"/account"}>
@@ -43,11 +38,24 @@ function ProfileMenu(props) {
         </p>
       </>
     );
+  } else if (props.session && props.session.user.image) {
+    content = (
+      <>
+        <Link href={"/account"}>
+          <a className={classes.item}>Account</a>
+        </Link>
+        <p className={classes.item}>Prodotti</p>
+        <p className={classes.item}>Aggiungi prodotto</p>
+        <p className={classes.item} onClick={logoutHandler}>
+          Esci
+        </p>
+      </>
+    );
   }
 
   return (
     <div className={classes.dropdown}>
-      <Link href={"/profile"} passHref>
+      <Link href={"/account"} passHref>
         <IconButton className={props.buttonClass}>
           <PersonOutlineIcon className={props.iconClass} />
         </IconButton>

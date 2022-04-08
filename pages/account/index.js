@@ -41,13 +41,24 @@ export default function Account(props) {
       <div className={classes.body}>
         <h1 className={classes.title}>Account</h1>
         <h2 className={classes.subtitle}>Ciao {name}!</h2>
+        <Link href={"/"}>
+          <a className={classes.subtitle}>Perchè fai cosi?</a>
+        </Link>
         <div className={classes["container"]}>
           <div className={classes["btn-container"]}>
-            <ButtonOutlined value="Ordini" className={classes["button"]} />
-            <ButtonOutlined value="Profilo" className={classes["button"]} />
+            <Link href={"/"} passHref>
+              <ButtonOutlined value="Profilo" className={classes["button"]} />
+            </Link>
+            <ButtonOutlined
+              value={!props.session.user.image ? "Ordini" : "Prodotti"}
+              className={classes["button"]}
+            />
           </div>
           <div className={classes["btn-container"]}>
-            <ButtonOutlined value="Indirizzi" className={classes["button"]} />
+            <ButtonOutlined
+              value={!props.session.user.image ? "Carrello" : "Vendite"}
+              className={classes["button"]}
+            />
             <ButtonOutlined value="Pagamenti" className={classes["button"]} />
           </div>
           <ButtonOutlined value="Assistenza" className={classes["button"]} />
