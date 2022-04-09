@@ -148,7 +148,7 @@ export default function CustomizedSteppers() {
     inputFocus: nameFocusHandler,
     reset: nameReset,
     focussing: nameFocussing,
-  } = useInput((name) => regExpM.test(name));
+  } = useInput((name) => regExpML.test(name));
 
   const {
     value: enteredPassword,
@@ -273,6 +273,7 @@ export default function CustomizedSteppers() {
       password: enteredPassword,
     });
 
+    console.log(result);
     if (!result.error) {
       setMsgError("");
       router.push("../");
@@ -308,7 +309,6 @@ export default function CustomizedSteppers() {
         Object.entries(address).filter(([_, v]) => v != "")
       );
 
-
       data = Object.fromEntries(
         Object.entries(data).filter(
           ([_, v]) => v != "" && JSON.stringify(v) != "{}"
@@ -329,7 +329,7 @@ export default function CustomizedSteppers() {
           ragione_sociale: enteredRagioneSociale,
           partita_iva: enteredPIva,
           address: address,
-          company: true
+          company: true,
         };
       }
 

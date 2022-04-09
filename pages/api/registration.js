@@ -29,24 +29,24 @@ export default async function handler(req, res) {
     //        const result = await collection.insertMany(data); //Inserisco nella collection
 
     await client.connect(); //Connect to our cluster
-    const db = client.db(); //Inserts db into the variable db
-    if (data.company == true){
-        collection = collection("users"); //Seleziono la collection
-        var user = await collection
-           .findOne({ email: data.email })
-    }
-    else{
-        collection = collection("company"); //Seleziono la collection
-        var user = await collection
-           .findOne({ email: data.email })
-    }
-    
-      
 
-    if (!user) {
+    const usersCollection = client.db().collection("users");
+    const user = await usersCollection.findOne({
+      email: data.email,
+    });
+
+    const companiesCollection = client.db().collection("companies");
+    const company = await companiesCollection.findOne({
+      email: data.email,
+    });
+
+    if (!user && !company) {
       data.password = await hashPassowrd(data.password); //encrypt the password
-      
-      await collection.insertOne(data); //Insert into users obj
+      if (data.company) {
+        await companiesCollection.insertOne(data);
+      } else {
+        await usersCollection.insertOne(data);
+      }
 
       let transporter = nodemailer.createTransport({
         service: "gmail",
