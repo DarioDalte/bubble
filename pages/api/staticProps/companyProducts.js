@@ -1,6 +1,6 @@
 module.exports = async function (db, email) {
   try {
-    var user = await db.collection("companies").findOne({email: email); //Selects documents from collection categories
+    var user = await db.collection("companies").findOne({email: email}); //Selects documents from collection categories
 
     if (user) {
       var prodotti = await db.collection("products").find({brand: user["_id"]}).toArray(); //Selects documents from collection categories
