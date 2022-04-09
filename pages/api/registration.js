@@ -25,16 +25,27 @@ export default async function handler(req, res) {
       return;
     }
 
+    var collection = "";
+    //        const result = await collection.insertMany(data); //Inserisco nella collection
+
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    var user = await db
-      .collection("users")
-      .findOne({ email: data.email })
+    if (data.company == true){
+        collection = collection("users"); //Seleziono la collection
+        var user = await collection
+           .findOne({ email: data.email })
+    }
+    else{
+        collection = collection("company"); //Seleziono la collection
+        var user = await collection
+           .findOne({ email: data.email })
+    }
+    
+      
 
     if (!user) {
       data.password = await hashPassowrd(data.password); //encrypt the password
-      const collection = db.collection("users"); //Select collection users
-
+      
       await collection.insertOne(data); //Insert into users obj
 
       let transporter = nodemailer.createTransport({
