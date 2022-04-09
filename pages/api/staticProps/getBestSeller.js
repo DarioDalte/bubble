@@ -110,7 +110,7 @@ module.exports = async function (db) {
           }
         }
         var media = somma_recensioni / cont;
-        var brand = await db.collection("companies").find("_id": prodotti[x]["brand"]).toArray(); //Selects documents from collection products
+        var brand = await db.collection("companies").find(_id: prodotti[x]["brand"]).toArray(); //Selects documents from collection products
 
         if (id_prodotto == five_cod_products[i]) {
           oggetto = {
