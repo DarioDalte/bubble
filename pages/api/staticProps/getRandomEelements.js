@@ -86,10 +86,13 @@ module.exports = async function (db) {
        * compare ids and if they are equals then add the information of product in obj oggetto
        * and add this obj to array cart and assing 1 to b
        */
-      var brand = await db.collection("companies").find({"_id": prodotti[x]["brand"]}).toArray(); //Selects documents from collection products
-      
+
       while (i < numero_prodotti) {
         var id_prod = prodotti[i]["category"];
+        var brand = await db
+          .collection("companies")
+          .find({ _id: prodotti[i]["brand"] })
+          .toArray(); //Selects documents from collection products
         if (id_prod == id_categoria) {
           oggetto = {
             brand: brand[0]["name"],
