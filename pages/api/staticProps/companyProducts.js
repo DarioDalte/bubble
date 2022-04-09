@@ -3,7 +3,7 @@ module.exports = async function (db, email) {
     var user = await db.collection("companies").findOne({email: email); //Selects documents from collection categories
 
     if (user) {
-      var prodotti = await db.collection("products").find({brand: user["_id"]).toArray(); //Selects documents from collection categories
+      var prodotti = await db.collection("products").find({brand: user["_id"]}).toArray(); //Selects documents from collection categories
 
       res
         .status(201)
