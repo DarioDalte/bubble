@@ -1,3 +1,4 @@
+import { sep } from "path";
 import { hashPassowrd, verifyPassword } from "./middlewares/auth.js";
 const databaseConnection = require("./middlewares/database.js");
 const EmailTemplate = require("email-templates").EmailTemplate;
@@ -45,6 +46,9 @@ export default async function handler(req, res) {
       if (data.company) {
         await companiesCollection.insertOne(data);
       } else {
+        let separato = data.name.split(" ");
+        data.name = separato[0];
+        data.cognome = separato[1];
         await usersCollection.insertOne(data);
       }
 
