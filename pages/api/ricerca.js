@@ -19,6 +19,9 @@ export default async function handler(req, res) {
     collection = db.collection("companies"); //Seleziono la collection
     const brand = await collection.find().toArray(); //Inserisco nella collection
 
+
+    console.log(brand);
+
     function capitalize(str) {
       const lower = str.toLowerCase();
       return str.charAt(0).toUpperCase() + lower.slice(1);
@@ -26,26 +29,46 @@ export default async function handler(req, res) {
 
     data.stringa = capitalize(data.stringa);
 
+
     var prodotti_ricerca = [];
+    var myJSON = "";
+    var stringa_1 = [];
+    var stringa_2 = "";
+    var stringa_3 = "";
+    var stringa_4 = "";
+
+    var stringa_4 = "";
+
 
     for (var i = 0; i < prodotti.length; i++) {
       var nome_prodotto = prodotti[i]["name"];
-      console.log("prodotto selezionato: ");
-      console.log(prodotti[i]);
+      myJSON = JSON.stringify(prodotti[i]);
+      stringa_1.push("prodotto selezionato: " + myJSON + "\n");
+
+
       if (nome_prodotto.includes(data.stringa)) {
         prodotti_ricerca.push(nome_prodotto);
-        console.log("prodotto aggiunto all'array");
+        stringa_1.push("prodotto  aggiunto all'array: " + myJSON + "\n");
+
+
       } else {
-        let id_brand = prodotti[i]["brand"];
-        console.log("brand prodotto");
-        console.log(id_brand);
+        let id_brand = prodotti[i]["brand"];  
+        stringa_1.push("brand prodotto: " + id_brand + "\n");
+
+
+
+        
         for (var x = 0; x < brand.length; x++) {
-          console.log("brand: ");
-          console.log(brand[x]);
+        
+
+          myJSON = JSON.stringify(brand[x]);
+          stringa_1.push("brand: " + myJSON);
+
+
           if (brand[x]["_id"] == id_brand) {
-            console.log("brand uguale!!!");
             if (brand[x]["name"].includes(data.stringa)) {
-              console.log("contiene la ricerca!!!");
+              stringa_1.push("prodotto aggiunto ricerca" + "\n");
+          
 
               prodotti_ricerca.push(nome_prodotto);
             }
@@ -55,6 +78,20 @@ export default async function handler(req, res) {
     }
 
     console.log(prodotti_ricerca);
+    
+    stringa_1 = stringa_1.toString();
+  
+    const fs = require('fs')
+
+    
+    try {
+      fs.writeFileSync('C:/Users/navfl/OneDrive/Desktop/Projects/bubble/pages/api/test.txt', stringa_1)
+      //file written successfully
+    } catch (err) {
+      console.error(err)
+    }
+    
+
 
     res.json({ message: "funzia!" });
   } catch (err) {
