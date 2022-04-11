@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         .find({ brand: user["_id"] })
         .toArray(); //Selects documents from collection categories
 
-      res.status(201).json({ prodotti: prodottigit });
+      res.status(201).json({ prodotti: prodotti });
       return;
     } else {
       res.status(200).json({ message: "Email inesistente", status: 0 });
