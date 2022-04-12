@@ -7,7 +7,7 @@ const client = await databaseConnection();
 
 export default NextAuth({
   session: {
-    //jwt: true,
+    jwt: true,
   },
   providers: [
     Providers.Credentials({
