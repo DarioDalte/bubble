@@ -10,6 +10,7 @@ import PasswordTextField from "../../UI/PasswordTextField/PasswordTextField";
 import Loading from "../../UI/Loading/Loading";
 
 import { useMediaQuery, TextField } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
 import BackArrow from "../../UI/BackArrow/BackArrow";
 
 export default function Login() {
@@ -18,6 +19,10 @@ export default function Login() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:47rem)");
+
+
+  // const bestSellers = useSelector((state) => state.bestSeller);
+  // console.log(bestSellers);
 
   const {
     value: enteredPassword,
@@ -96,7 +101,7 @@ export default function Login() {
 
           <PasswordTextField
             className={classes.input}
-            text={'Password'}
+            text={"Password"}
             value={enteredPassword}
             onChange={passwordHandler}
             onBlur={passwordBlurHandler}
@@ -105,7 +110,11 @@ export default function Login() {
             onEnter={loginHandler}
           />
 
-          <Button className={classes.button} value = "Login" onClick={loginHandler} />
+          <Button
+            className={classes.button}
+            value="Login"
+            onClick={loginHandler}
+          />
         </div>
 
         {(isMobile ? !emailFocussing : true) &&

@@ -10,7 +10,7 @@ function Main(props) {
     <div className={classes.container}>
       <Carousel />
       <Categories classes={classes.categories} />
-      <BestSeller bestSeller={props.bestSeller} />
+      <BestSeller bestSeller={props.bestSellers} isLoading={props.bestSellersIsLoading} />
       <RandomElements randomElements={props.randomElements} />
     </div>
   );

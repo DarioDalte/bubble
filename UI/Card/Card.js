@@ -6,7 +6,8 @@ import Image from "next/image";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-import { IconButton, Rating } from '@mui/material';
+import { IconButton, Rating } from "@mui/material";
+import Skeleton from "react-loading-skeleton";
 
 function Card(props) {
   const [heartClicked, setHeartClicked] = useState(false);
@@ -16,33 +17,49 @@ function Card(props) {
   };
   return (
     <div className={`${classes.card} ${props.className}`}>
-      <Image
-        src={props.path}
-        alt="Picture of the author"
-        width={150}
-        height={150}
-        layout='responsive'
-      ></Image>
+      {!props.isLoading ? (
+        <Image
+          src={props.path}
+          alt="Picture of the author"
+          width={150}
+          height={150}
+          layout="responsive"
+        ></Image>
+      ) : (
+        <Skeleton  height={150} width="100%"  />
+      )}
       <div className={classes.container}>
-        <span className={classes.title}>{props.name.charAt(0).toUpperCase() + props.name.slice(1)}</span>
-        <span className={classes.subtitle}>{props.brand.charAt(0).toUpperCase() + props.brand.slice(1)}</span>
-        <span className={classes.price}>€ {props.price}</span>
+        <span className={classes.title}>
+          {!props.isLoading ? props.name : <Skeleton width={"60%"} height={25} />}
+        </span>
+        <span className={classes.subtitle}>
+          {!props.isLoading ? props.brand : <Skeleton width={"40%"} height={15} />}
+        </span>
+        <span className={classes.price}>
+          {!props.isLoading ? "€" + props.price : <Skeleton width={"30%"} />}
+        </span>
         <div className={classes.footer}>
-          <Rating
-            className={classes.star}
-            name="half-rating-read"
-            defaultValue={props.star}
-            precision={0.1}
-            readOnly
-          />
+          {!props.isLoading ? (
+            <Rating
+              className={classes.star}
+              name="half-rating-read"
+              defaultValue={props.star}
+              precision={0.1}
+              readOnly
+            />
+          ) : (
+            <Skeleton width={130} />
+          )}
 
-          <IconButton onClick={onHeartClick}>
-            {heartClicked ? (
-              <FavoriteIcon className={classes.heart} />
-            ) : (
-              <FavoriteBorderIcon className={classes.heart} />
-            )}
-          </IconButton>
+          {!props.isLoading && (
+            <IconButton onClick={onHeartClick}>
+              {heartClicked ? (
+                <FavoriteIcon className={classes.heart} />
+              ) : (
+                <FavoriteBorderIcon className={classes.heart} />
+              )}
+            </IconButton>
+          )}
         </div>
       </div>
     </div>

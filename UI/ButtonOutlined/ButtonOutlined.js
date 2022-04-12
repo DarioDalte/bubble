@@ -1,10 +1,29 @@
-import React from 'react'
-import classes from './ButtonOutlined.module.scss'
+import Link from "next/link";
+import React from "react";
+import classes from "./ButtonOutlined.module.scss";
 
 function ButtonOutlined(props) {
-  return (
-    <input type='button' value={props.value} className={`${props.className} ${classes.button}`} onClick={props.onClick}/>
-  )
+  if (props.path) {
+    return (
+      <Link href={props.path}>
+        <a
+          className={`${props.className} ${classes.button}`}
+          onClick={props.onClick}
+        >
+          {props.value}
+        </a>
+      </Link>
+    );
+  } else {
+    return (
+      <button
+        className={`${props.className} ${classes.button}`}
+        onClick={props.onClick}
+      >
+        {props.value}
+      </button>
+    );
+  }
 }
 
-export default ButtonOutlined
+export default ButtonOutlined;

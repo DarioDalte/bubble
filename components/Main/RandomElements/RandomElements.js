@@ -6,10 +6,9 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 const RandomElements = (props) => {
   const isMobile = useMediaQuery("(max-width:47rem)");
-
   return (
     <div className={classes.container}>
-      {props.randomElements.map((category, i) => (
+      {props.randomElements && props.randomElements.elements.map((category, i) => (
         <div key={i} className={classes["category-container"]}>
           <span className={classes.text}>{category.categoria}</span>
           <Carousel isMobile={isMobile}>

@@ -37,18 +37,14 @@ export default function Account(props) {
   return (
     <>
       {isMobile && <BottomNav navValue={3} />}
-      <BackArrow />
+      <BackArrow path="/" />
       <div className={classes.body}>
         <h1 className={classes.title}>Account</h1>
         <h2 className={classes.subtitle}>Ciao {name}!</h2>
-        <Link href={"/"}>
-          <a className={classes.subtitle}>Perchè fai cosi?</a>
-        </Link>
         <div className={classes["container"]}>
           <div className={classes["btn-container"]}>
-            <Link href={"/"} passHref>
-              <ButtonOutlined value="Profilo" className={classes["button"]} />
-            </Link>
+            <ButtonOutlined value="Profilo" className={classes["button"]} path={'/'}/>
+
             <ButtonOutlined
               value={!props.session.user.image ? "Ordini" : "Prodotti"}
               className={classes["button"]}
