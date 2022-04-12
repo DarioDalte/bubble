@@ -1,13 +1,10 @@
-import { OpacityRounded } from "@material-ui/icons";
-
 const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
-  const client = await databaseConnection();
+  const client = await databaseConnection(); //Mi connetto al db
 
   try {
-    await client.connect(); //To connect to our cluster
-
+    await client.connect();
     const db = client.db(); //Boh
 
     var result = await db
@@ -29,7 +26,6 @@ export default async function handler(req, res) {
         prodotti.push(result[i]["orderdetails"][x]);
       }
     }
-    console.log(prodotti);
     function count_duplicate(prodotti) {
       let counts = {};
       for (let i = 0; i < prodotti.length; i++) {
@@ -45,16 +41,13 @@ export default async function handler(req, res) {
     group = Object.entries(group)
       .sort(([, a], [, b]) => a - b)
       .reduce((r, [k, v]) => ({ ...r, [k]: v }), {}); //Sort the dictionary
-    console.log(group);
     var five_cod_products = [];
     for (var i = 1; i < 6; i++) {
       var last = Object.keys(group)[Object.keys(group).length - i];
       five_cod_products.push(last);
     }
-    console.log(five_cod_products);
     var a = 0;
     var prodotti_finali = [];
-    console.log(five_cod_products);
     for (var i = 0; i < five_cod_products.length; i++) {
       for (var x = 0; x < prodotti.length; x++) {
         if (five_cod_products[i] == prodotti[x]["_id"] && a == 0) {
@@ -64,11 +57,64 @@ export default async function handler(req, res) {
       }
       a = 0;
     }
+    prodotti_finali = JSON.stringify(prodotti_finali);
+    prodotti_finali = JSON.parse(prodotti_finali);
 
-    res.status(422).json({
-      message: prodotti_finali,
-    });
-    return;
+    var recensioni = await db.collection("reviews").find().toArray(); //Selects documents from collection reviews
+    var elenco_recensioni = []; //Declare and initialize elenco_recensioni
+    var obj_recensioni = {}; //Declare and initialize obj_recensioni
+
+    for (var i = 0; i < recensioni.length; i++) {
+      let id = recensioni[i]["id_product"]
+        .toString()
+        .replace(/ObjectId\("(.*)"\)/, "$1");
+      obj_recensioni = {
+        id_prodotti: id,
+        value: recensioni[i]["value"],
+      };
+      elenco_recensioni.push(obj_recensioni);
+    }
+    let oggetto = {};
+    var cart = [];
+
+    for (var x = 0; x < prodotti_finali.length; x++) {
+      let id_prodotto = prodotti[x]["_id"]
+        .toString()
+        .replace(/ObjectId\("(.*)"\)/, "$1");
+
+      var somma_recensioni = 0;
+      var cont = 0;
+      for (var b = 0; b < elenco_recensioni.length; b++) {
+        var singola_recensione = elenco_recensioni[b];
+        var id_prodotto_recensito = singola_recensione["id_prodotti"];
+        if (id_prodotto == id_prodotto_recensito) {
+          somma_recensioni = somma_recensioni + singola_recensione["value"];
+          cont++;
+        }
+      }
+      var media = somma_recensioni / cont;
+      console.log(media);
+
+      var brand = await db
+        .collection("companies")
+        .find({ _id: prodotti[x]["brand"] })
+        .toArray(); //Selects documents from collection products
+
+      if (id_prodotto == five_cod_products[i]) {
+        prodotti_finali[x]["brand"] = brand;
+        oggetto = {
+          prodotto: prodotti_finali[x],
+
+          star: media ? media : 0,
+        };
+        cart.push(oggetto);
+
+        break;
+      }
+    }
+    cart = JSON.stringify(cart);
+    cart = JSON.parse(cart);
+    res.status(200).json(cart);
   } catch (e) {
     //error
     console.log("Error " + e);

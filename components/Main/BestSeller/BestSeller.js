@@ -47,8 +47,6 @@ function BestSeller(props) {
           />
         ))}
       </Carousel>
-
-
     </div>
   );
 }
