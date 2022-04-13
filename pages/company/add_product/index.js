@@ -8,17 +8,16 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Phone from "../../../components/Company/AddProduct/Phone";
 
-
-function AddProduct() {
-  const [typology, setTypology] = useState(null);
+function AddProduct(props) {
+  const [typology, setTypology] = useState("");
 
   const handleChange = (event) => {
     setTypology(event.target.value);
   };
 
   return (
-    <>
-    <h3 className={classes.title} >Aggiungi un prodotto!</h3>
+    <div className={classes.container}>
+      <h3 className={classes.title}>Aggiungi un prodotto!</h3>
       <div className={classes["select-container"]}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Tipologia</InputLabel>
@@ -29,13 +28,13 @@ function AddProduct() {
             label="Tipologia"
             onChange={handleChange}
           >
-            <MenuItem value={'phone'}>Telefoni</MenuItem>
-            <MenuItem value={'computer'}>Computer</MenuItem>
+            <MenuItem value={"phone"}>Telefoni</MenuItem>
+            <MenuItem value={"computer"}>Computer</MenuItem>
           </Select>
         </FormControl>
       </div>
-      {typology === 'phone' && <Phone/>}
-    </>
+      {typology === "phone" && <Phone companyName={props.session.user.name}/>}
+    </div>
   );
 }
 
@@ -52,5 +51,5 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  return { props: {} };
+  return { props: { session: session } };
 }
