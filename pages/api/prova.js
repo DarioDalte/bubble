@@ -95,21 +95,23 @@ export default async function handler(req, res) {
       var media = somma_recensioni / cont;
       console.log(media);
 
+      console.log(prodotti[x]["brand"]);
       var brand = await db
         .collection("companies")
         .find({ _id: prodotti[x]["brand"] })
-        .toArray(); //Selects documents from collection products
+        .toArray();
+      //Selects documents from collection products
+      console.log("brand");
+      console.log(brand);
 
-      if (id_prodotto == five_cod_products[i]) {
-        prodotti_finali[x]["brand"] = brand;
+      if (id_prodotto == prodotti[x]["_id"]) {
+        prodotti_finali[x]["brand"] = brand["name"];
         oggetto = {
           prodotto: prodotti_finali[x],
 
           star: media ? media : 0,
         };
         cart.push(oggetto);
-
-        break;
       }
     }
     cart = JSON.stringify(cart);
