@@ -15,9 +15,10 @@ function BestSeller(props) {
   const loadingContent = [];
   let bestSellers;
   if (!props.isLoading) {
+    console.log(props.bestSeller);
+    bestSellers = props.bestSeller;
+    bestSeller = bestSellers[0].prodotto;
     
-    bestSellers = props.bestSeller.bestSeller;
-    bestSeller = bestSellers[0];
   } else {
     for (let i = 0; i < 5; i++) {
       loadingContent.push(
@@ -59,8 +60,8 @@ function BestSeller(props) {
         <div className={classes["photo-container"]}>
           {!props.isLoading ? (
             <Image
-              src="/headphone.png"
-              alt="Picture of the author"
+              src={`/${bestSeller.image}`}
+              alt="Picture of the Best Seller"
               layout="fill"
               className={classes.photo}
             />
@@ -88,11 +89,11 @@ function BestSeller(props) {
             <Card
               className={!isMobile && classes["card-desktop"]}
               key={i}
-              name={bestSeller.name}
-              price={bestSeller.price}
-              brand={bestSeller.brand}
+              name={bestSeller.prodotto.name}
+              price={bestSeller.prodotto.price}
+              brand={bestSeller.prodotto.brand}
               star={bestSeller.star}
-              path={"/galaxybuds.webp"}
+              path={`/${bestSeller.prodotto.image}`}
             />
           ))}
         </Carousel>
