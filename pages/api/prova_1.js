@@ -7,17 +7,25 @@ export default async function handler(req, res) {
     await client.connect();
     const db = client.db(); //Boh
 
-    var categorie = await db.collection("categories").find().toArray(); //Selects documents from collection categories
-    const numero_categorie = await db.collection("categories").countDocuments(); //Return the count of documents
+    var result = await db
+      .collection("categories")
+      .aggregate([
+        {
+          $lookup: {
+            from: "products",
+            localField: "_id",
+            foreignField: "category",
+            as: "orderdetails",
+          },
+        },
+      ])
+      .toArray();
 
-    /***
-     *  Generate random numbers
-     */
+    console.log(result);
     function getRandomInt(max) {
       return Math.floor(Math.random() * max);
     }
-
-    var primo_numero_random = getRandomInt(numero_categorie); //Calls the function getRandomInt
+    var primo_numero_random = getRandomInt(result.length); //Calls the function getRandomInt
 
     var numeri_random = [primo_numero_random]; //Adds first random number
     var a = 0;
@@ -30,7 +38,7 @@ export default async function handler(req, res) {
      * otherwise assing 0 to a and repeat
      */
     for (var i = 0; i < 2; i++) {
-      var numero_random = getRandomInt(numero_categorie);
+      var numero_random = getRandomInt(result.length);
       for (var x = 0; x < numeri_random.length; x++) {
         if (numero_random == numeri_random[x]) {
           i = i - 1;
@@ -45,88 +53,91 @@ export default async function handler(req, res) {
       }
     }
 
-    var id_categorie = []; //Declare and initialize id_categorie
+    var recensioni = await db.collection("reviews").find().toArray(); //Selects documents from collection reviews
+    var elenco_recensioni = []; //Declare and initialize elenco_recensioni
+    var obj_recensioni = {}; //Declare and initialize obj_recensioni
 
-    /***
-     * flows categorie
-     * from categorie takes ID
-     * flows numeri_random
-     * compare variable i and z and if they are equals then add the cateogry id
-     */
-    for (var i = 0; i < categorie.length; i++) {
-      var id = categorie[i]["_id"];
-
-      for (var z = 0; z < numeri_random.length; z++) {
-        if (i == numeri_random[z]) {
-          id_categorie.push(id);
-        }
-      }
+    for (var i = 0; i < recensioni.length; i++) {
+      let id = recensioni[i]["id_product"]
+        .toString()
+        .replace(/ObjectId\("(.*)"\)/, "$1");
+      obj_recensioni = {
+        id_prodotti: id,
+        value: recensioni[i]["value"],
+      };
+      elenco_recensioni.push(obj_recensioni);
     }
-
-    var prodotti = await db.collection("products").find().toArray(); //Selects documents from collection products
-    const numero_prodotti = await db.collection("products").countDocuments(); //Selects documents from collection products
 
     let oggetto = {};
-
-    var elementi_random = [];
     var cart = [];
-
+    console.log(numeri_random);
     var b = 0;
+    var elementi_random = [];
 
-    /***
-     *  flows id_categorie, takes the id and query the db that returns the informations of category
-     *  transform id in String
-     * if b is 1 assing 0 to b and then add the array to obj oggett_da_mandare and then add this obj
-     * in elementi_random
-     */
-    for (var d = 0; d < id_categorie.length; d++) {
-      var id_categoria = id_categorie[d];
-      var nome_categoria = await db
-        .collection("categories")
-        .find({ _id: id_categoria })
-        .toArray();
-      nome_categoria = nome_categoria[0]["category"];
-      id_categoria = String(id_categorie[d]);
-      var i = 0;
-      /***
-       * flows prodotti, takes the product category
-       * compare ids and if they are equals then add the information of product in obj oggetto
-       * and add this obj to array cart and assing 1 to b
-       */
+    for (var d = 0; d < numeri_random.length; d++) {
+      console.log("NUMERO RANDOM: " + d);
+      for (var x = 0; x < result.length; x++) {
+        if (numeri_random[d] == x) {
+          console.log(result[x]["orderdetails"].length);
+          for (var f = 0; f < result[x]["orderdetails"].length; f++) {
+            if (result[x]["orderdetails"][f]) {
+              let id_prodotto = result[x]["orderdetails"][f]["_id"]
+                .toString()
+                .replace(/ObjectId\("(.*)"\)/, "$1");
+              console.log(id_prodotto);
 
-      while (i < numero_prodotti) {
-        var id_prod = prodotti[i]["category"];
-        var brand = await db
-          .collection("companies")
-          .find({ _id: prodotti[i]["brand"] })
-          .toArray(); //Selects documents from collection products
-        if (id_prod == id_categoria) {
-          oggetto = {
-            brand: brand[0]["name"],
-            name: prodotti[i]["name"],
-            price: prodotti[i]["price"],
-          };
-          cart.push(oggetto);
-          b = 1;
+              var somma_recensioni = 0;
+              var cont = 0;
+              for (var b = 0; b < elenco_recensioni.length; b++) {
+                var singola_recensione = elenco_recensioni[b];
+                var id_prodotto_recensito = singola_recensione["id_prodotti"];
+                if (id_prodotto == id_prodotto_recensito) {
+                  somma_recensioni =
+                    somma_recensioni + singola_recensione["value"];
+                  cont++;
+                }
+              }
+              var media = somma_recensioni / cont;
+              var brand = await db
+                .collection("companies")
+                .find({ _id: result[x]["orderdetails"][f]["brand"] })
+                .toArray();
+              //Selects documents from collection products
 
-          if (cart.length == 8) {
-            break;
+              if (id_prodotto == result[x]["orderdetails"][f]["_id"]) {
+                result[x]["orderdetails"][f]["brand"] = brand[0]["name"];
+                oggetto = {
+                  prodotto: result[x]["orderdetails"][f],
+
+                  star: media ? media : 0,
+                };
+                cart.push(oggetto);
+                b = 1;
+                if (cart.length == 8) {
+                  break;
+                }
+              }
+            } else {
+              console.log("non ce");
+            }
           }
         }
-        i++;
-      }
 
-      if (b == 1) {
-        b = 0;
-        var oggetto_da_mandare = {
-          categoria: nome_categoria,
-          prodotti: cart,
-        };
-        elementi_random.push(oggetto_da_mandare);
+        if (b == 1) {
+          b = 0;
+          var oggetto_da_mandare = {
+            categoria: result[x]["category"],
+            prodotti: cart,
+          };
+          elementi_random.push(oggetto_da_mandare);
+        }
+        cart = [];
       }
-      cart = [];
     }
-    res.status(200).json(elementi_random);
+
+    res.json({
+      elements: elementi_random,
+    });
   } catch (e) {
     //error
     console.log("Errore " + e);
