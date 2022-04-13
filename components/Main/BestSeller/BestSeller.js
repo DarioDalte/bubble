@@ -15,7 +15,7 @@ function BestSeller(props) {
   const loadingContent = [];
   let bestSellers;
   if (!props.isLoading) {
-    console.log(props.bestSeller);
+
     bestSellers = props.bestSeller;
     bestSeller = bestSellers[0].prodotto;
     

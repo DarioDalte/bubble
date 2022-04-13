@@ -6,6 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 const RandomElements = (props) => {
   const isMobile = useMediaQuery("(max-width:47rem)");
+  console.log(props.randomElements);
   return (
     <div className={classes.container}>
       {props.randomElements && props.randomElements.elements.map((category, i) => (
@@ -18,15 +19,15 @@ const RandomElements = (props) => {
                   className={!isMobile && classes["card-desktop"]}
                   key={i}
                   name={
-                    element.name.charAt(0).toUpperCase() + element.name.slice(1)
+                    element.prodotto.name.charAt(0).toUpperCase() + element.prodotto.name.slice(1)
                   }
-                  price={element.price}
+                  price={element.prodotto.price}
                   brand={
-                    element.brand.charAt(0).toUpperCase() +
-                    element.brand.slice(1)
+                    element.prodotto.brand.charAt(0).toUpperCase() +
+                    element.prodotto.brand.slice(1)
                   }
-                  star={0}
-                  path={"/galaxybuds.webp"}
+                  star={element.star}
+                  path={`/${element.prodotto.image}`}
                 />
               );
             })}

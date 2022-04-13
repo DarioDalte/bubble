@@ -34,9 +34,11 @@ function Header(props) {
             </IconButton>
           )}
           {props.session && props.session.user.image && (
-            <IconButton className={classes["icon-button"]}>
-              <AddIcon className={classes.icon} />
-            </IconButton>
+            <Link href='/company/add_product' passHref>
+              <IconButton className={classes["icon-button"]}>
+                <AddIcon className={classes.icon} />
+              </IconButton>
+            </Link>
           )}
         </div>
       </header>
