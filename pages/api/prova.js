@@ -105,7 +105,7 @@ export default async function handler(req, res) {
       console.log(brand);
 
       if (id_prodotto == prodotti[x]["_id"]) {
-        prodotti_finali[x]["brand"] = brand["name"];
+        prodotti_finali[x]["brand"] = brand[0]["name"];
         oggetto = {
           prodotto: prodotti_finali[x],
 
