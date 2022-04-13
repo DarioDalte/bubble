@@ -1,3 +1,6 @@
+import { Logger } from "sass";
+const mongoose = require("mongoose");
+
 const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
@@ -59,6 +62,7 @@ export default async function handler(req, res) {
     }
     prodotti_finali = JSON.stringify(prodotti_finali);
     prodotti_finali = JSON.parse(prodotti_finali);
+    console.log(prodotti_finali);
 
     var recensioni = await db.collection("reviews").find().toArray(); //Selects documents from collection reviews
     var elenco_recensioni = []; //Declare and initialize elenco_recensioni
@@ -78,7 +82,7 @@ export default async function handler(req, res) {
     var cart = [];
 
     for (var x = 0; x < prodotti_finali.length; x++) {
-      let id_prodotto = prodotti[x]["_id"]
+      let id_prodotto = prodotti_finali[x]["_id"]
         .toString()
         .replace(/ObjectId\("(.*)"\)/, "$1");
 
@@ -94,21 +98,25 @@ export default async function handler(req, res) {
       }
       var media = somma_recensioni / cont;
 
+      console.log(prodotti_finali[x]["brand"]);
+
+      let yourId = mongoose.Types.ObjectId(prodotti_finali[x]["brand"]);
+      console.log(yourId);
       var brand = await db
         .collection("companies")
-        .find({ _id: prodotti[x]["brand"] })
+        .find({ _id: yourId })
         .toArray();
       //Selects documents from collection products
+      console.log("ciao");
+      console.log(brand);
 
-      if (id_prodotto == prodotti[x]["_id"]) {
-        prodotti_finali[x]["brand"] = brand[0]["name"];
-        oggetto = {
-          prodotto: prodotti_finali[x],
+      prodotti_finali[x]["brand"] = brand[0]["name"];
+      oggetto = {
+        prodotto: prodotti_finali[x],
 
-          star: media ? media : 0,
-        };
-        cart.push(oggetto);
-      }
+        star: media ? media : 0,
+      };
+      cart.push(oggetto);
     }
     cart = JSON.stringify(cart);
     cart = JSON.parse(cart);
