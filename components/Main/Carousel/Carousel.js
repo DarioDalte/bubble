@@ -2,6 +2,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 
 import classes from "./Carousel.module.scss";
+import Image from "next/image";
 
 function myCarousel() {
   return (
@@ -11,23 +12,23 @@ function myCarousel() {
       showStatus={false}
       autoPlay={true}
       className={classes.carousel}
-      interval={6000}
+      interval={600000000}
     >
-      <div
-        className={classes.container}
-        style={{ backgroundImage: `url('/parigi.jpg')` }}
-      >
+      <div className={classes.container}>
         <div className={classes["left-item"]}>
-          <p className={classes.text}>Legend 1</p>
+          <p className={classes.text}>Non so cosa scrivere!</p>
+        </div>
+        <div className={classes.background}>
+          <Image src="/tizia.png" alt="Picture" layout="fill" />
         </div>
       </div>
 
-      <div
-        className={`${classes.container} ${classes["left-container"]}`}
-        style={{ backgroundImage: `url('/parigi.jpg')` }}
-      >
+      <div className={`${classes.container} ${classes["left-container"]}`}>
         <div className={classes["right-item"]}>
-          <p className={classes.text}>Legend 2</p>
+          <p className={classes.text}>Non so cosa scrivere!</p>
+        </div>
+        <div className={classes["background-left"]}>
+          <Image src="/tizio.png" alt="Picture" layout="fill" />
         </div>
       </div>
     </Carousel>

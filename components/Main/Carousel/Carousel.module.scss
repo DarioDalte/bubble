@@ -31,21 +31,25 @@
    height: 100%;
    background-size: cover;
    background-position: right;
+   display: flex;
+   background-color: #dd4d5b;
+   position: relative;
 
    .left-item {
-     border-radius: 0 20% 20% 0;
+     border-radius: 0 30% 30% 0;
    }
 
    .right-item {
-     border-radius: 20% 0 0 20%;
+     border-radius: 30% 0 0 30%;
    }
 
 
    .left-item,
    .right-item {
      height: 100%;
-     width: 65%;
+     width: 60%;
      background: #3669C9;
+     z-index: 100;
 
 
      display: flex;
@@ -54,6 +58,18 @@
 
      .text {
        color: white;
+       font-weight: 600;
+       font-size: 2.2rem;
+
+       @media (max-width: 56rem) {
+         font-size: 1.6rem;
+
+       }
+
+       @media (max-width: 36rem) {
+         font-size: 1.2rem;
+
+       }
      }
    }
 
@@ -63,4 +79,25 @@
  .left-container {
    display: flex;
    justify-content: flex-end;
+   background-color: rgb(177, 168, 168);
+
+ }
+
+ .background,
+ .background-left {
+   position: absolute;
+   height: 100%;
+
+ }
+
+ .background {
+   width: 60%;
+
+   right: 0;
+ }
+
+ .background-left {
+   width: 50%;
+
+   left: 0;
  }

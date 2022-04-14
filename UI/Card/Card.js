@@ -1,5 +1,5 @@
 import classes from "./Card.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
@@ -8,9 +8,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import { IconButton, Rating } from "@mui/material";
 import Skeleton from "react-loading-skeleton";
+import { useSession } from "next-auth/client";
+import Link from "next/link";
 
 function Card(props) {
   const [heartClicked, setHeartClicked] = useState(false);
+
+  const [session, status] = useSession();
 
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
@@ -26,14 +30,22 @@ function Card(props) {
           layout="responsive"
         ></Image>
       ) : (
-        <Skeleton  height={150} width="100%"  />
+        <Skeleton height={150} width="100%" />
       )}
       <div className={classes.container}>
         <span className={classes.title}>
-          {!props.isLoading ? props.name : <Skeleton width={"60%"} height={25} />}
+          {!props.isLoading ? (
+            props.name
+          ) : (
+            <Skeleton width={"60%"} height={25} />
+          )}
         </span>
         <span className={classes.subtitle}>
-          {!props.isLoading ? props.brand : <Skeleton width={"40%"} height={15} />}
+          {!props.isLoading ? (
+            props.brand
+          ) : (
+            <Skeleton width={"40%"} height={15} />
+          )}
         </span>
         <span className={classes.price}>
           {!props.isLoading ? "€" + props.price : <Skeleton width={"30%"} />}
@@ -51,14 +63,22 @@ function Card(props) {
             <Skeleton width={130} />
           )}
 
-          {!props.isLoading && (
-            <IconButton onClick={onHeartClick}>
-              {heartClicked ? (
-                <FavoriteIcon className={classes.heart} />
-              ) : (
+          {!session ? (
+            <Link href={'/login'} passHref>
+              <IconButton>
                 <FavoriteBorderIcon className={classes.heart} />
-              )}
-            </IconButton>
+              </IconButton>
+            </Link>
+          ) : (
+            !props.isLoading && (
+              <IconButton onClick={onHeartClick}>
+                {heartClicked ? (
+                  <FavoriteIcon className={classes.heart} />
+                ) : (
+                  <FavoriteBorderIcon className={classes.heart} />
+                )}
+              </IconButton>
+            )
           )}
         </div>
       </div>

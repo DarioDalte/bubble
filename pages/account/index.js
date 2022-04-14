@@ -47,6 +47,7 @@ export default function Account(props) {
 
             <ButtonOutlined
               value={!props.session.user.image ? "Ordini" : "Prodotti"}
+              path={props.session.user.image ? '/company/products' : '/orders'}
               className={classes["button"]}
             />
           </div>
