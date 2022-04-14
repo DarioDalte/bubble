@@ -1,6 +1,4 @@
 const databaseConnection = require("./middlewares/database.js");
-const mongoose = require("mongoose");
-let yourId = mongoose.Types.ObjectId("5ced2388dbbbe124d8671067");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Mi connetto al db
@@ -73,6 +71,7 @@ export default async function handler(req, res) {
     var cart = [];
     var b = 0;
     var elementi_random = [];
+    console.log(numeri_random);
 
     for (var d = 0; d < numeri_random.length; d++) {
       for (var x = 0; x < result.length; x++) {
