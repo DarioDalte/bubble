@@ -1,0 +1,65 @@
+
+.row{
+    display: flex;
+    align-items: center;
+
+    .num, .color, .increase{
+        text-align: center;
+    }
+
+    .num{
+        width: 10%;
+    }
+    .color{
+        width: 50%;
+    }
+    .increase{
+        width: 30%;
+    }
+    .delete{
+        width: 10%;
+    }
+
+    &:first-child{
+        margin-bottom: 1rem;
+        border-bottom: none;
+    }
+
+    &:last-child{
+        border-bottom: none;
+
+    }
+    margin-bottom: .5rem;
+    padding-bottom: .5rem;
+
+    border-bottom: 1px solid rgb(200, 200, 200);
+
+    .table-title{
+        font-weight: 600;
+    }
+}
+
+.subtitle {
+    color: #3669c9;
+}
+
+
+
+.btn{
+    width: 50%;
+    margin: auto;
+    max-width: 10rem;
+}
+
+.text{
+    text-align: center;
+}
+
+.input {
+    width: 100%;
+}
+
+.input-container__row {
+    display: flex;
+    gap: 1.5rem;
+}

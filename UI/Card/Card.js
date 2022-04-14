@@ -20,7 +20,7 @@ function Card(props) {
       {!props.isLoading ? (
         <Image
           src={props.path}
-          alt="Picture of the author"
+          alt={`Picture of ${props.name}`}
           width={150}
           height={150}
           layout="responsive"
