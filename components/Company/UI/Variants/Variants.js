@@ -1,5 +1,5 @@
 import classes from './Variants.module.scss'
-import Button from "../../../UI/Button/Button";
+import Button from "../../../../UI/Button/Button";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";

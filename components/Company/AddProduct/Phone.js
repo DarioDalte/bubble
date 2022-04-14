@@ -8,7 +8,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 
 import FormControl from "@mui/material/FormControl";
 import Divider from "@mui/material/Divider";
-import Variants from "../UI/Variants";
+import Variants from "../UI/Variants/Variants";
+import VariantsCircle from "../UI/VariantsCircle/VariantsCircle";
 import Button from "../../../UI/Button/Button";
 import useInput from "../../hooks/use-input";
 import Card from "../../../UI/Card/Card";
@@ -24,12 +25,16 @@ function Phone(props) {
   const [colorIncrease, setColorIncrease] = useState(0);
 
   const [memories, setMemories] = useState([]);
+  const [selectedMemory, setSelectedMemory] = useState();
   const [memory, setMemory] = useState("");
   const [memoryIncrease, setMemoryIncrease] = useState(0);
+  const memoriesList = [64, 128, 256];
 
   const [rams, setRams] = useState([]);
+  const [selectedRam, setSelectedRam] = useState();
   const [ram, setRam] = useState("");
   const [ramIncrease, setRamIncrease] = useState(0);
+  const ramList = [2, 4, 8];
 
   const {
     value: enteredName,
@@ -87,12 +92,12 @@ function Phone(props) {
   } = useInput((price) => price.trim().length >= 1);
 
   const addColorHandler = () => {
-    if (color && (colorIncrease || colorIncrease === 0)) {
+    if (color && (colorIncrease || colorIncrease >= 0)) {
       setColors([
         ...colors,
         {
           name: color,
-          increase: colorIncrease,
+          increase: colorIncrease ? colorIncrease : 0,
         },
       ]);
 
@@ -102,32 +107,38 @@ function Phone(props) {
   };
 
   const addMemoryHandler = () => {
-    if (memory && (memoryIncrease || memoryIncrease === 0)) {
+    if ((memory > 0 || selectedMemory >= 0) && (memoryIncrease >= 0)) {
       setMemories([
         ...memories,
         {
-          name: memory,
-          increase: memoryIncrease,
+          name: memory ? memory : memoriesList[selectedMemory],
+          increase: memoryIncrease ? memoryIncrease : 0,
         },
       ]);
 
       setMemory("");
       setMemoryIncrease(0);
+      setSelectedMemory(-1);
     }
   };
 
   const addRamHandler = () => {
-    if (ram && (ramIncrease || ramIncrease === 0)) {
+    if (
+      (ram > 0 || selectedRam >= 0) &&
+      (ramIncrease >= 0)
+    ) {
       setRams([
         ...rams,
         {
-          name: ram,
-          increase: ramIncrease,
+          name: ram ? ram : ramList[selectedRam],
+          increase: ramIncrease ? ramIncrease : 0,
         },
       ]);
 
       setRam("");
       setRamIncrease(0);
+      setSelectedRam(-1);
+
     }
   };
 
@@ -163,6 +174,11 @@ function Phone(props) {
         setIsLoading(false);
       });
     } else {
+      nameBlurHandler();
+      processorBlurHandler();
+      osBlurHandler();
+      polliciBlurHandler();
+      priceBlurHandler();
       window.scrollTo(0, 0);
       setError(
         "Inserisci tutti i valori e almeno una variante per ogni categoria"
@@ -259,10 +275,13 @@ function Phone(props) {
         />
         <Divider sx={{ margin: "2rem 0" }} />
 
-        <Variants
+        <VariantsCircle
           sectionName={"Memoria"}
           name={"GB"}
+          selectList={memoriesList}
           onClick={addMemoryHandler}
+          selected={selectedMemory}
+          setSelected={setSelectedMemory}
           list={memories}
           setList={setMemories}
           variant={memory}
@@ -274,10 +293,13 @@ function Phone(props) {
 
         <Divider sx={{ margin: "2rem 0" }} />
 
-        <Variants
+        <VariantsCircle
           sectionName={"Memoria RAM"}
           name={"GB"}
+          selectList={ramList}
           onClick={addRamHandler}
+          selected={selectedRam}
+          setSelected={setSelectedRam}
           list={rams}
           setList={setRams}
           variant={ram}
