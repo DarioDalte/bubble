@@ -45,10 +45,84 @@
 }
 
 
-.card-container{
+.card-container {
     display: flex;
     justify-content: center;
     max-width: 15.75rem;
     margin: auto;
     width: 100%;
+}
+
+
+
+
+.image-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    .image-dropper {
+        width: 100%;
+        padding: 3rem 0;
+        border-radius: 16px;
+        border: 1px dashed black;
+        font-weight: 500;
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+
+    .remove-all-image {
+        width: 100%;
+        max-width: 15rem;
+        padding: 1rem;
+        border-radius: 12px;
+        outline: none;
+        border: 1px solid #b8222f;
+        background-color: transparent;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all .5s;
+
+        &:hover {
+            background-color: #b8222f;
+            color: white;
+        }
+    }
+}
+
+
+.photo-list-container {
+    width: 100%;
+
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        width: 100%;
+
+
+        .change-photo {
+            border-bottom: 1px solid grey;
+            cursor: pointer;
+
+            &:hover {
+                border-bottom: 1px solid black;
+                font-weight: 500;
+
+            }
+
+        }
+    }
+}
+
+.helper-text{
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    font-size: 0.9rem;
+    max-width: 20rem;
 }

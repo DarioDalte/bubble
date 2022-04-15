@@ -22,13 +22,15 @@ function Card(props) {
   return (
     <div className={`${classes.card} ${props.className}`}>
       {!props.isLoading ? (
-        <Image
-          src={props.path}
-          alt={`Picture of ${props.name}`}
-          width={150}
-          height={150}
-          layout="responsive"
-        ></Image>
+        props.path && (
+          <Image
+            src={props.path}
+            alt={`Picture of ${props.name}`}
+            width={150}
+            height={150}
+            layout="responsive"
+          ></Image>
+        )
       ) : (
         <Skeleton height={150} width="100%" />
       )}
@@ -64,7 +66,7 @@ function Card(props) {
           )}
 
           {!session ? (
-            <Link href={'/login'} passHref>
+            <Link href={"/login"} passHref>
               <IconButton>
                 <FavoriteBorderIcon className={classes.heart} />
               </IconButton>

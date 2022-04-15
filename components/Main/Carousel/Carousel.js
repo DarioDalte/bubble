@@ -12,7 +12,7 @@ function myCarousel() {
       showStatus={false}
       autoPlay={true}
       className={classes.carousel}
-      interval={600000000}
+      interval={6000}
     >
       <div className={classes.container}>
         <div className={classes["left-item"]}>

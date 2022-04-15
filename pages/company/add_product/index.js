@@ -49,6 +49,7 @@ export default AddProduct;
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
+  const prevUrl = context.req.headers.referer;
 
   if (!session || !session.user.image) {
     return {
@@ -58,5 +59,5 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  return { props: { session: session, prevUrl: context.req.headers.referer } };
+  return { props: { session: session, prevUrl: prevUrl ? prevUrl : '/' } };
 }

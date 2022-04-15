@@ -1,10 +1,11 @@
 import classes from "./Phone.module.scss";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import TextField from "@mui/material/TextField";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
+import Image from "next/image";
 
 import FormControl from "@mui/material/FormControl";
 import Divider from "@mui/material/Divider";
@@ -15,6 +16,10 @@ import useInput from "../../hooks/use-input";
 import Card from "../../../UI/Card/Card";
 import Loading from "../../../UI/Loading/Loading";
 import axios from "axios";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+
+import ImageUploading from "react-images-uploading";
 
 function Phone(props) {
   const [error, setError] = useState("");
@@ -107,7 +112,7 @@ function Phone(props) {
   };
 
   const addMemoryHandler = () => {
-    if ((memory > 0 || selectedMemory >= 0) && (memoryIncrease >= 0)) {
+    if ((memory > 0 || selectedMemory >= 0) && memoryIncrease >= 0) {
       setMemories([
         ...memories,
         {
@@ -123,10 +128,7 @@ function Phone(props) {
   };
 
   const addRamHandler = () => {
-    if (
-      (ram > 0 || selectedRam >= 0) &&
-      (ramIncrease >= 0)
-    ) {
+    if ((ram > 0 || selectedRam >= 0) && ramIncrease >= 0) {
       setRams([
         ...rams,
         {
@@ -138,7 +140,6 @@ function Phone(props) {
       setRam("");
       setRamIncrease(0);
       setSelectedRam(-1);
-
     }
   };
 
@@ -184,6 +185,29 @@ function Phone(props) {
         "Inserisci tutti i valori e almeno una variante per ogni categoria"
       );
     }
+  };
+
+  // const [image, setImage] = useState([]);
+  // const [imageUrl, setImageUrl] = useState([]);
+  // console.log(imageUrl);
+
+  // useEffect(() => {
+  //   if (image.length < 1) return;
+  //   const newImageUrl = URL.createObjectURL(image);
+  //   setImageUrl(newImageUrl);
+  // }, [image]);
+
+  // const imageHandler = (e) => {
+  //   setImage(e.target.files[0]);
+  // };
+
+  const [images, setImages] = useState([]);
+  const maxNumber = 69;
+
+  const onChange = (imageList, addUpdateIndex) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList);
   };
 
   return (
@@ -308,11 +332,95 @@ function Phone(props) {
           setIncrease={setRamIncrease}
           empty={"Nessuna memoria aggiunta."}
         />
+
+        <Divider sx={{ marginTop: "2rem" }} />
+        <h2 style={{ marginBottom: 0 }} className={classes.title}>
+          Carica delle immagini
+        </h2>
+        <p className={classes["helper-text"]}>
+          P.S. Ricorda che la prima immagine che caricherai sarà quella mostrata
+          sulla card.
+        </p>
+        <div className="App">
+          <ImageUploading
+            multiple
+            value={images}
+            onChange={onChange}
+            maxNumber={maxNumber}
+            dataURLKey="data_url"
+          >
+            {({
+              imageList,
+              onImageUpload,
+              onImageRemoveAll,
+              onImageUpdate,
+              onImageRemove,
+              isDragging,
+              dragProps,
+            }) => (
+              // write your building UI
+              <div className={classes["image-wrapper"]}>
+                <button
+                  className={classes["image-dropper"]}
+                  style={isDragging ? { color: "red" } : undefined}
+                  onClick={onImageUpload}
+                  {...dragProps}
+                >
+                  Clicca o trascina qui
+                </button>
+
+                <div className={classes["photo-list-container"]}>
+                  {imageList.map((image, index) => (
+                    <>
+                      <div key={index} className={classes["list-item"]}>
+                        <Image
+                          src={image["data_url"]}
+                          width={100}
+                          height={100}
+                          alt={"Phone photo"}
+                        />
+
+                        <span
+                          className={classes["change-photo"]}
+                          onClick={() => onImageUpdate(index)}
+                        >
+                          Cambia
+                        </span>
+                        <IconButton
+                          aria-label="delete"
+                          className={classes.delete}
+                          onClick={() => onImageRemove(index)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                      <Divider sx={{ marginTop: "2rem" }} />
+                    </>
+                  ))}
+                </div>
+                {imageList.length === 0 ? (
+                  <span className={classes.text}>
+                    Nessuna immagine caricata.
+                  </span>
+                ) : (
+                  <button
+                    className={classes["remove-all-image"]}
+                    onClick={onImageRemoveAll}
+                  >
+                    Rimuovi tutte le immagini
+                  </button>
+                )}
+              </div>
+            )}
+          </ImageUploading>
+        </div>
+        <Divider sx={{ marginTop: "2rem" }} />
+
         <h2 className={classes.title}>Card Preview</h2>
 
         <div className={classes["card-container"]}>
           <Card
-            path={"/test"}
+            path={images[0] && images[0]["data_url"]}
             brand={props.companyName}
             name={enteredName}
             price={enteredPrice}
