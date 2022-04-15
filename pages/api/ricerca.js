@@ -1,3 +1,5 @@
+import { sassFalse } from "sass";
+
 const databaseConnection = require("./middlewares/database.js");
 
 export default async function handler(req, res) {
@@ -19,11 +21,24 @@ export default async function handler(req, res) {
     collection = db.collection("companies"); //Seleziono la collection
     const companies = await collection.find().toArray(); //Inserisco nella collection
 
+    var result = await db
+      .collection("categories")
+      .aggregate([
+        {
+          $lookup: {
+            from: "products",
+            localField: "_id",
+            foreignField: "category",
+            as: "orderdetails",
+          },
+        },
+      ])
+      .toArray();
+
     var stringa_1 = [];
 
     data.stringa = data.stringa.toLowerCase();
     data.stringa = data.stringa.split(" ").join("");
-    stringa_1.push("RICERCA" + data.stringa + "\n");
 
     var prodotti_ricerca = [];
     var myJSON = "";
@@ -33,49 +48,54 @@ export default async function handler(req, res) {
       nome_prodotto = nome_prodotto.split(" ").join("");
       nome_prodotto = nome_prodotto.toLowerCase();
       myJSON = JSON.stringify(prodotti[i]);
-      stringa_1.push("PRODOTTO: " + myJSON + "\n");
 
       if (nome_prodotto.includes(data.stringa)) {
         prodotti_ricerca.push(prodotti[i]);
-        stringa_1.push("RICERCA PRESENTE NEL NOME DEL PRODOTTO: " + "\n");
       } else {
         let id_brand = prodotti[i]["brand"];
-        stringa_1.push("ECCO L'ID DEL BRAND DEL PRODOTTO: " + id_brand + "\n");
 
         for (var x = 0; x < companies.length; x++) {
           myJSON = JSON.stringify(companies[x]);
-          stringa_1.push("COMPANY: " + myJSON + "\n");
           var brand = companies[x]["_id"]
             .toString()
             .replace(/ObjectId\("(.*)"\)/, "$1");
 
           if (brand === String(id_brand)) {
-            console.log("siiii è uguale");
             var nome = String(companies[x]["name"]);
             nome = nome.toLocaleLowerCase();
             if (nome.includes(data.stringa)) {
-              console.log("siiii è uguale1");
-              stringa_1.push();
-
               prodotti_ricerca.push(prodotti[i]);
             }
           }
         }
       }
     }
+    var a = 0;
 
-    stringa_1 = stringa_1.toString();
-
-    const fs = require("fs");
-
-    try {
-      fs.writeFileSync(
-        "C:/Users/Arslan/OneDrive/Desktop/bubble/pages/api/test.txt",
-        stringa_1
-      );
-      //file written successfully
-    } catch (err) {
-      console.error(err);
+    for (var i = 0; i < result.length; i++) {
+      var boh = result[i]["category"].toLowerCase();
+      if (boh.includes(data.stringa)) {
+        for (var z = 0; z < result[i]["orderdetails"].length; z++) {
+          prodotti_ricerca.push(result[i]["orderdetails"][z]);
+          a = 1;
+        }
+      }
+    }
+    var id;
+    if (a == 0) {
+      for (var i = 0; i < result.length; i++) {
+        if (result[i]["sub_category"]) {
+          var keys = Object.keys(result[i]["sub_category"]);
+          var values = Object.values(result[i]["sub_category"]);
+          for (var f = 0; f < keys.length; f++) {
+            if (keys[f].includes(data.stringa)) {
+              id = values[f];
+              break;
+            }
+          }
+        }
+        //for (var z = 0; z < result[i]["orderdetails"]; z++) {}
+      }
     }
 
     res.json({ prodotti: prodotti_ricerca });
