@@ -29,6 +29,7 @@
     "micro": "^9.3.4",
     "mongodb": "^4.4.0",
     "mongoose": "^6.2.11",
+    "multer": "^1.4.4",
     "next": "12.1.0",
     "next-auth": "^3.29.1",
     "next-redux-wrapper": "^7.0.5",

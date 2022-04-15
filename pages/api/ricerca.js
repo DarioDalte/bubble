@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       stringa_1.push("PRODOTTO: " + myJSON + "\n");
 
       if (nome_prodotto.includes(data.stringa)) {
-        prodotti_ricerca.push(prodotti[i]["name"]);
+        prodotti_ricerca.push(prodotti[i]);
         stringa_1.push("RICERCA PRESENTE NEL NOME DEL PRODOTTO: " + "\n");
       } else {
         let id_brand = prodotti[i]["brand"];
@@ -55,11 +55,9 @@ export default async function handler(req, res) {
             nome = nome.toLocaleLowerCase();
             if (nome.includes(data.stringa)) {
               console.log("siiii è uguale1");
-              stringa_1.push(
-                "PRODOTTO CONTENTE LA  RICERCA NEL NOME DEL BRAND" + "\n"
-              );
+              stringa_1.push();
 
-              prodotti_ricerca.push(prodotti[i]["name"]);
+              prodotti_ricerca.push(prodotti[i]);
             }
           }
         }
