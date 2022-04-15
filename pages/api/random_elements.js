@@ -71,12 +71,10 @@ export default async function handler(req, res) {
     var cart = [];
     var b = 0;
     var elementi_random = [];
-    console.log(numeri_random);
 
     for (var d = 0; d < numeri_random.length; d++) {
       for (var x = 0; x < result.length; x++) {
         if (numeri_random[d] == x) {
-          console.log(result[x]["orderdetails"].length);
           for (var f = 0; f < result[x]["orderdetails"].length; f++) {
             if (result[x]["orderdetails"][f]) {
               let id_prodotto = result[x]["orderdetails"][f]["_id"]

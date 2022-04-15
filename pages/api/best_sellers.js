@@ -62,7 +62,6 @@ export default async function handler(req, res) {
     }
     prodotti_finali = JSON.stringify(prodotti_finali);
     prodotti_finali = JSON.parse(prodotti_finali);
-    console.log(prodotti_finali);
 
     var recensioni = await db.collection("reviews").find().toArray(); //Selects documents from collection reviews
     var elenco_recensioni = []; //Declare and initialize elenco_recensioni
@@ -98,17 +97,13 @@ export default async function handler(req, res) {
       }
       var media = somma_recensioni / cont;
 
-      console.log(prodotti_finali[x]["brand"]);
-
       let yourId = mongoose.Types.ObjectId(prodotti_finali[x]["brand"]);
-      console.log(yourId);
+
       var brand = await db
         .collection("companies")
         .find({ _id: yourId })
         .toArray();
       //Selects documents from collection products
-      console.log("ciao");
-      console.log(brand);
 
       prodotti_finali[x]["brand"] = brand[0]["name"];
       oggetto = {

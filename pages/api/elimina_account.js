@@ -46,7 +46,11 @@ export default async function handler(req, res) {
         );
 
         if (isValid) {
-          const collection = db.collection("users"); //Select collection users
+          var collection = db.collection("users"); //Select collection users
+
+          await collection.deleteOne({ email: data.email });
+
+          var collection = db.collection("cart"); //Select collection users
 
           await collection.deleteOne({ email: data.email });
 
@@ -88,6 +92,11 @@ export default async function handler(req, res) {
 
           res.status(422).json({
             message: "Account eliminato",
+          });
+          return;
+        } else {
+          res.status(422).json({
+            message: "Credenziali errate",
           });
           return;
         }
