@@ -1,109 +1,95 @@
 .title {
-    text-align: center;
-    color: #3669c9;
+  text-align: center;
+  color: #3669c9;
 }
 
 .container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 90%;
+  margin: 2rem auto;
+  max-width: 70rem;
+
+  .card {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
 
     display: flex;
-    gap: 2rem;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+    gap: 1rem;
+    opacity: 1;
+    transition: all 0.3s;
+
+    @media (min-width: 50rem) {
+      width: 20%;
+    }
+
+    .subtitle {
+      font-weight: 500;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  // @media (min-width:) {
+
+  // }
+
+  .icon-container {
+    display: flex;
+    justify-content: flex-end;
+
+    .edit-icon {
+      color: #3669c9;
+    }
+
+    .delete-icon {
+      color: #b8222f;
+    }
+  }
+
+  .add-container {
+    width: 40%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    width: 90%;
-    margin: 2rem auto;
-    max-width: 70rem;
 
+    .btn {
+      width: 115px;
+      height: 115px;
+      border: 1px solid rgb(209, 205, 205);
 
+      .add-icon {
+        font-size: 2.5rem;
+      }
 
-    .card {
+      @media (max-width: 56rem) {
+        width: 90px;
+        height: 90px;
 
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        padding: 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 40%;
-        gap: 1rem;
-        opacity: 1;
-
-
-        @media (min-width: 50rem) {
-            width: 20%;
-
+        .add-icon {
+          font-size: 2rem;
         }
-
-        .subtitle {
-            font-weight: 500;
-        }
-
-
-        &:hover {
-            transform: scale(1.1);
-        }
-
-
+      }
     }
 
-    // @media (min-width:) {
-
-    // }
-
-    .icon-container {
-        display: flex;
-        justify-content: flex-end;
-
-        .edit-icon {
-            color: #3669c9;
-        }
-
-        .delete-icon {
-            color: #b8222f;
-        }
+    @media (min-width: 50rem) {
+      width: 20%;
     }
-
-    .add-container {
-
-        width: 40%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .btn {
-            width: 115px;
-            height: 115px;
-            border: 1px solid rgb(209, 205, 205);
-
-            .add-icon {
-                font-size: 2.5rem
-            }
-
-            @media(max-width: 56rem) {
-                width: 90px;
-                height: 90px;
-
-                .add-icon {
-                    font-size: 2rem
-                }
-
-            }
-        }
-
-        @media (min-width: 50rem) {
-            width: 20%;
-
-        }
-
-    }
+  }
 }
 
-
 .deleted {
-    transition: opacity 1s;
+  transition: opacity 1s;
 
-    opacity: 0 !important;
+  opacity: 0 !important;
 }

@@ -71,6 +71,7 @@ export default async function handler(req, res) {
         }
       }
     }
+<<<<<<< Updated upstream
     var a = 0;
 
     for (var i = 0; i < result.length; i++) {
@@ -112,6 +113,21 @@ export default async function handler(req, res) {
           }
         }
       }
+=======
+
+    stringa_1 = stringa_1.toString();
+
+    const fs = require("fs");
+
+    try {
+      fs.writeFileSync(
+        "./test.txt",
+        stringa_1
+      );
+      //file written successfully
+    } catch (err) {
+      console.error(err);
+>>>>>>> Stashed changes
     }
 
     res.json({ prodotti: prodotti_ricerca });

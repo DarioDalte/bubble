@@ -6,6 +6,11 @@
   outline: none;
   background: rgb(219, 219, 219);
   border-radius: 8px 0 0 8px;
+
+  &:focus {
+    border: 2px solid #3669c9;
+    border-right: none;
+  }
 }
 .container {
   height: 100%;
@@ -15,10 +20,17 @@
   border-radius: 0 8px 8px 0;
   border-left: 1px solid rgb(179, 179, 179);
 
+  cursor: pointer;
+
   .icon {
     height: 100%;
     width: 100%;
 
     color: rgb(85, 84, 84);
   }
+}
+
+.focussed {
+  border: 2px solid #3669c9;
+  border-left: 1px solid rgb(179, 179, 179);
 }

@@ -1,0 +1,85 @@
+.body {
+  display: flex;
+  margin: auto;
+  margin-top: 7rem;
+  width: 95%;
+  max-width: 110rem;
+
+  .filter-container {
+    width: 20%;
+    border-right: 2px solid rgba(0, 0, 0, 0.12);
+    padding-right: 1rem;
+
+    .price-container {
+      display: flex;
+      gap: 1rem;
+
+      @media (max-width: 62.5rem) {
+        flex-direction: column;
+      }
+    }
+  }
+  .products-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .card {
+      margin-bottom: 2rem;
+      max-width: 17rem;
+      width: 20%;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      @media (max-width: 75rem) {
+        width: 25%;
+      }
+
+      @media (max-width: 47rem) {
+        margin: 0.5rem;
+        width: 30%;
+      }
+
+      @media (max-width: 35rem) {
+        width: 40%;
+      }
+    }
+  }
+}
+
+.title {
+  margin-bottom: 1rem;
+  color: #3669c9;
+}
+
+.radio {
+  width: 100%;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  width: 50%;
+  max-width: 7rem;
+  justify-content: center;
+  display: flex;
+  margin: 2rem auto;
+  border-radius: 8px;
+  border: none;
+  background-color: transparent;
+  border: 1px solid #b8222f;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+
+  &:hover{
+  font-weight: bold;
+  color: white;
+  background-color: #b8222f;
+
+  }
+}

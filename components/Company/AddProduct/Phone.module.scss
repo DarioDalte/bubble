@@ -103,6 +103,16 @@
         justify-content: center;
         gap: 2rem;
         width: 100%;
+        border-bottom: 1px solid rgb(200, 200, 200);
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 1rem;
+        }
+
 
 
         .change-photo {
@@ -119,7 +129,7 @@
     }
 }
 
-.helper-text{
+.helper-text {
     text-align: center;
     width: 100%;
     margin: auto;

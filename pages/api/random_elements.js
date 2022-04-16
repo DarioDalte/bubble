@@ -21,6 +21,7 @@ export default async function handler(req, res) {
       ])
       .toArray();
 
+
     function getRandomInt(max) {
       return Math.floor(Math.random() * max);
     }

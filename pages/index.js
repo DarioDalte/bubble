@@ -37,7 +37,6 @@ export default function Home(props) {
       });
     } else {
       setBestSellersIsLoading(false);
-
     }
   }, []);
 
@@ -58,8 +57,6 @@ export default function Home(props) {
     </>
   );
 }
-
-
 
 export async function getServerSideProps(ctx) {
   const session = await getSession({ req: ctx.req });

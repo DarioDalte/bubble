@@ -41,6 +41,10 @@ function Phone(props) {
   const [ramIncrease, setRamIncrease] = useState(0);
   const ramList = [2, 4, 8];
 
+  const [images, setImages] = useState([]);
+  const maxNumber = 69;
+
+
   const {
     value: enteredName,
     valueIsValid: nameIsValid,
@@ -152,17 +156,20 @@ function Phone(props) {
       polliciIsValid &&
       colors.length >= 1 &&
       rams.length >= 1 &&
-      memories.length >= 1
+      memories.length >= 1 &&
+      images.length >= 1
     ) {
       setError("");
       setIsLoading(true);
-
+      const imagesList = images.map((image) => image.file.name);
+      console.log(imagesList);
+      
       const obj = {
         brand: props.companyName,
         name: enteredName,
         category: "Informatica",
         sub_categories: ["Telefoni"],
-        image: "test",
+        images: imagesList,
         pollici: enteredPollici,
         price: enteredPrice,
         OS: enteredOs,
@@ -171,10 +178,11 @@ function Phone(props) {
       };
       console.log(obj);
 
-      axios.post("/api/add_product", obj).then((res) => {
+      axios.post("/api/add_product", [obj, images]).then((res) => {
         setIsLoading(false);
       });
     } else {
+
       nameBlurHandler();
       processorBlurHandler();
       osBlurHandler();
@@ -201,12 +209,10 @@ function Phone(props) {
   //   setImage(e.target.files[0]);
   // };
 
-  const [images, setImages] = useState([]);
-  const maxNumber = 69;
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    console.log(imageList, addUpdateIndex);
+   
     setImages(imageList);
   };
 
@@ -371,31 +377,28 @@ function Phone(props) {
 
                 <div className={classes["photo-list-container"]}>
                   {imageList.map((image, index) => (
-                    <>
-                      <div key={index} className={classes["list-item"]}>
-                        <Image
-                          src={image["data_url"]}
-                          width={100}
-                          height={100}
-                          alt={"Phone photo"}
-                        />
+                    <div key={index} className={classes["list-item"]}>
+                      <Image
+                        src={image["data_url"]}
+                        width={100}
+                        height={100}
+                        alt={"Phone photo"}
+                      />
 
-                        <span
-                          className={classes["change-photo"]}
-                          onClick={() => onImageUpdate(index)}
-                        >
-                          Cambia
-                        </span>
-                        <IconButton
-                          aria-label="delete"
-                          className={classes.delete}
-                          onClick={() => onImageRemove(index)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </div>
-                      <Divider sx={{ marginTop: "2rem" }} />
-                    </>
+                      <span
+                        className={classes["change-photo"]}
+                        onClick={() => onImageUpdate(index)}
+                      >
+                        Cambia
+                      </span>
+                      <IconButton
+                        aria-label="delete"
+                        className={classes.delete}
+                        onClick={() => onImageRemove(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
                   ))}
                 </div>
                 {imageList.length === 0 ? (
