@@ -8,6 +8,12 @@ export default function SearchBar() {
   const inputRef = useRef();
   const router = useRouter();
 
+  const onSearchHandler = () => {
+    if (inputRef.current.value) {
+      router.push(`/products/${inputRef.current.value}`);
+    }
+  };
+
   return (
     <>
       <input
@@ -28,7 +34,11 @@ export default function SearchBar() {
         }}
       />
       <div className={`${classes.container} ${iconClass && classes.focussed}`}>
-        <SearchIcon className={classes.icon} color="red" />
+        <SearchIcon
+          className={classes.icon}
+          color="red"
+          onClick={onSearchHandler}
+        />
       </div>
     </>
   );

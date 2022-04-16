@@ -4,6 +4,7 @@
   margin-top: 7rem;
   width: 95%;
   max-width: 110rem;
+  margin-bottom: 7rem;
 
   .filter-container {
     width: 20%;
@@ -59,6 +60,14 @@
   width: 100%;
   justify-content: space-between;
   margin: 0;
+  @media (max-width: 25rem){
+    height: 26px;
+
+    span{
+      font-size: 1rem;
+    }
+  }
+
 }
 
 .btn {
@@ -74,12 +83,92 @@
   border: 1px solid #b8222f;
   font-weight: 500;
   cursor: pointer;
-  transition: all .2s;
+  transition: all 0.2s;
 
-  &:hover{
-  font-weight: bold;
-  color: white;
-  background-color: #b8222f;
+  &:hover {
+    font-weight: bold;
+    color: white;
+    background-color: #b8222f;
+  }
+}
 
+.nothing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+  .text {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #3669c9;
+  }
+
+  .icon {
+    font-size: 3rem;
+    font-weight: 500;
+    color: #3669c9;
+  }
+}
+
+.loading {
+  margin-top: 3rem;
+}
+
+.modal-btn {
+  text-align: center;
+  width: 50%;
+  border: 1px solid black;
+  margin: auto;
+  margin-bottom: 3rem;
+  padding: 1rem 0;
+  border-radius: 12px;
+}
+
+.modal {
+  background: white;
+  border: none;
+  padding: 2rem;
+
+  outline: none;
+  width: 80%;
+  margin: auto;
+  border-radius: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 442px;
+}
+
+.tabs {
+  div {
+    justify-content: center;
+  }
+}
+
+.price-container-mobile {
+  display: flex;
+  gap: 2rem;
+}
+
+.btn-container {
+  display: flex;
+
+  .btn-apply {
+    width: 40%;
+    padding: 0.5rem 1rem;
+    max-width: 7rem;
+    justify-content: center;
+    display: flex;
+    border-radius: 8px;
+    margin: 2rem auto;
+    border: none;
+    background-color: transparent;
+    background-color: #3669c9;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
   }
 }
