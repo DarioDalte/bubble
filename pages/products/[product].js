@@ -1,5 +1,6 @@
 import classes from "./products.module.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import Header from "../../components/Header/Header";
 import Card from "../../UI/Card/Card";
@@ -16,12 +17,31 @@ import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Divider from "@mui/material/Divider";
 import RadioGroup from "@mui/material/RadioGroup";
+import { useRouter } from "next/router";
 
 function Products(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
   const [filterName, setFilterName] = useState(-1);
   const [filterPrice, setFilterPrice] = useState(-1);
   const [filterRating, setFilterRating] = useState(-1);
+
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+  const { product } = router.query;
+  console.log(product);
+  useEffect(() => {
+    enterHandler();
+  }, [product]);
+
+  const enterHandler = () => {
+    setIsLoading(true);
+    axios.post("/api/ricerca", { stringa: product }).then((res) => {
+      setProducts(res.data.prodotti);
+      setIsLoading(false);
+    });
+  };
 
   return (
     <>
@@ -143,23 +163,28 @@ function Products(props) {
         )}
 
         <div className={classes["products-container"]}>
-          {props.products.map((product, i) => {
-            if (i < 20) {
-              return (
-                <Card
-                  key={i}
-                  className={classes.card}
-                  name={
-                    product.name.charAt(0).toUpperCase() + product.name.slice(1)
+          {!isLoading
+            ? products.length === 0
+              ? "Non sono stati trovati prodotti"
+              : products.map((product, i) => {
+                  if (i < 20) {
+                    return (
+                      <Card
+                        key={i}
+                        className={classes.card}
+                        name={
+                          product.name.charAt(0).toUpperCase() +
+                          product.name.slice(1)
+                        }
+                        price={product.price}
+                        brand={"Logitech"}
+                        star={product.star}
+                        path={`/${product.image}`}
+                      />
+                    );
                   }
-                  price={product.price}
-                  brand={"Logitech"}
-                  star={product.star}
-                  path={`/${product.image}`}
-                />
-              );
-            }
-          })}
+                })
+            : "Carico..."}
         </div>
       </div>
       {isMobile && <BottomNav navValue={-1} />}
@@ -170,19 +195,10 @@ function Products(props) {
 export default Products;
 
 export async function getServerSideProps(ctx) {
-  const databaseConnection = require("../api/middlewares/database.js");
   const session = await getSession({ req: ctx.req });
-
-  const client = await databaseConnection();
-  await client.connect();
-  const db = client.db();
-
-  const products = await db.collection("products").find().toArray();
-  //   console.log(products);
 
   return {
     props: {
-      products: JSON.parse(JSON.stringify(products)),
       session: session,
     }, // will be passed to the page component as props
   };

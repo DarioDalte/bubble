@@ -20,6 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 
 import ImageUploading from "react-images-uploading";
+import {useMutate} from 'restful-react';
 
 function Phone(props) {
   const [error, setError] = useState("");
@@ -44,6 +45,10 @@ function Phone(props) {
   const [images, setImages] = useState([]);
   const maxNumber = 69;
 
+  const {mutate: uploadImage} = useMutate({
+    verb: 'POST',
+    path: '/api/upload_images'
+  });
 
   const {
     value: enteredName,
@@ -160,10 +165,10 @@ function Phone(props) {
       images.length >= 1
     ) {
       setError("");
-      setIsLoading(true);
+      // setIsLoading(true);
       const imagesList = images.map((image) => image.file.name);
       console.log(imagesList);
-      
+
       const obj = {
         brand: props.companyName,
         name: enteredName,
@@ -178,11 +183,22 @@ function Phone(props) {
       };
       console.log(obj);
 
-      axios.post("/api/add_product", [obj, images]).then((res) => {
-        setIsLoading(false);
-      });
-    } else {
+      const formData = new FormData();
+      images.map((image) =>{
+        formData.append('image', image.file)
+      })
+      uploadImage(formData).then((res) =>{
+        console.log(res);
+      }).catch((err) =>{
+        console.log(err);
+      })
 
+      axios
+        .post("/api/add_product", obj,)
+        .then((res) => {
+          setIsLoading(false);
+        })
+    } else {
       nameBlurHandler();
       processorBlurHandler();
       osBlurHandler();
@@ -209,10 +225,9 @@ function Phone(props) {
   //   setImage(e.target.files[0]);
   // };
 
-
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-   
+
     setImages(imageList);
   };
 

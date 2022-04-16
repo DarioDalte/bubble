@@ -11,13 +11,19 @@ import classes from "./products.module.scss";
 import Link from "next/link";
 import axios from "axios";
 
+
+
+
 function Products(props) {
   const [products, setProducts] = useState(props.products);
   const [deletedItem, setDeletedItem] = useState();
+  const router = useRouter()
 
   function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
+
+
 
   const deleteHandler = async (i) => {
     axios.post("/api/elimina_prodotto", { id: products[i]["_id"] });
