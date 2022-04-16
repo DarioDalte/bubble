@@ -1,6 +1,7 @@
 import { sassFalse } from "sass";
 
 const databaseConnection = require("./middlewares/database.js");
+const mongoose = require("mongoose");
 
 export default async function handler(req, res) {
   const client = await databaseConnection();
@@ -81,20 +82,35 @@ export default async function handler(req, res) {
         }
       }
     }
-    var id;
     if (a == 0) {
       for (var i = 0; i < result.length; i++) {
         if (result[i]["sub_category"]) {
           var keys = Object.keys(result[i]["sub_category"]);
           var values = Object.values(result[i]["sub_category"]);
+
           for (var f = 0; f < keys.length; f++) {
-            if (keys[f].includes(data.stringa)) {
-              id = values[f];
-              break;
+            if (keys[f].toLowerCase().includes(data.stringa)) {
+              for (var z = 0; z < result[i]["orderdetails"].length; z++) {
+                var variabile = result[i]["orderdetails"][z]["sub_categories"];
+                if (variabile) {
+                  for (var r = 0; r < variabile.length; r++) {
+                    variabile[r] = variabile[r]
+                      .toString()
+                      .replace(/ObjectId\("(.*)"\)/, "$1");
+
+                    values[f] = values[f]
+                      .toString()
+                      .replace(/ObjectId\("(.*)"\)/, "$1");
+
+                    if (variabile[r] == values[f]) {
+                      prodotti_ricerca.push(result[i]["orderdetails"][z]);
+                    }
+                  }
+                }
+              }
             }
           }
         }
-        //for (var z = 0; z < result[i]["orderdetails"]; z++) {}
       }
     }
 

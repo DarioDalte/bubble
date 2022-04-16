@@ -23,23 +23,14 @@ export default async function handler(req, res) {
       .find({ _id: data.id })
       .toArray(); //Selects documents from collection product
     var id = data.id;
-    delete data.id;
-
-    if (product.length != 0) {
-      const collection = db.collection("products"); //Select collection product
-      var myquery = { _id: id };
-      var newvalues = { $set: data };
-      await collection.updateOne(myquery, newvalues);
-      res.json({
-        message: "Modifiche effettuate",
-      });
-      return;
-    } else {
-      res.json({
-        message: "Nessun prodotto",
-      });
-      return;
+    console.log(product);
+    if (product) {
     }
+
+    res.json({
+      message: "Nessun prodotto",
+    });
+    return;
   } finally {
     // Close the connection to the MongoDB cluster
     await client.close();
