@@ -58,19 +58,28 @@ export default async function handler(req, res) {
         .find({ _id: yourId })
         .toArray();
       //Selects documents from collection products
+      var obj = {
+        id: product["_id"],
+        brand: brand[0]["name"],
+        name: product["name"],
+        category: category[0]["category"],
+        pollici: product["pollici"],
+        processore: product["processore"],
+        price: prezzo_prodotto,
+        image: image,
+      };
+      var user = await db.collection("cart").findOne({
+        email: data.email,
+      });
+      user["products"].push(obj);
+      var myquery = { email: data.email };
+      var newvalues = { $set: { products: user["products"] } };
+      await db.collection("cart").updateOne(myquery, newvalues);
 
       res.json({
-        prodotto: {
-          id: product["_id"],
-          brand: brand[0]["name"],
-          name: product["name"],
-          category: category[0]["category"],
-          pollici: product["pollici"],
-          processore: product["processore"],
-          price: prezzo_prodotto,
-          image: image,
-        },
+        prodotto: obj,
       });
+
       return;
     } else {
       res.json({

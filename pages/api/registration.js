@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         data.cognome = separato[1];
         await usersCollection.insertOne(data);
         const db = client.db(); //Boh
-        var obj = { email: data.email };
+        var obj = { email: data.email, products: [] };
         // obj = JSON.parse(obj);
 
         await db.collection("cart").insert(obj);
