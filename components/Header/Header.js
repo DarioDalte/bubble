@@ -9,6 +9,7 @@ import SearchBar from "../../UI/SearchBar/SearchBar";
 
 import { IconButton, useMediaQuery } from "@mui/material";
 import ProfileMenu from "./ProfileMenu/ProfileMenu";
+import Image from "next/image";
 
 function Header(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
@@ -16,7 +17,17 @@ function Header(props) {
   return (
     <>
       <header className={classes.header}>
-        <div className={classes.logo}>logo</div>
+        <div className={classes.logo}>
+          <Link href={"/"} passHref>
+            <Image
+              className={classes.image}
+              src={"/logo.png"}
+              width={58}
+              height={65}
+              alt={"Bubble logo"}
+            />
+          </Link>
+        </div>
         <div className={classes.title}>
           {isMobile ? "Bubble" : <SearchBar />}
         </div>
@@ -34,7 +45,7 @@ function Header(props) {
             </IconButton>
           )}
           {props.session && props.session.user.image && (
-            <Link href='/company/add_product' passHref>
+            <Link href="/company/add_product" passHref>
               <IconButton className={classes["icon-button"]}>
                 <AddIcon className={classes.icon} />
               </IconButton>

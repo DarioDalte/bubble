@@ -12,6 +12,7 @@ import Loading from "../../UI/Loading/Loading";
 import { useMediaQuery, TextField } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import BackArrow from "../../UI/BackArrow/BackArrow";
+import MyHead from "../../UI/MyHead/MyHead";
 
 export default function Login() {
   const [msgError, setMsgError] = useState("");
@@ -19,7 +20,6 @@ export default function Login() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width:47rem)");
-
 
   // const bestSellers = useSelector((state) => state.bestSeller);
   // console.log(bestSellers);
@@ -76,6 +76,7 @@ export default function Login() {
 
   return (
     <>
+      <MyHead title={'Login'}/>
       <BackArrow />
 
       <div className={`${classes.container} ${!isMobile && classes.desktop}`}>

@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Phone from "../../../components/Company/AddProduct/Phone";
 import BackArrow from "../../../UI/BackArrow/BackArrow";
+import Head from "next/head";
 
 function AddProduct(props) {
   const [typology, setTypology] = useState("");
@@ -18,6 +19,10 @@ function AddProduct(props) {
 
   return (
     <>
+
+    <Head>
+      <title>Aggiungi un prodotto</title>
+    </Head>
       <BackArrow  path={`${props.prevUrl}`}/>
 
       <div className={classes.container}>

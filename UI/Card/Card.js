@@ -57,7 +57,7 @@ function Card(props) {
             <Rating
               className={classes.star}
               name="half-rating-read"
-              defaultValue={props.star}
+              value={props.star ? props.star : 0}
               precision={0.1}
               readOnly
             />

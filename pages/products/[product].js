@@ -28,15 +28,18 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import MyHead from "../../UI/MyHead/MyHead";
 
 function Products(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
-  const [filterName, setFilterName] = useState(-1);
-  const [filterPrice, setFilterPrice] = useState(-1);
-  const [filterRating, setFilterRating] = useState(-1);
+  const [filter, setFilter] = useState(-1);
+
   const [value, setValue] = useState("1");
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(false);
 
   const [products, setProducts] = useState([]);
+  const [initialProducts, setInitialProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -44,7 +47,6 @@ function Products(props) {
 
   const router = useRouter();
   const { product } = router.query;
-  console.log(product);
   useEffect(() => {
     enterHandler();
   }, [product]);
@@ -53,6 +55,7 @@ function Products(props) {
     setIsLoading(true);
     axios.post("/api/ricerca", { stringa: product }).then((res) => {
       setProducts(res.data.prodotti);
+      setInitialProducts(res.data.prodotti);
       setIsLoading(false);
     });
   };
@@ -60,9 +63,44 @@ function Products(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const filterHandler = (e) => {
+    setFilter(e.target.value);
+    if (e.target.value == 0) {
+      const temp = [...products].sort((a, b) =>
+        a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+      );
+      setProducts(temp);
+    } else if (e.target.value == 1) {
+      const temp = [...products].sort((a, b) =>
+        a.name < b.name ? 1 : b.name < a.name ? -1 : 0
+      );
+      setProducts(temp);
+    } else if (e.target.value == 2) {
+      const temp = [...products].sort((a, b) => a.price - b.price);
+      setProducts(temp);
+    } else if (e.target.value == 3) {
+      const temp = [...products].sort((a, b) => b.price - a.price);
+      setProducts(temp);
+    } else if (e.target.value == 4) {
+      const temp = [...products].sort((a, b) => a.star - b.star);
+      setProducts(temp);
+    } else if (e.target.value == 5) {
+      const temp = [...products].sort((a, b) => b.star - a.star);
+      setProducts(temp);
+    }
+  };
+
+  const resetHandler = () => {
+    setFilter(-1);
+    setProducts(initialProducts);
+    setMinPrice(0);
+    setMaxPrice(false);
+    handleClose();
+  };
 
   return (
     <>
+      <MyHead title={"Prodotti"} />
       <Modal
         open={open}
         onClose={handleClose}
@@ -77,7 +115,7 @@ function Products(props) {
                 <Tab label="Ordina" value="2" />
               </TabList>
             </Box>
-            <TabPanel value="1" sx={{ padding: 0, marginTop: "3rem"}}>
+            <TabPanel value="1" sx={{ padding: 0, marginTop: "3rem" }}>
               <h3 className={classes.title}>Prezzo</h3>
               <div className={classes["price-container-mobile"]}>
                 <FormControl fullWidth>
@@ -90,7 +128,11 @@ function Products(props) {
                     startAdornment={
                       <InputAdornment position="start">€</InputAdornment>
                     }
-                    label="Prezzo"
+                    label="Min"
+                    onChange={(e) => {
+                      setMinPrice(e.target.value);
+                    }}
+                    value={minPrice}
                   />
                 </FormControl>
                 <FormControl fullWidth>
@@ -103,16 +145,24 @@ function Products(props) {
                     startAdornment={
                       <InputAdornment position="start">€</InputAdornment>
                     }
-                    label="Prezzo"
+                    label="Max"
+                    onChange={(e) => {
+                      setMaxPrice(e.target.value);
+                    }}
+                    value={maxPrice}
                   />
                 </FormControl>
               </div>
-              <div className={classes["btn-container"]} style={{ marginTop: "2rem" }}>
+              <div
+                className={classes["btn-container"]}
+                style={{ marginTop: "2rem" }}
+              >
                 <input
                   type="button"
                   value={"Reset"}
                   className={classes.btn}
                   style={{ width: "40%" }}
+                  onClick={resetHandler}
                 />
                 <input
                   type="button"
@@ -124,12 +174,9 @@ function Products(props) {
             </TabPanel>
             <TabPanel value="2" sx={{ padding: 0, marginTop: "1.5rem" }}>
               <RadioGroup
-                onChange={(e) => {
-                  setFilterName(e.target.value);
-                }}
-                value={filterName}
+                onChange={filterHandler}
+                value={filter}
               >
-                {" "}
                 <FormControlLabel
                   className={classes.radio}
                   value={0}
@@ -146,6 +193,7 @@ function Products(props) {
                   labelPlacement="start"
                 />
                 <Divider />
+
                 <FormControlLabel
                   className={classes.radio}
                   value={1}
@@ -161,18 +209,11 @@ function Products(props) {
                   label="Nome (Z-A)"
                   labelPlacement="start"
                 />
-              </RadioGroup>
-              <RadioGroup
-                sx={{ marginTop: "1.5rem" }}
-                onChange={(e) => {
-                  setFilterPrice(e.target.value);
-                }}
-                value={filterPrice}
-              >
-                {" "}
+
                 <FormControlLabel
+                  sx={{ marginTop: "1.5rem !important" }}
                   className={classes.radio}
-                  value={0}
+                  value={2}
                   control={
                     <Radio
                       sx={{
@@ -186,9 +227,10 @@ function Products(props) {
                   labelPlacement="start"
                 />
                 <Divider />
+
                 <FormControlLabel
                   className={classes.radio}
-                  value={1}
+                  value={3}
                   control={
                     <Radio
                       sx={{
@@ -201,18 +243,11 @@ function Products(props) {
                   label="Prezzo decrescente"
                   labelPlacement="start"
                 />
-              </RadioGroup>
-              <RadioGroup
-                sx={{ marginTop: "1.5rem" }}
-                onChange={(e) => {
-                  setFilterRating(e.target.value);
-                }}
-                value={filterRating}
-              >
-                {" "}
+
                 <FormControlLabel
+                  sx={{ marginTop: "1.5rem !important" }}
                   className={classes.radio}
-                  value={0}
+                  value={4}
                   control={
                     <Radio
                       sx={{
@@ -222,13 +257,13 @@ function Products(props) {
                       }}
                     />
                   }
-                  label="Valutazione crescente"
+                  label="Il meno valutato"
                   labelPlacement="start"
                 />
                 <Divider />
                 <FormControlLabel
                   className={classes.radio}
-                  value={1}
+                  value={5}
                   control={
                     <Radio
                       sx={{
@@ -238,21 +273,18 @@ function Products(props) {
                       }}
                     />
                   }
-                  label="Valutazione decrescente"
+                  label="Il pià valutato"
                   labelPlacement="start"
                 />
               </RadioGroup>
+
               <div className={classes["btn-container"]}>
                 <input
                   type="button"
                   value={"Reset"}
                   className={classes.btn}
                   style={{ width: "40%" }}
-                  onClick={() => {
-                    setFilterRating(-1);
-                    setFilterPrice(-1);
-                    setFilterName(-1);
-                  }}
+                  onClick={resetHandler}
                 />
                 <input
                   type="button"
@@ -282,7 +314,11 @@ function Products(props) {
                   startAdornment={
                     <InputAdornment position="start">€</InputAdornment>
                   }
-                  label="Prezzo"
+                  label="Min"
+                  onChange={(e) => {
+                    setMinPrice(e.target.value);
+                  }}
+                  value={minPrice}
                 />
               </FormControl>
               <FormControl fullWidth>
@@ -293,19 +329,19 @@ function Products(props) {
                   startAdornment={
                     <InputAdornment position="start">€</InputAdornment>
                   }
-                  label="Prezzo"
+                  label="Max"
+                  onChange={(e) => {
+                    setMaxPrice(e.target.value);
+                  }}
+                  value={maxPrice}
                 />
               </FormControl>
             </div>
             <h3 style={{ marginTop: "2rem" }} className={classes.title}>
               Ordina per
             </h3>
-            <RadioGroup
-              onChange={(e) => {
-                setFilterName(e.target.value);
-              }}
-              value={filterName}
-            >
+
+            <RadioGroup onChange={filterHandler} value={filter}>
               {" "}
               <FormControlLabel
                 className={classes.radio}
@@ -322,18 +358,10 @@ function Products(props) {
                 label="Nome (Z-A)"
                 labelPlacement="start"
               />
-            </RadioGroup>
-            <RadioGroup
-              sx={{ marginTop: "2rem" }}
-              onChange={(e) => {
-                setFilterPrice(e.target.value);
-              }}
-              value={filterPrice}
-            >
-              {" "}
               <FormControlLabel
+                sx={{ marginTop: "2rem !important" }}
                 className={classes.radio}
-                value={0}
+                value={2}
                 control={<Radio />}
                 label="Prezzo crescente"
                 labelPlacement="start"
@@ -341,33 +369,25 @@ function Products(props) {
               <Divider />
               <FormControlLabel
                 className={classes.radio}
-                value={1}
+                value={3}
                 control={<Radio />}
                 label="Prezzo decrescente"
                 labelPlacement="start"
               />
-            </RadioGroup>
-            <RadioGroup
-              sx={{ marginTop: "2rem" }}
-              onChange={(e) => {
-                setFilterRating(e.target.value);
-              }}
-              value={filterRating}
-            >
-              {" "}
               <FormControlLabel
+                sx={{ marginTop: "2rem !important" }}
                 className={classes.radio}
-                value={0}
+                value={4}
                 control={<Radio />}
-                label="Valutazione crescente"
+                label="Il meno valutato"
                 labelPlacement="start"
               />
               <Divider />
               <FormControlLabel
                 className={classes.radio}
-                value={1}
+                value={5}
                 control={<Radio />}
-                label="Valutazione decrescente"
+                label="Il più valutato"
                 labelPlacement="start"
               />
             </RadioGroup>
@@ -376,11 +396,7 @@ function Products(props) {
               type="button"
               value={"Reset"}
               className={classes.btn}
-              onClick={() => {
-                setFilterRating(-1);
-                setFilterPrice(-1);
-                setFilterName(-1);
-              }}
+              onClick={resetHandler}
             />
           </div>
         )}
@@ -402,7 +418,10 @@ function Products(props) {
               </div>
             ) : (
               products.map((product, i) => {
-                if (i < 20) {
+                if (
+                  Math.trunc(product.price) >= minPrice &&
+                  (maxPrice ? Math.trunc(product.price) <= maxPrice : true)
+                ) {
                   return (
                     <Card
                       key={i}
@@ -412,7 +431,7 @@ function Products(props) {
                         product.name.slice(1)
                       }
                       price={product.price}
-                      brand={"Logitech"}
+                      brand={product.brand}
                       star={product.star}
                       path={`/${product.image}`}
                     />

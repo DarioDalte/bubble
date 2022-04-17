@@ -10,20 +10,15 @@ import AddIcon from "@mui/icons-material/Add";
 import classes from "./products.module.scss";
 import Link from "next/link";
 import axios from "axios";
-
-
-
+import Head from "next/head";
 
 function Products(props) {
   const [products, setProducts] = useState(props.products);
   const [deletedItem, setDeletedItem] = useState();
-  const router = useRouter()
 
   function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
-
-
 
   const deleteHandler = async (i) => {
     axios.post("/api/elimina_prodotto", { id: products[i]["_id"] });
@@ -35,6 +30,10 @@ function Products(props) {
 
   return (
     <>
+      <Head>
+        <title>Prodotti</title>
+      </Head>
+
       <BackArrow path={props.prevUrl} />
       <h1 className={classes.title}>I miei prodotti</h1>
 
@@ -112,7 +111,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       session: session,
-      prevUrl: context.req.headers.referer,
+      prevUrl: context.req.headers.referer ? context.req.headers.referer : "/",
       products: JSON.parse(JSON.stringify(products)),
     },
   };

@@ -1,6 +1,7 @@
 import { getSession } from "next-auth/client";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import MyHead from '../UI/MyHead/MyHead';
 
 import Header from "../components/Header/Header";
 import Main from "../components/Main/Main";
@@ -45,6 +46,7 @@ export default function Home(props) {
 
   return (
     <>
+     <MyHead title={'Homepage'}/>
       <Header session={props.session} />
 
       <Main

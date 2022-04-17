@@ -10,6 +10,7 @@ import ButtonOutlined from "../../UI/ButtonOutlined/ButtonOutlined";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { loadStripe } from "@stripe/stripe-js";
 import Link from "next/link";
+import MyHead from "../../UI/MyHead/MyHead";
 
 export default function Account(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
@@ -36,6 +37,7 @@ export default function Account(props) {
   const stripe = loadStripe(publishableKey);*/
   return (
     <>
+      <MyHead title={"Account"} />
       {isMobile && <BottomNav navValue={3} />}
       <BackArrow path="/" />
       <div className={classes.body}>
@@ -43,11 +45,15 @@ export default function Account(props) {
         <h2 className={classes.subtitle}>Ciao {name}!</h2>
         <div className={classes["container"]}>
           <div className={classes["btn-container"]}>
-            <ButtonOutlined value="Profilo" className={classes["button"]} path={'/'}/>
+            <ButtonOutlined
+              value="Profilo"
+              className={classes["button"]}
+              path={"/"}
+            />
 
             <ButtonOutlined
               value={!props.session.user.image ? "Ordini" : "Prodotti"}
-              path={props.session.user.image ? '/company/products' : '/orders'}
+              path={props.session.user.image ? "/company/products" : "/orders"}
               className={classes["button"]}
             />
           </div>

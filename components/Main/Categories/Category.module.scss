@@ -1,20 +1,26 @@
 .container {
-
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   .category {
     padding: 0.7rem;
     border-radius: 16px;
     margin-top: 1rem;
-    margin-bottom: .5rem;
-    margin-left: .8rem !important;
-    margin-right: .8rem !important;
+    margin-bottom: 0.5rem;
+    margin-left: 0.8rem !important;
+    margin-right: 0.8rem !important;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s;
+  }
+}
+
+.hover {
+  &:hover {
+    transform: scale(1.2);
   }
 }
