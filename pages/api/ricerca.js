@@ -184,12 +184,13 @@ export default async function handler(req, res) {
       console.log("arrivo");
 
       prodotti_ricerca[x]["brand"] = brand[0]["name"];
-      oggetto = {
-        prodotto: prodotti_ricerca[x],
+      prodotti_ricerca[x]["star"] = media ? media : 0;
+      //oggetto = {
+      //prodotto: prodotti_ricerca[x],
 
-        star: media ? media : 0,
-      };
-      cart.push(oggetto);
+      // star: media ? media : 0,
+      //};
+      cart.push(prodotti_ricerca[x]);
     }
 
     res.json({ prodotti: cart });
