@@ -21,7 +21,6 @@ export default async function handler(req, res) {
     var prezzo_prodotto = product["price"];
     var prova = [];
     var image = data.prodotto["image"];
-    var a = 0;
     if (product) {
       for (var x = 0; x < cart["products"].length; x++) {
         if (cart["products"][x]["id"] == data.prodotto["_id"]) {
@@ -38,45 +37,44 @@ export default async function handler(req, res) {
                       product["varianti"]["SSD"][i]["size"] ==
                       data.prodotto["SSD"]
                     ) {
-                      cart["products"].splice(x, 1);
-                      x--;
-                      var myquery = { email: data.email };
-                      var newvalues = { $set: { products: cart["products"] } };
-                      await db.collection("cart").updateOne(myquery, newvalues);
-                      res.json({
-                        prodotto: "eliminato",
-                      });
-                      a = 1;
-                      return;
+                      if (parseFloat(data.aumenta) == 0) {
+                        cart["products"][x]["quantity"] =
+                          parseFloat(cart["products"][x]["quantity"]) - 1;
+                        console.log(cart["products"][x]["quantity"]);
+                        prova = cart["products"];
+
+                        var myquery = { email: data.email };
+                        var newvalues = { $set: { products: prova } };
+                        await db
+                          .collection("cart")
+                          .updateOne(myquery, newvalues);
+                        res.json({
+                          prodotto: "decrementato",
+                        });
+                        return;
+                      } else {
+                        cart["products"][x]["quantity"] =
+                          parseFloat(cart["products"][x]["quantity"]) + 1;
+                        console.log(cart["products"][x]["quantity"]);
+                        prova = cart["products"];
+
+                        var myquery = { email: data.email };
+                        var newvalues = { $set: { products: prova } };
+                        await db
+                          .collection("cart")
+                          .updateOne(myquery, newvalues);
+                        res.json({
+                          prodotto: "incrementato",
+                        });
+                        return;
+                      }
                     }
                   }
                 }
               }
             }
           }
-          await db.collection("cart").updateOne(myquery, newvalues);
-          res.json({
-            prodotto: "Inf",
-          });
-          a = 1;
-          return;
-          /* cart["products"].splice(x, 1);
-          x--;
-          var myquery = { email: data.email };
-          var newvalues = { $set: { products: cart["products"] } };
-          await db.collection("cart").updateOne(myquery, newvalues);
-          res.json({
-            prodotto: "eliminato",
-          });
-          a = 1;
-          return;*/
         }
-      }
-      if (a == 0) {
-        res.json({
-          message: "Prodotto non presente",
-        });
-        return;
       }
     } else {
       res.json({

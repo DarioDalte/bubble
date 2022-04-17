@@ -8,11 +8,10 @@ export default async function handler(req, res) {
     const db = client.db(); //Boh
 
     var data = req.body; //Inserts the request data into the variable data
-<<<<<<< HEAD
+    console.log("sono qui");
     console.log(data);
+    console.log("sono qui");
 
-=======
->>>>>>> 8c05c8b50bd9e05117b79297e3f00aa6f1047085
     var companies = await db.collection("companies").find().toArray();
     for (var i = 0; i < companies.length; i++) {
       if (data.brand == companies[i]["name"]) {

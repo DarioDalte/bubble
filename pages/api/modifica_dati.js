@@ -35,10 +35,10 @@ export default async function handler(req, res) {
 
       const handlebarOptions = {
         viewEngine: {
-          partialsDir: path.resolve("./pages/modificare_dati/"),
+          partialsDir: path.resolve("../bubble/email/modificare_dati"),
           defaultLayout: false,
         },
-        viewPath: path.resolve("./pages/modificare_dati"),
+        viewPath: path.resolve("../bubble/email/modificare_dati"),
       };
       transporter.use("compile", hbs(handlebarOptions));
 

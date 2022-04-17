@@ -64,17 +64,17 @@ export default async function handler(req, res) {
 
           const handlebarOptions = {
             viewEngine: {
-              partialsDir: path.resolve("./pages/elimina_account/"),
+              partialsDir: path.resolve("../bubble/email/elimina_account"),
               defaultLayout: false,
             },
-            viewPath: path.resolve("./pages/elimina_account/"),
+            viewPath: path.resolve("../bubble/email/elimina_account"),
           };
           transporter.use("compile", hbs(handlebarOptions));
 
           let mailOption = {
             from: "bubblebubbleproject@gmail.com",
             to: data.email,
-            subject: "Modifica",
+            subject: "Account eliminato",
             template: "email",
             context: {
               name: users[0]["name"], // replace {{name}} with Adebola

@@ -14,73 +14,127 @@ export default async function handler(req, res) {
 
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    console.log(data.id);
-    data.id = mongoose.Types.ObjectId(data.id);
+    var id = mongoose.Types.ObjectId(data.prodotto["_id"]);
 
-    console.log(data.id);
-    var product = await db.collection("products").findOne({ _id: data.id }); //Selects documents from collection product
-    var id = data.id;
+    var product = await db.collection("products").findOne({ _id: id }); //Selects documents from collection product
+    var cart = await db.collection("cart").findOne({ email: data.email }); //Selects documents from collection product
     var prezzo_prodotto = product["price"];
-    var image;
+    var prova = [];
+    var image = data.prodotto["image"];
+    var a = 0;
     if (product) {
-      for (var i = 0; i < product["varianti"]["colors"].length; i++) {
-        if (product["varianti"]["colors"][i]["name"] == data.colore) {
-          prezzo_prodotto =
-            prezzo_prodotto +
-            parseFloat(product["varianti"]["colors"][i]["increase"]);
-          image = product["varianti"]["colors"][i]["image"];
+      for (var x = 0; x < cart["products"].length; x++) {
+        if (
+          cart["products"][x]["id"] == data.prodotto["_id"] &&
+          cart["products"][x]["color"] == data.prodotto["color"] &&
+          cart["products"][x]["RAM"] == data.prodotto["RAM"] &&
+          cart["products"][x]["SSD"] == data.prodotto["SSD"]
+        ) {
+          cart["products"][x]["quantity"] =
+            parseFloat(cart["products"][x]["quantity"]) + 1;
+          console.log(cart["products"][x]["quantity"]);
+          prova = cart["products"];
+
+          var myquery = { email: data.email };
+          var newvalues = { $set: { products: prova } };
+          await db.collection("cart").updateOne(myquery, newvalues);
+          res.json({
+            prodotto: "incrementato",
+          });
+          a = 1;
+          return;
         }
       }
-      for (var i = 0; i < product["varianti"]["RAM"].length; i++) {
-        if (product["varianti"]["RAM"][i]["gb"] == data.ram) {
-          prezzo_prodotto =
-            prezzo_prodotto +
-            parseFloat(product["varianti"]["RAM"][i]["increase"]);
+      if (a == 0) {
+        var id_colore, id_ram, id_ssd, nome_colore, nome_ram, nome_ssd;
+        for (var i = 0; i < product["varianti"]["colors"].length; i++) {
+          if (
+            product["varianti"]["colors"][i]["name"] == data.prodotto["color"]
+          ) {
+            id_colore = product["varianti"]["colors"][i]["color_Id"];
+            nome_colore = product["varianti"]["colors"][i]["name"];
+            prezzo_prodotto =
+              prezzo_prodotto +
+              parseFloat(product["varianti"]["colors"][i]["increase"]);
+            image = product["varianti"]["colors"][i]["image"];
+          }
         }
-      }
-      for (var i = 0; i < product["varianti"]["SSD"].length; i++) {
-        if (product["varianti"]["SSD"][i]["size"] == data.ram) {
-          prezzo_prodotto =
-            prezzo_prodotto +
-            parseFloat(product["varianti"]["SSD"][i]["increase"]);
+        for (var i = 0; i < product["varianti"]["RAM"].length; i++) {
+          if (product["varianti"]["RAM"][i]["gb"] == data.prodotto["RAM"]) {
+            id_ram = product["varianti"]["RAM"][i]["RAM_Id"];
+            nome_ram = product["varianti"]["RAM"][i]["gb"];
+            prezzo_prodotto =
+              prezzo_prodotto +
+              parseFloat(product["varianti"]["RAM"][i]["increase"]);
+          }
         }
+        for (var i = 0; i < product["varianti"]["SSD"].length; i++) {
+          if (product["varianti"]["SSD"][i]["size"] == data.prodotto["SSD"]) {
+            id_ssd = product["varianti"]["SSD"][i]["SSD_Id"];
+            nome_ssd = product["varianti"]["SSD"][i]["size"];
+            prezzo_prodotto =
+              prezzo_prodotto +
+              parseFloat(product["varianti"]["SSD"][i]["increase"]);
+          }
+        }
+
+        let yourId = mongoose.Types.ObjectId(product["brand"]);
+
+        var brand = await db
+          .collection("companies")
+          .find({ _id: yourId })
+          .toArray();
+        //Selects documents from collection products
+        //Selects documents from collection products
+
+        yourId = mongoose.Types.ObjectId(product["category"]);
+
+        var category = await db
+          .collection("categories")
+          .find({ _id: yourId })
+          .toArray();
+        //Selects documents from collection products
+        //Selects documents from collection products
+
+        var obj_front_end = {
+          id: product["_id"],
+          brand: brand[0]["name"],
+          name: product["name"],
+          category: category[0]["category"],
+          pollici: product["pollici"],
+          processore: product["processore"],
+          color: nome_colore,
+          RAM: nome_ram,
+          SSD: nome_ssd,
+          price: prezzo_prodotto,
+          image: image,
+          quantity: data.prodotto["quantity"],
+        };
+
+        var obj_database = {
+          id: product["_id"],
+          brand: brand[0]["_id"],
+          name: product["name"],
+          category: category[0]["_id"],
+          pollici: product["pollici"],
+          processore: product["processore"],
+          color: id_colore,
+          RAM: id_ram,
+          SSD: id_ssd,
+          price: prezzo_prodotto,
+          image: image,
+          quantity: data.prodotto["quantity"],
+        };
+        cart["products"].push(obj_database);
+        var myquery = { email: data.email };
+        var newvalues = { $set: { products: cart["products"] } };
+        await db.collection("cart").updateOne(myquery, newvalues);
+        res.json({
+          prodotto: obj_front_end,
+        });
+
+        return;
       }
-      let yourId = mongoose.Types.ObjectId(product["brand"]);
-      var brand = await db
-        .collection("companies")
-        .find({ _id: yourId })
-        .toArray();
-      //Selects documents from collection products
-
-      yourId = mongoose.Types.ObjectId(product["category"]);
-      var category = await db
-        .collection("categories")
-        .find({ _id: yourId })
-        .toArray();
-      //Selects documents from collection products
-      var obj = {
-        id: product["_id"],
-        brand: brand[0]["name"],
-        name: product["name"],
-        category: category[0]["category"],
-        pollici: product["pollici"],
-        processore: product["processore"],
-        price: prezzo_prodotto,
-        image: image,
-      };
-      var user = await db.collection("cart").findOne({
-        email: data.email,
-      });
-      user["products"].push(obj);
-      var myquery = { email: data.email };
-      var newvalues = { $set: { products: user["products"] } };
-      await db.collection("cart").updateOne(myquery, newvalues);
-
-      res.json({
-        prodotto: obj,
-      });
-
-      return;
     } else {
       res.json({
         message: "Nessun prodotto",

@@ -68,10 +68,10 @@ export default async function handler(req, res) {
 
       const handlebarOptions = {
         viewEngine: {
-          partialsDir: path.resolve("./pages/welcome/"),
+          partialsDir: path.resolve("../bubble/email/welcome"),
           defaultLayout: false,
         },
-        viewPath: path.resolve("./pages/welcome"),
+        viewPath: path.resolve("../bubble/email/welcome"),
       };
       transporter.use("compile", hbs(handlebarOptions));
 
