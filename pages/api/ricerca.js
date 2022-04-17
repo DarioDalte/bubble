@@ -51,6 +51,11 @@ export default async function handler(req, res) {
       myJSON = JSON.stringify(prodotti[i]);
 
       if (nome_prodotto.includes(data.stringa)) {
+        var brand = await db
+          .collection("companies")
+          .findOne({ _id: prodotti[i]["brand"] });
+        //Selects documents f
+        prodotti[i]["brand"] = brand["name"];
         prodotti_ricerca.push(prodotti[i]);
       } else {
         let id_brand = prodotti[i]["brand"];
@@ -65,6 +70,7 @@ export default async function handler(req, res) {
             var nome = String(companies[x]["name"]);
             nome = nome.toLocaleLowerCase();
             if (nome.includes(data.stringa)) {
+              prodotti[i]["brand"] = companies[x]["name"];
               prodotti_ricerca.push(prodotti[i]);
             }
           }
@@ -77,6 +83,11 @@ export default async function handler(req, res) {
       var boh = result[i]["category"].toLowerCase();
       if (boh.includes(data.stringa)) {
         for (var z = 0; z < result[i]["orderdetails"].length; z++) {
+          var brand = await db
+            .collection("companies")
+            .findOne({ _id: result[i]["orderdetails"][z]["brand "] });
+          //Selects documents f
+          result[i]["orderdetails"][z]["brand"] = brand["name"];
           prodotti_ricerca.push(result[i]["orderdetails"][z]);
           a = 1;
         }
@@ -103,6 +114,11 @@ export default async function handler(req, res) {
                       .replace(/ObjectId\("(.*)"\)/, "$1");
 
                     if (variabile[r] == values[f]) {
+                      var brand = await db.collection("companies").findOne({
+                        _id: result[i]["orderdetails"][z]["brand"],
+                      });
+                      //Selects documents f
+                      result[i]["orderdetails"][z]["brand"] = brand["name"];
                       prodotti_ricerca.push(result[i]["orderdetails"][z]);
                     }
                   }
