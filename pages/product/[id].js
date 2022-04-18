@@ -11,6 +11,11 @@ import GppGoodIcon from "@mui/icons-material/GppGood";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Rating from "@mui/material/Rating";
 import Link from "next/link";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -22,16 +27,31 @@ function Product(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState();
   const [heartClicked, setHeartClicked] = useState(false);
-
+  const [variant, setVariant] = useState([]);
+  const [initialPrice, setInitialPrice] = useState();
+  const [price, setPrice] = useState();
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
+  console.log(variant);
 
   useEffect(() => {
     axios.post("/api/single_product", { id: id }).then((res) => {
       console.log(res.data);
       setData(res.data);
       setIsLoading(false);
+
+      let arr = [];
+      Object.keys(res.data.prodotto.varianti).map((key, index) => {
+        arr.push({
+          type: key,
+          name: res.data.prodotto.varianti[key][0].name,
+          increase: 0,
+        });
+      });
+      setVariant(arr);
+      setInitialPrice(res.data.prodotto.price);
+      setPrice(res.data.prodotto.price);
     });
   }, []);
 
@@ -52,7 +72,7 @@ function Product(props) {
           <div className={classes.container}>
             <h2 className={classes.title}>{data.prodotto.name}</h2>
             <div className={classes["price-rating-container"]}>
-              <p className={classes.price}>€ {data.prodotto.price}</p>
+              <p className={classes.price}>€ {price}</p>
               <div className={classes.rating}>
                 <div className={classes["rating-average"]}>
                   <StarIcon sx={{ color: "#faaf00" }} /> {data.star}
@@ -85,6 +105,93 @@ function Product(props) {
             </div>
 
             <Divider sx={{ margin: "1rem 0" }} />
+            {Object.keys(data.prodotto.varianti).map((key, index) => {
+              return (
+                <Accordion key={index}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    sx={{ alignItems: "center" }}
+                  >
+                    <div className={classes["menu-container"]}>
+                      <span
+                        style={{
+                          fontWeight: "600",
+                          fontSize: "1.2rem",
+                          marginRight: ".5rem",
+                        }}
+                      >
+                        {key}:{" "}
+                      </span>{" "}
+                      <span>
+                        {variant.map((ourVariant) => {
+                          if (ourVariant.type == key) {
+                            return ourVariant.name;
+                          }
+                        })}
+                      </span>
+                    </div>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ display: "flex", gap: "1rem" }}>
+                    {data.prodotto.varianti[key].map((element, i) => {
+                      let isSelected = false;
+                      variant.map(
+                        (ourVariant) =>
+                          ourVariant.type == key &&
+                          ourVariant.name == element.name &&
+                          (isSelected = true)
+                      );
+
+                      let increase = parseFloat(element.increase);
+
+                      variant.map((element) => {
+                        if (element.type != key) {
+                          increase += parseFloat(element.increase);
+                        }
+                      });
+
+                      
+
+                      return (
+                        <div
+                          key={i}
+                          className={`${classes.variant} ${
+                            isSelected ? classes.selected : ""
+                          }`}
+                          onClick={() => {
+                            let arr = [];
+
+                            variant.map((obj) => {
+                              const clone = JSON.parse(JSON.stringify(obj));
+
+                              if (clone.type == key) {
+                                clone.name = element.name;
+                                clone.increase = element.increase;
+                              }
+                              arr.push(clone);
+                            });
+
+                            setVariant(arr);
+
+                            let totalIncrease = 0;
+                            arr.map((element) => {
+                              totalIncrease += parseFloat(element.increase);
+                            });
+                            console.log(totalIncrease.toFixed(2));
+                            setPrice(initialPrice + totalIncrease);
+                          }}
+                        >
+                          <div className={classes.name}>{element.name}</div>
+                          <Divider />
+                          <div className={classes.price}>
+                            {parseFloat(initialPrice) + increase} €
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </AccordionDetails>
+                </Accordion>
+              );
+            })}
             {!data.recensioni.length == 0 ? (
               <div className={classes["rating-container"]}>
                 <div className={classes["rating-number"]}>
@@ -100,7 +207,9 @@ function Product(props) {
                   const [name, surname] = recensione["id_user"].split(" ");
                   return (
                     <div key={i} className={classes.review}>
-                      <h4 className={classes.title}>{name} {surname[0]}.</h4>
+                      <h4 className={classes.title}>
+                        {name} {surname[0]}.
+                      </h4>
                       <Rating
                         name="read-only"
                         value={recensione.value}
@@ -113,7 +222,15 @@ function Product(props) {
                 })}
               </div>
             ) : (
-              <p style={{textAlign: 'center', marginTop: '3rem', fontWeight: '600'}}>Non ci sono recensioni per questo prodotto</p>
+              <p
+                style={{
+                  textAlign: "center",
+                  marginTop: "3rem",
+                  fontWeight: "600",
+                }}
+              >
+                Non ci sono recensioni per questo prodotto
+              </p>
             )}
 
             <div className={classes["bottom-nav"]}>

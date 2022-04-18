@@ -88,26 +88,45 @@
   font-weight: 500;
 }
 
-.bottom-nav{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    padding: 2rem 0;
-    background-color: #ffffff;
-    justify-content: center;
-    gap: 2rem;
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  padding: 2rem 0;
+  background-color: #ffffff;
+  justify-content: center;
+  gap: 2rem;
 
-    .btn{
-        padding: .8rem 1rem;
-        border-radius: 8px;
-        background-color: #3669c9;
-        color: white;
-        font-weight: 600;
-    }
+  .btn {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    background-color: #3669c9;
+    color: white;
+    font-weight: 600;
+  }
 }
 
-.heart{
-    font-size: 2rem;
+.heart {
+  font-size: 2rem;
+}
+
+.variant {
+  border: 1px solid #8d9096;
+  border-radius: 8px;
+  cursor: pointer;
+
+  .name {
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+  }
+  .price {
+    padding: 0.4rem 1rem;
+  }
+}
+
+.selected {
+  border-color: #3669c9;
+  border: 2px solid #3669c9;
 }
