@@ -28,6 +28,12 @@ export default async function handler(req, res) {
       for (var b = 0; b < reviews.length; b++) {
         console.log("sono dentro");
         somma_recensioni = somma_recensioni + reviews[b]["value"];
+
+        yourId = mongoose.Types.ObjectId(reviews[b]["id_user"]);
+        console.log(yourId);
+        var user = await db.collection("users").findOne({ _id: yourId });
+        console.log(user);
+        reviews[b]["id_user"] = user["name"] + " " + user["cognome"];
         cont++;
       }
       var media = somma_recensioni / cont;
@@ -39,6 +45,7 @@ export default async function handler(req, res) {
         .find({ _id: yourId })
         .toArray();
       //Selects documents from collection products
+      var user = await db.collection("users").find({ _id: yourId }).toArray();
 
       prodotti["brand"] = brand[0]["name"];
 
