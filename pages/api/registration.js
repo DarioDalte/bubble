@@ -56,6 +56,11 @@ export default async function handler(req, res) {
         // obj = JSON.parse(obj);
 
         await db.collection("cart").insert(obj);
+
+        var obj = { email: data.email, name: "Wishlist", products: [] };
+        // obj = JSON.parse(obj);
+
+        await db.collection("wishlist").insert(obj);
       }
 
       let transporter = nodemailer.createTransport({

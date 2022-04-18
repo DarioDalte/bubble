@@ -53,6 +53,9 @@ export default async function handler(req, res) {
           var collection = db.collection("cart"); //Select collection users
 
           await collection.deleteOne({ email: data.email });
+          var collection = db.collection("wishlist"); //Select collection users
+
+          await collection.deleteOne({ email: data.email });
 
           let transporter = nodemailer.createTransport({
             service: "gmail",
