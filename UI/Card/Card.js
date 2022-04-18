@@ -1,5 +1,5 @@
 import classes from "./Card.module.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 
 import Image from "next/image";
 
@@ -11,7 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import { useSession } from "next-auth/client";
 import Link from "next/link";
 
-function Card(props) {
+const Card = forwardRef(function Card(props, ref) {
   const [heartClicked, setHeartClicked] = useState(false);
 
   const [session, status] = useSession();
@@ -19,7 +19,8 @@ function Card(props) {
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
-  return (
+
+  const content = (
     <div className={`${classes.card} ${props.className}`}>
       {!props.isLoading ? (
         props.path && (
@@ -86,6 +87,15 @@ function Card(props) {
       </div>
     </div>
   );
-}
+
+  if (!props.id) {
+    return <>{content}</>;
+  }
+  return (
+    <Link href={`/product/${props.id}`} passHref>
+      {content}
+    </Link>
+  );
+});
 
 export default Card;

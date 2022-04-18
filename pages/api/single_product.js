@@ -10,9 +10,7 @@ export default async function handler(req, res) {
     await client.connect();
     const db = client.db(); //Boh
     var data = req.body; //Inserts the request data into the variable data
-    console.log(data.prodotto["_id"]);
-    let yourId = mongoose.Types.ObjectId(data.prodotto["_id"]);
-    console.log(yourId);
+    let yourId = mongoose.Types.ObjectId(data.id);
     var collection = db.collection("products"); //Seleziono la collection
     const prodotti = await collection.findOne({ _id: yourId });
     //Inserisco nella collection

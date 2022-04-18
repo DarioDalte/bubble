@@ -8,6 +8,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Carousel from "../../../UI/Carousel/Carousel";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Link from "next/link";
 
 function BestSeller(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
@@ -15,10 +16,8 @@ function BestSeller(props) {
   const loadingContent = [];
   let bestSellers;
   if (!props.isLoading) {
-
     bestSellers = props.bestSeller;
     bestSeller = bestSellers[0].prodotto;
-    
   } else {
     for (let i = 0; i < 5; i++) {
       loadingContent.push(
@@ -72,11 +71,7 @@ function BestSeller(props) {
               borderRadius="0.5rem"
               duration={3}
             >
-              <Skeleton
-                
-                height="100%"
-                containerClassName="avatar-skeleton"
-              />
+              <Skeleton height="100%" containerClassName="avatar-skeleton" />
             </SkeletonTheme>
           )}
         </div>
@@ -87,8 +82,9 @@ function BestSeller(props) {
         <Carousel>
           {bestSellers.slice(1).map((bestSeller, i) => (
             <Card
-              className={!isMobile && classes["card-desktop"]}
               key={i}
+              id={bestSeller.prodotto['_id']}
+              className={!isMobile && classes["card-desktop"]}
               name={bestSeller.prodotto.name}
               price={bestSeller.prodotto.price}
               brand={bestSeller.prodotto.brand}
