@@ -24,25 +24,70 @@ export default async function handler(req, res) {
     var a = 0;
     if (product) {
       for (var x = 0; x < cart["products"].length; x++) {
-        if (
-          cart["products"][x]["id"] == data.prodotto["_id"] &&
-          cart["products"][x]["color"] == data.prodotto["color"] &&
-          cart["products"][x]["RAM"] == data.prodotto["RAM"] &&
-          cart["products"][x]["SSD"] == data.prodotto["SSD"]
-        ) {
-          cart["products"][x]["quantity"] =
-            parseFloat(cart["products"][x]["quantity"]) + 1;
-          console.log(cart["products"][x]["quantity"]);
-          prova = cart["products"];
+        var id_colore, id_ram, id_ssd, nome_colore, nome_ram, nome_ssd;
+        for (var i = 0; i < product["varianti"]["colors"].length; i++) {
+          if (
+            product["varianti"]["colors"][i]["name"] == data.prodotto["color"]
+          ) {
+            console.log(product["varianti"]["colors"][i]["name"]);
+            console.log(data.prodotto["color"]);
+            console.log("uguale");
+            id_colore = product["varianti"]["colors"][i]["color_Id"];
+            nome_colore = product["varianti"]["colors"][i]["name"];
+            for (var y = 0; y < product["varianti"]["RAM"].length; y++) {
+              if (product["varianti"]["RAM"][y]["gb"] == data.prodotto["RAM"]) {
+                console.log(product["varianti"]["RAM"][y]["gb"]);
+                console.log(data.prodotto["RAM"]);
+                console.log("uguale");
+                id_ram = product["varianti"]["RAM"][y]["RAM_Id"];
+                nome_ram = product["varianti"]["RAM"][y]["gb"];
+                for (var z = 0; z < product["varianti"]["SSD"].length; z++) {
+                  if (
+                    product["varianti"]["SSD"][z]["size"] ==
+                    data.prodotto["SSD"]
+                  ) {
+                    console.log(product["varianti"]["SSD"][z]["size"]);
+                    console.log(data.prodotto["SSD"]);
+                    console.log("uguale");
+                    id_ssd = product["varianti"]["SSD"][z]["SSD_Id"];
+                    nome_ssd = product["varianti"]["SSD"][z]["size"];
 
-          var myquery = { email: data.email };
-          var newvalues = { $set: { products: prova } };
-          await db.collection("cart").updateOne(myquery, newvalues);
-          res.json({
-            prodotto: "incrementato",
-          });
-          a = 1;
-          return;
+                    console.log("TUTTE LE INFO");
+                    console.log(cart["products"][x]["id"]);
+                    console.log(cart["products"][x]["color"]);
+                    console.log(cart["products"][x]["RAM"]);
+                    console.log(cart["products"][x]["SSD"]);
+                    console.log(id);
+                    console.log(id_colore);
+                    console.log(id_ram);
+                    console.log(id_ssd);
+                    if (
+                      String(cart["products"][x]["id"]) == String(id) &&
+                      String(cart["products"][x]["color"]) ==
+                        String(id_colore) &&
+                      String(cart["products"][x]["RAM"]) == String(id_ram) &&
+                      String(cart["products"][x]["SSD"]) == String(id_ssd)
+                    ) {
+                      console.log("entra?");
+                      cart["products"][x]["quantity"] =
+                        parseFloat(cart["products"][x]["quantity"]) + 1;
+                      console.log(cart["products"][x]["quantity"]);
+                      prova = cart["products"];
+
+                      var myquery = { email: data.email };
+                      var newvalues = { $set: { products: prova } };
+                      await db.collection("cart").updateOne(myquery, newvalues);
+                      res.json({
+                        prodotto: "incrementato",
+                      });
+                      a = 1;
+                      return;
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
       if (a == 0) {
