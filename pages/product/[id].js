@@ -66,10 +66,10 @@ function Product(props) {
     <>
       <MyHead title={isLoading ? "Prodotto" : data.prodotto.name} />
 
-      <Header session={props.session} />
+      {/* <Header session={props.session} /> */}
       
 
-      <BackArrow path={props.prevPath} sx={{marginTop: '7rem'}} />
+      <BackArrow path={props.prevPath} sx={{}} />
 
       {isLoading && (
         <div className={classes.loading}>

@@ -43,7 +43,11 @@ export default async function handler(req, res) {
           products: cartProducts,
           totalPrice: totalPrice,
         };
+
         res.json(obj);
+
+        await client.close();
+
       }
     });
   } else {

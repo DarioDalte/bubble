@@ -18,7 +18,6 @@ export default async function handler(req, res) {
       collection = db.collection("reviews"); //Seleziono la collection
       const reviews = await collection.find({ id_product: yourId }).toArray();
 
-
       var somma_recensioni = 0;
       var cont = 0;
       for (var b = 0; b < reviews.length; b++) {
@@ -55,5 +54,8 @@ export default async function handler(req, res) {
   } catch (e) {
     //error
     console.log("Error " + e);
+  } finally {
+    // Close the connection to the MongoDB cluster
+    await client.close();
   }
 }

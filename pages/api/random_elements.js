@@ -136,5 +136,8 @@ export default async function handler(req, res) {
   } catch (e) {
     //error
     console.log("Errore " + e);
+  } finally {
+    // Close the connection to the MongoDB cluster
+    await client.close();
   }
 }
