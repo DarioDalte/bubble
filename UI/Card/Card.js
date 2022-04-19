@@ -66,14 +66,15 @@ const Card = forwardRef(function Card(props, ref) {
             <Skeleton width={130} />
           )}
 
-          {!session ? (
-            <Link href={"/login"} passHref>
-              <IconButton>
-                <FavoriteBorderIcon className={classes.heart} />
-              </IconButton>
-            </Link>
-          ) : (
+          { 
             !props.isLoading && (
+              !session ? (
+                <Link href={"/login"} passHref>
+                  <IconButton>
+                    <FavoriteBorderIcon className={classes.heart} />
+                  </IconButton>
+                </Link>
+              ) :
               <IconButton onClick={onHeartClick}>
                 {heartClicked ? (
                   <FavoriteIcon className={classes.heart} />
@@ -82,11 +83,13 @@ const Card = forwardRef(function Card(props, ref) {
                 )}
               </IconButton>
             )
-          )}
+          }
         </div>
       </div>
     </div>
   );
+
+
 
   if (!props.id) {
     return <>{content}</>;

@@ -424,6 +424,7 @@ function Products(props) {
                 ) {
                   return (
                     <Card
+                    id={product['_id']}
                       key={i}
                       className={classes.card}
                       name={

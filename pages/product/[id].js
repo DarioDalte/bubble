@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import classes from "./product.module.scss";
 import BackArrow from "../../UI/BackArrow/BackArrow";
+import Loading from "../../UI/Loading/Loading";
 import StarIcon from "@mui/icons-material/Star";
 import axios from "axios";
 import { Divider } from "@mui/material";
@@ -16,6 +17,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -42,13 +44,15 @@ function Product(props) {
       setIsLoading(false);
 
       let arr = [];
-      Object.keys(res.data.prodotto.varianti).map((key, index) => {
-        arr.push({
-          type: key,
-          name: res.data.prodotto.varianti[key][0].name,
-          increase: 0,
+      if (res.data.prodotto.varianti) {
+        Object.keys(res.data.prodotto.varianti).map((key, index) => {
+          arr.push({
+            type: key,
+            name: res.data.prodotto.varianti[key][0].name,
+            increase: 0,
+          });
         });
-      });
+      }
       setVariant(arr);
       setInitialPrice(res.data.prodotto.price);
       setPrice(res.data.prodotto.price);
@@ -58,6 +62,11 @@ function Product(props) {
   return (
     <>
       <BackArrow />
+      {isLoading && (
+        <div className={classes.loading}>
+          <CircularProgress className={classes.loading} />
+        </div>
+      )}
       {!isLoading && (
         <>
           <div className={classes["image-container"]}>
@@ -104,94 +113,95 @@ function Product(props) {
               </div>
             </div>
 
-            <Divider sx={{ margin: "1rem 0" }} />
-            {Object.keys(data.prodotto.varianti).map((key, index) => {
-              return (
-                <Accordion key={index}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{ alignItems: "center" }}
-                  >
-                    <div className={classes["menu-container"]}>
-                      <span
-                        style={{
-                          fontWeight: "600",
-                          fontSize: "1.2rem",
-                          marginRight: ".5rem",
-                        }}
-                      >
-                        {key}:{" "}
-                      </span>{" "}
-                      <span>
-                        {variant.map((ourVariant) => {
-                          if (ourVariant.type == key) {
-                            return ourVariant.name;
-                          }
-                        })}
-                      </span>
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ display: "flex", gap: "1rem" }}>
-                    {data.prodotto.varianti[key].map((element, i) => {
-                      let isSelected = false;
-                      variant.map(
-                        (ourVariant) =>
-                          ourVariant.type == key &&
-                          ourVariant.name == element.name &&
-                          (isSelected = true)
-                      );
-
-                      let increase = parseFloat(element.increase);
-
-                      variant.map((element) => {
-                        if (element.type != key) {
-                          increase += parseFloat(element.increase);
-                        }
-                      });
-
-                      
-
-                      return (
-                        <div
-                          key={i}
-                          className={`${classes.variant} ${
-                            isSelected ? classes.selected : ""
-                          }`}
-                          onClick={() => {
-                            let arr = [];
-
-                            variant.map((obj) => {
-                              const clone = JSON.parse(JSON.stringify(obj));
-
-                              if (clone.type == key) {
-                                clone.name = element.name;
-                                clone.increase = element.increase;
-                              }
-                              arr.push(clone);
-                            });
-
-                            setVariant(arr);
-
-                            let totalIncrease = 0;
-                            arr.map((element) => {
-                              totalIncrease += parseFloat(element.increase);
-                            });
-                            console.log(totalIncrease.toFixed(2));
-                            setPrice(initialPrice + totalIncrease);
+            <Divider sx={{ marginTop: "1rem", marginBottom: "2rem" }} />
+            {data.prodotto.varianti &&
+              Object.keys(data.prodotto.varianti).map((key, index) => {
+                return (
+                  <Accordion key={index}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      sx={{ alignItems: "center" }}
+                    >
+                      <div className={classes["menu-container"]}>
+                        <span
+                          style={{
+                            fontWeight: "600",
+                            fontSize: "1.2rem",
+                            marginRight: ".5rem",
                           }}
                         >
-                          <div className={classes.name}>{element.name}</div>
-                          <Divider />
-                          <div className={classes.price}>
-                            {parseFloat(initialPrice) + increase} €
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
+                          {key}:
+                        </span>
+                        <span>
+                          {variant.map((ourVariant) => {
+                            if (ourVariant.type == key) {
+                              return ourVariant.name;
+                            }
+                          })}
+                        </span>
+                      </div>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ display: "flex", gap: "1rem" }}>
+                      <div className={classes["scrolling-wrapper"]}>
+                        {data.prodotto.varianti[key].map((element, i) => {
+                          let isSelected = false;
+                          variant.map(
+                            (ourVariant) =>
+                              ourVariant.type == key &&
+                              ourVariant.name == element.name &&
+                              (isSelected = true)
+                          );
+
+                          let increase = parseFloat(element.increase);
+
+                          variant.map((element) => {
+                            if (element.type != key) {
+                              increase += parseFloat(element.increase);
+                            }
+                          });
+
+                          return (
+                            <div
+                              key={i}
+                              className={`${classes.variant} ${
+                                isSelected ? classes.selected : ""
+                              }`}
+                              onClick={() => {
+                                let arr = [];
+
+                                variant.map((obj) => {
+                                  const clone = JSON.parse(JSON.stringify(obj));
+
+                                  if (clone.type == key) {
+                                    clone.name = element.name;
+                                    clone.increase = element.increase;
+                                  }
+                                  arr.push(clone);
+                                });
+
+                                setVariant(arr);
+
+                                let totalIncrease = 0;
+                                arr.map((element) => {
+                                  totalIncrease += parseFloat(element.increase);
+                                });
+                                console.log(totalIncrease.toFixed(2));
+                                setPrice(initialPrice + totalIncrease);
+                              }}
+                            >
+                              <div className={classes.name}>{element.name}</div>
+                              <Divider />
+                              <div className={classes.price}>
+                                <p>{parseFloat(initialPrice) + increase} €</p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
             {!data.recensioni.length == 0 ? (
               <div className={classes["rating-container"]}>
                 <div className={classes["rating-number"]}>
