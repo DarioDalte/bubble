@@ -173,7 +173,6 @@ export default async function handler(req, res) {
         }
       }
       var media = somma_recensioni / cont;
-      console.log(prodotti_ricerca[x]["brand"]);
       let yourId = mongoose.Types.ObjectId(prodotti_ricerca[x]["brand"]);
 
       var brand = await db
@@ -181,7 +180,6 @@ export default async function handler(req, res) {
         .find({ _id: yourId })
         .toArray();
       //Selects documents from collection products
-      console.log("arrivo");
 
       prodotti_ricerca[x]["brand"] = brand[0]["name"];
       prodotti_ricerca[x]["star"] = media ? media : 0;

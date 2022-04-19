@@ -6,13 +6,14 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function BackArrow(props) {
   return (
-    <Link href={props.path ? props.path : "/"} passHref>
-      <IconButton className={classes["arrow-container"]}>
-        <ArrowBackIcon className={classes.arrow} />
-      </IconButton>
-    </Link>
+    <div style={props.sx}>
+      <Link href={props.path ? props.path : "/"} passHref>
+        <IconButton className={classes["arrow-container"]}>
+          <ArrowBackIcon className={classes.arrow} />
+        </IconButton>
+      </Link>
+    </div>
   );
 }
 
 export default BackArrow;
-

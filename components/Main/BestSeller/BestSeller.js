@@ -52,18 +52,22 @@ function BestSeller(props) {
           )}
 
           <div className={classes["subtitle-container"]}>
-            <span className={classes.subtitle}>Compra ora</span>
+            <Link href={props.isLoading ? '/' : `/product/${bestSeller["_id"]}`}>
+              <a className={classes.subtitle}>Compra ora</a>
+            </Link>
             <ArrowForwardIcon className={classes.arrowIcon} />
           </div>
         </div>
         <div className={classes["photo-container"]}>
           {!props.isLoading ? (
-            <Image
-              src={`/${bestSeller.image}`}
-              alt="Picture of the Best Seller"
-              layout="fill"
-              className={classes.photo}
-            />
+            <Link href={`/product/${bestSeller["_id"]}`} passHref>
+              <Image
+                src={`/${bestSeller.image}`}
+                alt="Picture of the Best Seller"
+                layout="fill"
+                className={classes.photo}
+              />
+            </Link>
           ) : (
             <SkeletonTheme
               baseColor="#5294e0"
@@ -83,7 +87,7 @@ function BestSeller(props) {
           {bestSellers.slice(1).map((bestSeller, i) => (
             <Card
               key={i}
-              id={bestSeller.prodotto['_id']}
+              id={bestSeller.prodotto["_id"]}
               className={!isMobile && classes["card-desktop"]}
               name={bestSeller.prodotto.name}
               price={bestSeller.prodotto.price}

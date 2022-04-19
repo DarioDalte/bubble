@@ -1,0 +1,22 @@
+.middle-container {
+    cursor: pointer;
+    display: flex;
+    .shop-left {
+      width: 90%;
+      .shop-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        margin-top: 0.5rem;
+      }
+    }
+  
+    .shop-right {
+      display: flex;
+      align-items: center;
+      width: 10%;
+      justify-content: flex-end;
+      padding-right: 2rem;
+    }
+  }

@@ -14,23 +14,18 @@ export default async function handler(req, res) {
     var collection = db.collection("products"); //Seleziono la collection
     const prodotti = await collection.findOne({ _id: yourId });
     //Inserisco nella collection
-    console.log(prodotti);
     if (prodotti) {
       collection = db.collection("reviews"); //Seleziono la collection
       const reviews = await collection.find({ id_product: yourId }).toArray();
 
-      console.log(reviews);
 
       var somma_recensioni = 0;
       var cont = 0;
       for (var b = 0; b < reviews.length; b++) {
-        console.log("sono dentro");
         somma_recensioni = somma_recensioni + reviews[b]["value"];
 
         yourId = mongoose.Types.ObjectId(reviews[b]["id_user"]);
-        console.log(yourId);
         var user = await db.collection("users").findOne({ _id: yourId });
-        console.log(user);
         reviews[b]["id_user"] = user["name"] + " " + user["cognome"];
         cont++;
       }

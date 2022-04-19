@@ -1,0 +1,44 @@
+.scrolling-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  gap: 0.3rem;
+  .container {
+    flex: 0 0 auto;
+    margin-left: 0.3rem;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  @media (min-width: 62rem) {
+    gap: 1.5rem;
+  }
+}
+
+.variant {
+  border: 1px solid #8d9096;
+  border-radius: 8px;
+  cursor: pointer;
+
+  .name {
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+  }
+  .price {
+    padding: 0.4rem 1rem;
+    width: 110px;
+    @media (max-width: 25rem) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.selected {
+    border-color: #3669c9;
+    border: 2px solid #3669c9;
+  }
+  

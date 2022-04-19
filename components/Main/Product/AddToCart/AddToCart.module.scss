@@ -1,0 +1,15 @@
+.heart {
+  font-size: 2rem !important;
+}
+
+.btn {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background-color: #3669c9;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    background-color: #34599d;
+  }
+}

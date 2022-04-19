@@ -22,6 +22,7 @@ BLue color: #3669c9
 }
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 .avatar-skeleton {
