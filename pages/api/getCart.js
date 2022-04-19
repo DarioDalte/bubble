@@ -1,4 +1,5 @@
 const databaseConnection = require("./middlewares/database.js");
+const mongoose = require("mongoose");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -17,6 +18,10 @@ export default async function handler(req, res) {
       const dbProduct = await db
         .collection("products")
         .findOne({ _id: product.id });
+
+      const brandId = mongoose.Types.ObjectId(dbProduct["brand"]);
+      const brand = await db.collection("companies").findOne({ _id: brandId });
+      dbProduct.brand = brand.name;
       dbProduct.price = parseFloat(dbProduct.price);
 
       if (product.variant) {
