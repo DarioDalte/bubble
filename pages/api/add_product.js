@@ -1,6 +1,7 @@
 const databaseConnection = require("./middlewares/database.js");
 const os = require("os");
 const crypto = require("crypto");
+const mongoose = require("mongoose");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Mi connetto al db
@@ -31,9 +32,6 @@ export default async function handler(req, res) {
     console.log(data.varianti);
     console.log("sono qui");
 
-    console.log(objectId());
-    console.log("sono qui");
-
     var companies = await db.collection("companies").find().toArray();
     for (var i = 0; i < companies.length; i++) {
       if (data.brand == companies[i]["name"]) {
@@ -55,6 +53,11 @@ export default async function handler(req, res) {
             }
           }
         }
+      }
+    }
+    for (var key in data.varianti) {
+      for (var x = 0; x < data.varianti[key].length; x++) {
+        data.varianti[key][x]["id"] = mongoose.Types.ObjectId(objectId());
       }
     }
 
