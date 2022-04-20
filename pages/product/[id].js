@@ -68,10 +68,12 @@ function Product(props) {
 
         res.data.recensioni.map((review) => (ratingSomma += review.value));
 
-        for (let i = 0; i < res.data.recensioni.length; i++) {
-          if (res.data.recensioni[i].email === props.session.user.email) {
-            setMyReview(res.data.recensioni[i]);
-            res.data.recensioni.splice(i, 1);
+        if (props.session) {
+          for (let i = 0; i < res.data.recensioni.length; i++) {
+            if (res.data.recensioni[i].email === props.session.user.email) {
+              setMyReview(res.data.recensioni[i]);
+              res.data.recensioni.splice(i, 1);
+            }
           }
         }
 
