@@ -4,6 +4,9 @@ const databaseConnection = require("./middlewares/database.js");
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 const path = require("path");
+const sgMail = require("@sendgrid/mail");
+const API_KEY =
+  "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";
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -57,6 +60,32 @@ export default async function handler(req, res) {
 
           await collection.deleteOne({ email: data.email });
 
+          sgMail.setApiKey(API_KEY);
+          const message = {
+            to: data.email,
+            from: "bubblebubbleproject@gmail.com",
+            template_id: "d-d90d1c6f3d1e4ad69447354385cb8342",
+            personalizations: [
+              {
+                to: [
+                  {
+                    email: data.email,
+                  },
+                ],
+                subject: "ACCOUNT MODIFICATO",
+                dynamic_template_data: {
+                  name: users[0].name,
+                },
+              },
+            ],
+          };
+
+          sgMail
+            .send(message)
+            .then((response) => console.log("Email inviata"))
+            .catch((error) => console.log(error.message));
+
+          /*
           let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -92,6 +121,7 @@ export default async function handler(req, res) {
               console.log("Email inviata");
             }
           });
+          */
 
           res.status(422).json({
             message: "Account eliminato",

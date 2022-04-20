@@ -1,3 +1,4 @@
+import { Response } from "@sendgrid/helpers/classes";
 import { json } from "micro";
 import { sep } from "path";
 import { hashPassowrd, verifyPassword } from "./middlewares/auth.js";
@@ -6,6 +7,9 @@ const EmailTemplate = require("email-templates").EmailTemplate;
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 const path = require("path");
+const sgMail = require("@sendgrid/mail");
+const API_KEY =
+  "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";
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -63,6 +67,31 @@ export default async function handler(req, res) {
         await db.collection("wishlist").insert(obj);
       }
 
+      sgMail.setApiKey(API_KEY);
+      const message = {
+        to: data.email,
+        from: "bubblebubbleproject@gmail.com",
+        template_id: "d-7de973dc3b4449729f2c76d881f0377b",
+        personalizations: [
+          {
+            to: [
+              {
+                email: data.email,
+              },
+            ],
+            subject: "REGISTRAZIONE",
+            dynamic_template_data: {
+              name: data.name,
+            },
+          },
+        ],
+      };
+
+      sgMail
+        .send(message)
+        .then((response) => console.log("Email inviata"))
+        .catch((error) => console.log(error.message));
+      /*
       let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -98,7 +127,7 @@ export default async function handler(req, res) {
           console.log("Email inviata");
         }
       });
-
+*/
       res
         .status(201)
         .json({ message: "Registrazione effettuata con successo", status: 1 });

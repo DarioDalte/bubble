@@ -4,6 +4,9 @@ const databaseConnection = require("./middlewares/database.js");
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 const path = require("path");
+const sgMail = require("@sendgrid/mail");
+const API_KEY =
+  "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";
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -25,6 +28,32 @@ export default async function handler(req, res) {
       await collection.updateOne(myquery, newvalues);
       users = await db.collection("users").find({ _id: id }).toArray(); //Selects documents from collection users
 
+      sgMail.setApiKey(API_KEY);
+      const message = {
+        to: data.email,
+        from: "bubblebubbleproject@gmail.com",
+        template_id: "d-ce3a5931f35743d09a2a7f129f3aa179",
+        personalizations: [
+          {
+            to: [
+              {
+                email: data.email,
+              },
+            ],
+            subject: "ACCOUNT MODIFICATO",
+            dynamic_template_data: {
+              name: users[0].name,
+            },
+          },
+        ],
+      };
+
+      sgMail
+        .send(message)
+        .then((response) => console.log("Email inviata"))
+        .catch((error) => console.log(error.message));
+
+      /*
       let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -60,6 +89,7 @@ export default async function handler(req, res) {
           console.log("Email inviata");
         }
       });
+      */
 
       res.json({
         message: "Account modificato",
