@@ -10,6 +10,7 @@ import StarIcon from "@mui/icons-material/Star";
 import axios from "axios";
 import { Divider } from "@mui/material";
 import Header from "../../components/Header/Header";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import Rating from "@mui/material/Rating";
 import Link from "next/link";
@@ -37,19 +38,18 @@ function Product(props) {
   const [initialPrice, setInitialPrice] = useState();
   const [price, setPrice] = useState();
   const isMobile = useMediaQuery("(max-width:62rem)");
+  const [reviews, setReviews] = useState([]);
+  const [ratingAverage, setRatingAverage] = useState(0);
+  const [myReview, setMyReview] = useState();
+  const [reviewNumber, setReviewNumber] = useState(0);
 
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   useEffect(() => {
     axios.post("/api/single_product", { id: id }).then((res) => {
       setData(res.data);
-      setIsLoading(false);
 
       let arr = [];
       if (res.data.prodotto.varianti) {
@@ -61,11 +61,55 @@ function Product(props) {
           });
         });
       }
+
+      if (res.data.recensioni.length != 0) {
+        let ratingSomma = 0;
+        let ratingNumber = res.data.recensioni.length;
+
+        res.data.recensioni.map((review) => (ratingSomma += review.value));
+
+        for (let i = 0; i < res.data.recensioni.length; i++) {
+          if (res.data.recensioni[i].email === props.session.user.email) {
+            setMyReview(res.data.recensioni[i]);
+            res.data.recensioni.splice(i, 1);
+          }
+        }
+
+        console.log(ratingSomma);
+        console.log(ratingNumber);
+        setRatingAverage((ratingSomma / ratingNumber).toFixed(1));
+        setReviews(res.data.recensioni);
+        setReviewNumber(parseInt(res.data.numero_recensioni));
+      }
       setVariant(arr);
       setInitialPrice(res.data.prodotto.price);
       setPrice(res.data.prodotto.price);
+      setIsLoading(false);
     });
   }, []);
+
+  const deleteReviewHandler = () => {
+    setReviewNumber((prevReviewNumber) => prevReviewNumber - 1);
+
+    setMyReview("");
+    if (reviews.length != 0) {
+      let ratingSomma = 0;
+      reviews.map((review) => {
+        ratingSomma += review.value;
+      });
+      setRatingAverage((ratingSomma / reviews.length).toFixed(1));
+    } else {
+      setRatingAverage(0);
+    }
+    axios
+      .post("/api/elimina_recensione", {
+        email: props.session.user.email,
+        id_product: id,
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   return (
     <>
@@ -101,19 +145,15 @@ function Product(props) {
                 <div>
                   <h2 className={classes.title}>{data.prodotto.name}</h2>
                   <div className={classes["price-rating-container"]}>
-                    <p className={classes.price}>
-                      € {price && price.toFixed(2)}
-                    </p>
+                    <p className={classes.price}>€ {price.toFixed(2)}</p>
                     <div className={classes.rating}>
                       <div className={classes["rating-average"]}>
-                        <StarIcon sx={{ color: "#faaf00" }} /> {data.star}
+                        <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
                       </div>
                       <div className={classes["rating-number"]}>
-                        <p>{data.numero_recensioni}</p>
+                        <p>{reviewNumber}</p>
                         <p>
-                          {data.numero_recensioni === 1
-                            ? "Recensione"
-                            : "Recensioni"}
+                          {reviewNumber === 1 ? "Recensione" : "Recensioni"}
                         </p>
                       </div>
                     </div>
@@ -164,34 +204,76 @@ function Product(props) {
             <div className={classes.container}>
               {!isMobile && <ShopLine brand={data.prodotto.brand} />}
 
-              <AddReview />
+              <AddReview
+                setMyReview={setMyReview}
+                reviews={reviews}
+                session={props.session}
+                id={id}
+                setRatingAverage={setRatingAverage}
+                setReviewNumber={setReviewNumber}
+              />
 
-              
-
-              {!data.recensioni.length == 0 ? (
+              {!reviews.length == 0 || myReview ? (
                 <div className={classes["rating-container"]}>
                   <div className={classes["rating-number"]}>
                     <div className={classes["rating-left"]}>
-                      Recensioni ({data.numero_recensioni})
+                      Recensioni ({reviewNumber})
                     </div>
                     <div className={classes["rating-average"]}>
-                      <StarIcon sx={{ color: "#faaf00" }} /> {data.star}
+                      <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
                     </div>
                   </div>
 
-                  {data.recensioni.map((recensione, i) => {
+                  {myReview && (
+                    <>
+                      <div className={classes["my-reviw-container"]}>
+                        <div className={classes.review}>
+                          <span className={classes.title}>
+                            {`${myReview["id_user"].split(" ")[0]} ${
+                              myReview["id_user"].split(" ")[1]
+                            }`}
+                          </span>
+                          <Rating
+                            name="read-only"
+                            value={myReview.value}
+                            readOnly
+                            className={classes.rating}
+                          />
+                          <span className={classes.subtitle}>
+                            {myReview.title}
+                          </span>
+                          <p className={classes.text}>{myReview.text}</p>
+                        </div>
+                        <div className={classes["icon-container"]}>
+                          <IconButton>
+                            <DeleteIcon
+                              className={classes["delete-icon"]}
+                              onClick={deleteReviewHandler}
+                            />
+                          </IconButton>
+                        </div>
+                      </div>
+                      <Divider sx={{ marginTop: "1rem" }} />
+                    </>
+                  )}
+
+                  {reviews.map((recensione, i) => {
                     const [name, surname] = recensione["id_user"].split(" ");
                     return (
                       <div key={i} className={classes.review}>
-                        <h4 className={classes.title}>
-                          {name} {surname[0]}.
-                        </h4>
+                        <span className={classes.title}>
+                          {name} {surname[0]}.{" "}
+                          <Divider orientation="vertical" />
+                        </span>
                         <Rating
                           name="read-only"
                           value={recensione.value}
                           readOnly
                           className={classes.rating}
                         />
+                        <span className={classes.subtitle}>
+                          {recensione.title}
+                        </span>
                         <p className={classes.text}>{recensione.text}</p>
                       </div>
                     );

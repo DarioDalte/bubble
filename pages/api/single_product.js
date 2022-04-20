@@ -29,6 +29,7 @@ export default async function handler(req, res) {
         console.log(user);
         if (user) {
           reviews[b]["id_user"] = user["name"] + " " + user["cognome"];
+          reviews[b]["email"] = user.email;
           cont++;
         } else {
           reviews[b]["id_user"] = "Utente eliminato";

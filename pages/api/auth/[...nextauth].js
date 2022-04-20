@@ -47,7 +47,10 @@ export default NextAuth({
 
         client.close();
         if (user) {
-          return { email: user.email, name: user.name };
+          return {
+            email: user.email,
+            name: `${user.name} ${user.cognome ? user.cognome : ""}`,
+          };
         } else {
           return {
             email: company.email,

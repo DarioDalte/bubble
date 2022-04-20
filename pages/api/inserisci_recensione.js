@@ -30,13 +30,14 @@ export default async function handler(req, res) {
         text: data.text,
         value: data.value,
         id_product: yourId,
+        title: data.title
       };
       await db.collection("reviews").insertOne(obj);
-      res.status(200).json({ message: "Recensione aggiunta" });
+      res.status(200).json({ status: 1, message: "Recensione aggiunta" });
       return;
     }
 
-    res.status(200).json({ message: "Prodotto già recensito" });
+    res.status(200).json({ status: 0, message: "Prodotto già recensito" });
     return;
   } catch (e) {
     //error

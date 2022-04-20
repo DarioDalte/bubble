@@ -81,7 +81,7 @@
         margin-left: 5px;
       }
     }
-    .text {
+    .text, .title {
       margin-left: 5px;
     }
     .rating {
@@ -90,6 +90,19 @@
     }
     .review {
       margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+
+      .title{
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .subtitle{
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-left: 5px;
+      }
 
       &:first {
         margin-top: 1rem !important;
@@ -135,4 +148,21 @@
   display: flex;
   justify-content: center;
   gap: 2rem;
+}
+
+.my-reviw-container{
+  display: flex;
+
+  .review{
+    width: 90%;
+  }
+  .icon-container{
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.delete-icon {
+  color: #b8222f;
 }
