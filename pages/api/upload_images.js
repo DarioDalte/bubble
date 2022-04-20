@@ -1,10 +1,16 @@
-import multer from "multer";
-import path from "path";
+  const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  fileFilter: function (req, file, cb) {},
+});
 
-var fs = require("fs"),
-  request = require("request");
+const singleUpload = upload.single("image");
 
 export default async function handler(req, res) {
+  console.log(req.file);
+
+  /*
   const storage = multer.diskStorage({
     destination: "./public/",
     filename: (req, file, cb) => {
@@ -14,6 +20,7 @@ export default async function handler(req, res) {
   });
 
   const uploadImage = multer({ storage }).single("photo");
+  */
   res.status(200).json("Prodotto aggiunto nel database");
 }
 

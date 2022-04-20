@@ -20,7 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 
 import ImageUploading from "react-images-uploading";
-import {useMutate} from 'restful-react';
+import { useMutate } from "restful-react";
 
 function Phone(props) {
   const [error, setError] = useState("");
@@ -45,9 +45,9 @@ function Phone(props) {
   const [images, setImages] = useState([]);
   const maxNumber = 69;
 
-  const {mutate: uploadImage} = useMutate({
-    verb: 'POST',
-    path: '/api/upload_images'
+  const { mutate: uploadImage } = useMutate({
+    verb: "POST",
+    path: "/api/upload_images",
   });
 
   const {
@@ -125,7 +125,7 @@ function Phone(props) {
       setMemories([
         ...memories,
         {
-          name: memory ? memory : memoriesList[selectedMemory],
+          name: `${memory ? memory : memoriesList[selectedMemory]}GB`,
           increase: memoryIncrease ? memoryIncrease : 0,
         },
       ]);
@@ -141,7 +141,7 @@ function Phone(props) {
       setRams([
         ...rams,
         {
-          name: ram ? ram : ramList[selectedRam],
+          name: `${ram ? ram : ramList[selectedRam]}GB`,
           increase: ramIncrease ? ramIncrease : 0,
         },
       ]);
@@ -179,25 +179,27 @@ function Phone(props) {
         price: enteredPrice,
         OS: enteredOs,
         processore: enteredProcessor,
-        varianti: { colors: colors, RAM: rams, SSD: memories },
+        varianti: { Colore: colors, Ram: rams, Memoria: memories },
       };
       console.log(obj);
 
       const formData = new FormData();
-      images.map((image) =>{
-        formData.append('image', image.file)
-      })
-      uploadImage(formData).then((res) =>{
-        console.log(res);
-      }).catch((err) =>{
-        console.log(err);
-      })
+      images.map((image) => {
+        formData.append("image", image.file);
+      });
 
-      axios
-        .post("/api/add_product", obj,)
+      console.log(formData);
+      uploadImage(formData)
         .then((res) => {
-          setIsLoading(false);
+          console.log(res);
         })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      axios.post("/api/add_product", obj).then((res) => {
+        setIsLoading(false);
+      });
     } else {
       nameBlurHandler();
       processorBlurHandler();
