@@ -91,7 +91,7 @@ function MobileVariant(props) {
                       <Divider />
                       <div className={classes.price}>
                         <p>
-                          {parseFloat(props.initialPrice) + increase} €
+                          {(parseFloat(props.initialPrice) + increase).toFixed(2)} €
                         </p>
                       </div>
                     </div>

@@ -1,4 +1,4 @@
-import { Logger } from "sass";
+
 const mongoose = require("mongoose");
 
 const databaseConnection = require("./middlewares/database.js");
@@ -8,6 +8,7 @@ export default async function handler(req, res) {
 
   try {
     await client.connect();
+ 
     const db = client.db(); //Boh
     var data = req.body; //Inserts the request data into the variable data
     let yourId = mongoose.Types.ObjectId(data.id);

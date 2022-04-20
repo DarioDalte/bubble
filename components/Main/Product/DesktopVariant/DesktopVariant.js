@@ -30,7 +30,7 @@ function DesktopVariant(props) {
               </div>
             </div>
             <div sx={{ display: "flex", gap: "1rem" }}>
-              <div className={style['variant-container']}>
+              <div className={style["variant-container"]}>
                 {props.varianti[key].map((element, i) => {
                   let isSelected = false;
                   props.variant.map(
@@ -79,7 +79,8 @@ function DesktopVariant(props) {
                       <div className={classes.name}>{element.name}</div>
                       <Divider />
                       <div className={classes.price}>
-                        <p>{parseFloat(props.initialPrice) + increase} €</p>
+                        {(parseFloat(props.initialPrice) + increase).toFixed(2)}{" "}
+                        €
                       </div>
                     </div>
                   );

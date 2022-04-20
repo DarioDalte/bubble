@@ -9,12 +9,13 @@ import MyHead from "../../UI/MyHead/MyHead";
 import StarIcon from "@mui/icons-material/Star";
 import axios from "axios";
 import { Divider } from "@mui/material";
-import Header from '../../components/Header/Header'
+import Header from "../../components/Header/Header";
 
 import Rating from "@mui/material/Rating";
 import Link from "next/link";
 
 import CircularProgress from "@mui/material/CircularProgress";
+import AddReview from "../../components/Main/Product/AddReview/AddReview";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -40,6 +41,10 @@ function Product(props) {
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     axios.post("/api/single_product", { id: id }).then((res) => {
@@ -67,7 +72,6 @@ function Product(props) {
       <MyHead title={isLoading ? "Prodotto" : data.prodotto.name} />
 
       {/* <Header session={props.session} /> */}
-      
 
       <BackArrow path={props.prevPath} sx={{}} />
 
@@ -97,7 +101,9 @@ function Product(props) {
                 <div>
                   <h2 className={classes.title}>{data.prodotto.name}</h2>
                   <div className={classes["price-rating-container"]}>
-                    <p className={classes.price}>€ {price}</p>
+                    <p className={classes.price}>
+                      € {price && price.toFixed(2)}
+                    </p>
                     <div className={classes.rating}>
                       <div className={classes["rating-average"]}>
                         <StarIcon sx={{ color: "#faaf00" }} /> {data.star}
@@ -144,7 +150,10 @@ function Product(props) {
               </div>
             </div>
             {data.prodotto.varianti && !isMobile && (
-              <div style={{margin: '4rem 0'}} className={classes["btn-container"]}>
+              <div
+                style={{ margin: "4rem 0" }}
+                className={classes["btn-container"]}
+              >
                 <AddToCart
                   session={props.session}
                   onHeartClick={onHeartClick}
@@ -154,6 +163,10 @@ function Product(props) {
             )}
             <div className={classes.container}>
               {!isMobile && <ShopLine brand={data.prodotto.brand} />}
+
+              <AddReview />
+
+              
 
               {!data.recensioni.length == 0 ? (
                 <div className={classes["rating-container"]}>
