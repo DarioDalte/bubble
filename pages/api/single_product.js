@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const databaseConnection = require("./middlewares/database.js");
@@ -8,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     await client.connect();
- 
+
     const db = client.db(); //Boh
     var data = req.body; //Inserts the request data into the variable data
     let yourId = mongoose.Types.ObjectId(data.id);
@@ -18,6 +17,7 @@ export default async function handler(req, res) {
     if (prodotti) {
       collection = db.collection("reviews"); //Seleziono la collection
       const reviews = await collection.find({ id_product: yourId }).toArray();
+      console.log(reviews);
 
       var somma_recensioni = 0;
       var cont = 0;
@@ -26,8 +26,14 @@ export default async function handler(req, res) {
 
         yourId = mongoose.Types.ObjectId(reviews[b]["id_user"]);
         var user = await db.collection("users").findOne({ _id: yourId });
-        reviews[b]["id_user"] = user["name"] + " " + user["cognome"];
-        cont++;
+        console.log(user);
+        if (user) {
+          reviews[b]["id_user"] = user["name"] + " " + user["cognome"];
+          cont++;
+        } else {
+          reviews[b]["id_user"] = "Utente eliminato";
+          cont++;
+        }
       }
       var media = somma_recensioni / cont;
 

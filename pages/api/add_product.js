@@ -1,7 +1,26 @@
 const databaseConnection = require("./middlewares/database.js");
+const os = require("os");
+const crypto = require("crypto");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Mi connetto al db
+
+  function objectId() {
+    const seconds = Math.floor(new Date() / 1000).toString(16);
+    const machineId = crypto
+      .createHash("md5")
+      .update(os.hostname())
+      .digest("hex")
+      .slice(0, 6);
+    const processId = process.pid.toString(16).slice(0, 4).padStart(4, "0");
+    const counter = process
+      .hrtime()[1]
+      .toString(16)
+      .slice(0, 6)
+      .padStart(6, "0");
+
+    return seconds + machineId + processId + counter;
+  }
 
   try {
     await client.connect();
@@ -9,7 +28,10 @@ export default async function handler(req, res) {
 
     var data = req.body; //Inserts the request data into the variable data
     console.log("sono qui");
-    console.log(data);
+    console.log(data.varianti);
+    console.log("sono qui");
+
+    console.log(objectId());
     console.log("sono qui");
 
     var companies = await db.collection("companies").find().toArray();
