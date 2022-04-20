@@ -1,15 +1,38 @@
-.heart {
-  font-size: 2rem !important;
-}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  .heart {
+    font-size: 2rem !important;
+    margin-right: 1rem;
+  }
 
-.btn {
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  background-color: #3669c9;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  &:hover {
-    background-color: #34599d;
+  .qnt-container {
+    display: flex;
+    gap: 1.7rem;
+    justify-content: center;
+    align-items: center;
+
+    .qnt-icon-container{
+      border: 1px solid #BABABA !important;
+      border-radius: 13px !important;
+      .qnt-icon {
+        font-size: 1.2rem !important;
+      }
+    }
+  }
+
+  .btn {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    background-color: #3669c9;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+      background-color: #34599d;
+    }
   }
 }

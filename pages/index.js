@@ -44,6 +44,9 @@ export default function Home(props) {
   // const data = useSelector((state) => state.homeProducts);
   // console.log(data);
 
+
+
+
   return (
     <>
      <MyHead title={'Homepage'}/>

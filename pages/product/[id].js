@@ -11,7 +11,7 @@ import axios from "axios";
 import { Divider } from "@mui/material";
 import Header from "../../components/Header/Header";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Rating from "@mui/material/Rating";
 import Link from "next/link";
 
@@ -36,13 +36,14 @@ function Product(props) {
   const [heartClicked, setHeartClicked] = useState(false);
   const [variant, setVariant] = useState([]);
   const [initialPrice, setInitialPrice] = useState();
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState(0);
   const isMobile = useMediaQuery("(max-width:62rem)");
   const [reviews, setReviews] = useState([]);
   const [ratingAverage, setRatingAverage] = useState(0);
   const [myReview, setMyReview] = useState();
   const [reviewNumber, setReviewNumber] = useState(0);
-
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
@@ -55,6 +56,7 @@ function Product(props) {
       if (res.data.prodotto.varianti) {
         Object.keys(res.data.prodotto.varianti).map((key, index) => {
           arr.push({
+            id: res.data.prodotto.varianti[key][0].id,
             type: key,
             name: res.data.prodotto.varianti[key][0].name,
             increase: 0,
@@ -77,15 +79,13 @@ function Product(props) {
           }
         }
 
-        console.log(ratingSomma);
-        console.log(ratingNumber);
         setRatingAverage((ratingSomma / ratingNumber).toFixed(1));
         setReviews(res.data.recensioni);
         setReviewNumber(parseInt(res.data.numero_recensioni));
       }
       setVariant(arr);
       setInitialPrice(res.data.prodotto.price);
-      setPrice(res.data.prodotto.price);
+      setPrice(parseFloat(res.data.prodotto.price));
       setIsLoading(false);
     });
   }, []);
@@ -113,13 +113,43 @@ function Product(props) {
       });
   };
 
+  const addToCartHandler = () => {
+    setIsAdding(true);
+
+    setTimeout(() => {
+      setIsAdding(false);
+    }, 300);
+
+    const productVariant = {};
+    variant.map((variant) => {
+      productVariant[variant["type"]] = variant.id;
+    });
+
+    const obj = {
+      id: id,
+      email: props.session.user.email,
+      variant: productVariant,
+      qnt: quantity,
+    };
+
+    console.log(obj);
+    window.navigator.vibrate(100);
+  };
+
   return (
     <>
       <MyHead title={isLoading ? "Prodotto" : data.prodotto.name} />
 
       {/* <Header session={props.session} /> */}
 
-      <BackArrow path={props.prevPath} sx={{}} />
+      <div className={classes.header}>
+        <BackArrow path={props.prevPath} classes={classes.backArrow} />
+        <IconButton>
+          <ShoppingCartOutlinedIcon
+            className={`${classes.cart} ${isAdding ? classes.bump : ""}`}
+          />
+        </IconButton>
+      </div>
 
       {isLoading && (
         <div className={classes.loading}>
@@ -186,6 +216,9 @@ function Product(props) {
                       session={props.session}
                       onHeartClick={onHeartClick}
                       heartClicked={heartClicked}
+                      quantity={quantity}
+                      setQuantity={setQuantity}
+                      addToCartHandler={addToCartHandler}
                     />
                   </div>
                 )}
@@ -200,6 +233,9 @@ function Product(props) {
                   session={props.session}
                   onHeartClick={onHeartClick}
                   heartClicked={heartClicked}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  addToCartHandler={addToCartHandler}
                 />
               </div>
             )}
@@ -299,6 +335,9 @@ function Product(props) {
                     session={props.session}
                     onHeartClick={onHeartClick}
                     heartClicked={heartClicked}
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                    addToCartHandler={addToCartHandler}
                   />
                 </div>
               )}

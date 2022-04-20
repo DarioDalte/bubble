@@ -61,6 +61,7 @@ function DesktopVariant(props) {
                           const clone = JSON.parse(JSON.stringify(obj));
 
                           if (clone.type == key) {
+                            clone.id = element.id;
                             clone.name = element.name;
                             clone.increase = element.increase;
                           }

@@ -39,10 +39,19 @@ function Header(props) {
               session={props.session}
             />
           )}
-          {(!props.session || !props.session.user.image) && (
-            <IconButton className={classes["icon-button"]}>
-              <ShoppingCartOutlinedIcon className={classes.icon} />
-            </IconButton>
+          {!props.session && (
+            <Link href={"/login"} passHref>
+              <IconButton className={classes["icon-button"]}>
+                <ShoppingCartOutlinedIcon className={classes.icon} />
+              </IconButton>
+            </Link>
+          )}
+          {props.session && !props.session.user.image && (
+            <Link href={"/cart"} passHref>
+              <IconButton className={classes["icon-button"]}>
+                <ShoppingCartOutlinedIcon className={classes.icon} />
+              </IconButton>
+            </Link>
           )}
           {props.session && props.session.user.image && (
             <Link href="/company/add_product" passHref>
