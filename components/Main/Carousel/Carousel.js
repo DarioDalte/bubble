@@ -16,7 +16,7 @@ function myCarousel() {
     >
       <div className={classes.container}>
         <div className={classes["left-item"]}>
-          <p className={classes.text}>Non so cosa scrivere!</p>
+          <p className={classes.text}>Sconti di pasqua!</p>
         </div>
         <div className={classes.background}>
           <Image src="/tizia.png" alt="Picture" layout="fill" />
@@ -25,7 +25,7 @@ function myCarousel() {
 
       <div className={`${classes.container} ${classes["left-container"]}`}>
         <div className={classes["right-item"]}>
-          <p className={classes.text}>Non so cosa scrivere!</p>
+          <p className={classes.text}>Sconti di pasqua!</p>
         </div>
         <div className={classes["background-left"]}>
           <Image src="/tizio.png" alt="Picture" layout="fill" />
