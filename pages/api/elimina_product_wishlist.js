@@ -14,22 +14,16 @@ export default async function handler(req, res) {
 
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    var id = mongoose.Types.ObjectId(data.prodotto["_id"]);
+    var id = mongoose.Types.ObjectId(data.id);
 
     var product = await db.collection("products").findOne({ _id: id }); //Selects documents from collection product
     var wishlist = await db
       .collection("wishlist")
       .findOne({ email: data.email, name: data.name }); //Selects documents from collection product
-    var prezzo_prodotto = product["price"];
-    var prova = [];
-    var image = data.prodotto["image"];
     var a = 0;
     if (product) {
       for (var i = 0; i < wishlist["products"].length; i++) {
-        console.log(id);
-        console.log(product["_id"]);
-        if (String(id) == String(product["_id"])) {
-          console.log("entro");
+        if (String(id) == String(wishlist["products"][i])) {
           wishlist["products"].splice(i, 1);
           i--;
           var myquery = { email: data.email };
