@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     var a = 0;
 
     for (var i = 0; i < wishlist["products"].length; i++) {
-      console.log(wishlist["products"][i]);
       if (String(wishlist["products"][i]) == String(id)) {
         a = 1;
         res.json({

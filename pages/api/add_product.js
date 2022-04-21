@@ -28,9 +28,7 @@ export default async function handler(req, res) {
     const db = client.db(); //Boh
 
     var data = req.body; //Inserts the request data into the variable data
-    console.log("sono qui");
-    console.log(data.varianti);
-    console.log("sono qui");
+
 
     var companies = await db.collection("companies").find().toArray();
     for (var i = 0; i < companies.length; i++) {

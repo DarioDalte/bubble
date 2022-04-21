@@ -13,7 +13,6 @@ export default async function handler(req, res) {
 
   try {
     var data = req.body; //Inserts the request data into the variable data
-    console.log(data);
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
     data.id = ObjectId(data.id).valueOf();

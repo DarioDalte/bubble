@@ -27,6 +27,7 @@ import ShopLine from "../../components/Main/Product/ShopLine/ShopLine";
 import MobileVariant from "../../components/Main/Product/MobileVariant/MobileVariant";
 import DesktopVariant from "../../components/Main/Product/DesktopVariant/DesktopVariant";
 import AddToCart from "../../components/Main/Product/AddToCart/AddToCart";
+import { useSelector, useDispatch } from "react-redux";
 
 function Product(props) {
   const router = useRouter();
@@ -44,10 +45,12 @@ function Product(props) {
   const [reviewNumber, setReviewNumber] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const dispatch = useDispatch();
+
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
-
+  const wishlistProducts = useSelector((state) => state.wishlistProducts);
   useEffect(() => {
     axios.post("/api/single_product", { id: id }).then((res) => {
       setData(res.data);
@@ -90,6 +93,43 @@ function Product(props) {
     });
   }, []);
 
+  useEffect(() => {
+
+    if (wishlistProducts) {
+      if (wishlistProducts.includes(id)) {
+        setHeartClicked(true);
+      } else {
+        setHeartClicked(false);
+      }
+    }
+    if (props.session) {
+      const obj = {
+        email: props.session.user.email,
+        name: "Wishlist",
+      };
+      axios.post("/api/getWishlist", obj).then((res) => {
+        const wishlist = res.data;
+        const wishlistIds = [];
+        wishlist.products.map((product) => {
+          wishlistIds.push(product.id);
+        });
+
+        if (wishlistIds.includes(id)) {
+          setHeartClicked(true);
+        } else {
+          setHeartClicked(false);
+        }
+
+        if (wishlist.status) {
+          dispatch({
+            type: "ADD_WISHLISTPRODUCTS",
+            wishlistProducts: wishlistIds,
+          });
+        }
+      });
+    }
+  }, [router.asPath]);
+
   const deleteReviewHandler = () => {
     setReviewNumber((prevReviewNumber) => prevReviewNumber - 1);
 
@@ -109,7 +149,7 @@ function Product(props) {
         id_product: id,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       });
   };
 
@@ -133,9 +173,8 @@ function Product(props) {
       qnt: quantity,
     };
 
-    console.log(obj);
     axios.post("/api/inserimento_carrello", obj).then((res) => {
-      console.log(res);
+      // console.log(res);
     });
   };
 

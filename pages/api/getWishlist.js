@@ -5,7 +5,6 @@ export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
 
   const data = req.body; //Inserts the request data into the variable data
-  console.log(data);
 
   await client.connect(); //Connect to our cluster
   const db = client.db(); //Inserts db into the variable db

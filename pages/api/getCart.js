@@ -17,19 +17,19 @@ export default async function handler(req, res) {
     let sumQnt = 0;
     await Promise.all(
       cart.products.map(async (product, i) => {
-        console.log(product);
         sumQnt += product.qnt;
+        const productId = mongoose.Types.ObjectId(product.id);
 
         const dbProduct = await db
           .collection("products")
-          .findOne({ _id: product.id });
+          .findOne({ _id: productId });
 
-        const brandId = mongoose.Types.ObjectId(dbProduct["brand"]);
+        const brandId = mongoose.Types.ObjectId(dbProduct.brand);
         const brand = await db
           .collection("companies")
           .findOne({ _id: brandId });
         const cartProduct = {
-          id: dbProduct['_id'],
+          id: dbProduct["_id"],
           image: dbProduct.image,
           name: dbProduct.name,
           brand: brand.name,
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
       products: cartProducts,
       totalPrice: totalPrice,
       totalProducts: sumQnt,
-      status: 1
+      status: 1,
     };
 
     res.json(obj);

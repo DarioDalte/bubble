@@ -66,7 +66,7 @@ function AddToCart(props) {
                       }
                       
                       axios.post('/api/elimina_product_wishlist', obj).then(res=>{
-                        console.log(res);
+                        // console.log(res);
                       })
                     }}
                   />
@@ -82,7 +82,7 @@ function AddToCart(props) {
                       }
                       
                       axios.post('/api/inserisci_wishlist', obj).then(res=>{
-                        console.log(res);
+                        // console.log(res);
                       })
                     }}
                   />

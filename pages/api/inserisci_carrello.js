@@ -29,16 +29,10 @@ export default async function handler(req, res) {
           if (
             product["varianti"]["colors"][i]["name"] == data.prodotto["color"]
           ) {
-            console.log(product["varianti"]["colors"][i]["name"]);
-            console.log(data.prodotto["color"]);
-            console.log("uguale");
             id_colore = product["varianti"]["colors"][i]["color_Id"];
             nome_colore = product["varianti"]["colors"][i]["name"];
             for (var y = 0; y < product["varianti"]["RAM"].length; y++) {
               if (product["varianti"]["RAM"][y]["gb"] == data.prodotto["RAM"]) {
-                console.log(product["varianti"]["RAM"][y]["gb"]);
-                console.log(data.prodotto["RAM"]);
-                console.log("uguale");
                 id_ram = product["varianti"]["RAM"][y]["RAM_Id"];
                 nome_ram = product["varianti"]["RAM"][y]["gb"];
                 for (var z = 0; z < product["varianti"]["SSD"].length; z++) {
@@ -46,21 +40,9 @@ export default async function handler(req, res) {
                     product["varianti"]["SSD"][z]["size"] ==
                     data.prodotto["SSD"]
                   ) {
-                    console.log(product["varianti"]["SSD"][z]["size"]);
-                    console.log(data.prodotto["SSD"]);
-                    console.log("uguale");
                     id_ssd = product["varianti"]["SSD"][z]["SSD_Id"];
                     nome_ssd = product["varianti"]["SSD"][z]["size"];
 
-                    console.log("TUTTE LE INFO");
-                    console.log(cart["products"][x]["id"]);
-                    console.log(cart["products"][x]["color"]);
-                    console.log(cart["products"][x]["RAM"]);
-                    console.log(cart["products"][x]["SSD"]);
-                    console.log(id);
-                    console.log(id_colore);
-                    console.log(id_ram);
-                    console.log(id_ssd);
                     if (
                       String(cart["products"][x]["id"]) == String(id) &&
                       String(cart["products"][x]["color"]) ==
@@ -68,10 +50,8 @@ export default async function handler(req, res) {
                       String(cart["products"][x]["RAM"]) == String(id_ram) &&
                       String(cart["products"][x]["SSD"]) == String(id_ssd)
                     ) {
-                      console.log("entra?");
                       cart["products"][x]["quantity"] =
                         parseFloat(cart["products"][x]["quantity"]) + 1;
-                      console.log(cart["products"][x]["quantity"]);
                       prova = cart["products"];
 
                       var myquery = { email: data.email };

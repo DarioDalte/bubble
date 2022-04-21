@@ -50,9 +50,10 @@ function Cart(props) {
           <CircularProgress className={classes.loading} />
         </div>
       )}
-      {!isLoading && products && (
+      {!isLoading && products && products.length != 0 && (
         <>
           <div className={classes.container}>
+            <h3 className={classes.title}>Il tuo carrello!</h3>
             <div className={classes.products}>
               {products.map((product, i) => {
                 return (
@@ -140,7 +141,7 @@ function Cart(props) {
                                 axios
                                   .post("/api/elimina_carrello", obj)
                                   .then((res) => {
-                                    console.log(res);
+                                    // console.log(res);
                                   });
 
                                 const productsClone = JSON.parse(
@@ -148,11 +149,16 @@ function Cart(props) {
                                 );
 
                                 productsClone.splice(i, 1);
-                                console.log("aooo");
                                 setProducts(productsClone);
                                 let myTotal = totalProducts;
                                 myTotal = myTotal - 1;
-                                console.log(myTotal);
+
+                                let myTotalPrice = totalPrice;
+                                myTotalPrice -= product.price;
+
+                                setTotalPrice(
+                                  parseFloat(myTotalPrice).toFixed(2)
+                                );
                                 setTotalProducts(myTotal);
                               }}
                             />

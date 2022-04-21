@@ -25,14 +25,11 @@ export default async function handler(req, res) {
     await Promise.all(
       cart.products.map(async (product, index) => {
         products.push(product);
-        console.log(products);
         if (data.id == product["id"]) {
-          console.log("si");
           if (data.variant) {
           } else {
             products[index].qnt =
               parseFloat(products[index].qnt) + parseFloat(data.qnt);
-            console.log(products);
 
             var myquery = { email: data.email };
 

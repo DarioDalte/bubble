@@ -15,7 +15,6 @@ export default async function handler(req, res) {
 
     const collection = collection("users"); //Seleziono la collection
     const result = await collection.insertMany(data); //Inserisco nella collection
-    console.log("info inserite");
     res.json({ message: "funzia!" });
   } catch (err) {
     //... handle it locally

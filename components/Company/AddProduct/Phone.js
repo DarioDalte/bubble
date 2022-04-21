@@ -167,7 +167,6 @@ function Phone(props) {
       setError("");
       // setIsLoading(true);
       const imagesList = images.map((image) => image.file.name);
-      console.log(imagesList);
 
       const obj = {
         brand: props.companyName,
@@ -181,17 +180,17 @@ function Phone(props) {
         processore: enteredProcessor,
         varianti: { Colore: colors, Ram: rams, Memoria: memories },
       };
-      console.log(obj);
+      // console.log(obj);
 
       const formData = new FormData();
       images.map((image) => {
         formData.append("image", image.file);
       });
 
-      console.log(formData);
+      // console.log(formData);
       uploadImage(formData)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
           console.log(err);

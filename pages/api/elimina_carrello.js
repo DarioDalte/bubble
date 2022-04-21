@@ -25,36 +25,25 @@ export default async function handler(req, res) {
     if (data.variant) {
       var non_funzia;
       var arr = [];
-      console.log("HA VARIANTII");
       Object.keys(cart.products).map((product, index) => {
-        console.log("PRODUCT: ");
-        console.log(product);
+
         Object.keys(cart.products[product]).map((key, index) => {
-          console.log("KEY: ");
-          console.log(key);
+  
           if (
             String(cart.products[product][key]) ==
             String(mongoose.Types.ObjectId(data.id))
           ) {
-            console.log("IDENTICOO: ");
-            console.log(String(cart.products[product][key]));
-            console.log(String(mongoose.Types.ObjectId(data.id)));
+ 
             a = 1;
           }
           if (a == 1) {
-            console.log("a = 1: ");
-            console.log("KEY: ");
-            console.log(key);
+
             Object.keys(cart.products[product][key]).map((key_1, index) => {
               if (
                 String(cart.products[product][key][key_1]) ==
                 String(mongoose.Types.ObjectId(data.variant[key_1]))
               ) {
-                console.log("IDENTICOO: ");
-                console.log(String(cart.products[product][key][key_1]));
-                console.log(
-                  String(mongoose.Types.ObjectId(data.variant[key_1]))
-                );
+
                 arr.push(1);
                 non_funzia = product;
               }
@@ -77,10 +66,8 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log(cart["products"]);
     if (entra.length == 2) {
       cart["products"].splice(pos, 1);
-      console.log(cart["products"]);
       var myquery = { email: data.email };
       var newvalues = { $set: { products: cart["products"] } };
       await db.collection("cart").updateOne(myquery, newvalues);
@@ -92,7 +79,6 @@ export default async function handler(req, res) {
     }
     if (array.length == 3) {
       cart["products"].splice(funziaaaa, 1);
-      console.log(cart["products"]);
       var myquery = { email: data.email };
       var newvalues = { $set: { products: cart["products"] } };
       await db.collection("cart").updateOne(myquery, newvalues);

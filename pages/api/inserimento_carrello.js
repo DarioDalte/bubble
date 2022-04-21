@@ -16,9 +16,7 @@ export default async function handler(req, res) {
 
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    console.log("\n");
-    console.log("\n");
-    console.log("\n");
+
 
     var cart = await db.collection("cart").findOne({ email: data.email }); //Selects documents from collection product
     var a = 0;
@@ -28,36 +26,25 @@ export default async function handler(req, res) {
     if (data.variant) {
       var non_funzia;
       var arr = [];
-      console.log("HA VARIANTII");
       Object.keys(cart.products).map((product, index) => {
-        console.log("PRODUCT: ");
-        console.log(product);
+
         Object.keys(cart.products[product]).map((key, index) => {
-          console.log("KEY: ");
-          console.log(key);
+
           if (
             String(cart.products[product][key]) ==
             String(mongoose.Types.ObjectId(data.id))
           ) {
-            console.log("IDENTICOO: ");
-            console.log(String(cart.products[product][key]));
-            console.log(String(mongoose.Types.ObjectId(data.id)));
+
             a = 1;
           }
           if (a == 1) {
-            console.log("a = 1: ");
-            console.log("KEY: ");
-            console.log(key);
+
             Object.keys(cart.products[product][key]).map((key_1, index) => {
               if (
                 String(cart.products[product][key][key_1]) ==
                 String(mongoose.Types.ObjectId(data.variant[key_1]))
               ) {
-                console.log("IDENTICOO: ");
-                console.log(String(cart.products[product][key][key_1]));
-                console.log(
-                  String(mongoose.Types.ObjectId(data.variant[key_1]))
-                );
+
                 arr.push(1);
                 non_funzia = product;
               }
@@ -79,11 +66,7 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log("SONO FUORI");
-    console.log("ARRAY");
-    console.log(array);
-    console.log("ENTRA");
-    console.log(entra);
+
 
     if (entra.length == 2) {
       await Promise.all(
@@ -91,7 +74,6 @@ export default async function handler(req, res) {
           if (cart.products[product]["id"] == data.id) {
             cart.products[product]["qnt"] =
               parseFloat(cart.products[product]["qnt"]) + 1;
-            console.log(cart.products);
             var myquery = { email: data.email };
             var newvalues = { $set: { products: cart.products } };
             await db.collection("cart").updateOne(myquery, newvalues);
@@ -111,7 +93,6 @@ export default async function handler(req, res) {
             d = 1;
             //delete data.email;
             cart.products.push(data);
-            console.log(cart.products);
             var myquery = { email: data.email };
             var newvalues = { $set: { products: cart.products } };
             await db.collection("cart").updateOne(myquery, newvalues);
@@ -135,7 +116,6 @@ export default async function handler(req, res) {
       return;
     } else {
       var d = 0;
-      console.log("sonoqui");
 
       if (d == 0) {
         Object.keys(data.variant).map(async (key, index) => {
@@ -145,7 +125,6 @@ export default async function handler(req, res) {
         d = 1;
         //delete data.email;
         cart.products.push(data);
-        console.log(cart.products);
         var myquery = { email: data.email };
         var newvalues = { $set: { products: cart.products } };
         await db.collection("cart").updateOne(myquery, newvalues);

@@ -6,7 +6,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 const RandomElements = (props) => {
   const isMobile = useMediaQuery("(max-width:47rem)");
-  console.log(props.randomElements);
   return (
     <div className={classes.container}>
       {props.randomElements &&

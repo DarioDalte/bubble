@@ -16,7 +16,6 @@ export default async function handler(req, res) {
     const collection = db.collection("users"); //Seleziono la collection
     await deleteListingByName(client, nome);
 
-    console.log("info eliminate");
   } catch (err) {
     //... handle it locally
     console.log(err.message);

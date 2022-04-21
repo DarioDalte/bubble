@@ -14,10 +14,8 @@ export default async function handler(req, res) {
 
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    console.log(data.id);
     data.id = mongoose.Types.ObjectId(data.id);
 
-    console.log(data.id);
     var users = await db
       .collection("products")
       .find({ _id: data.id })

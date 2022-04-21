@@ -19,7 +19,6 @@ export default async function handler(req, res) {
       .collection("wishlist")
       .deleteOne({ email: data.email, name: data.name });
 
-    console.log(result["deletedCount"]);
     if (parseFloat(result["deletedCount"]) != 0) {
       res.json({ message: "wishlist eliminata" });
       return;

@@ -25,7 +25,11 @@ function BottomNav(props) {
       }}
     >
       <BottomNavigationAction label="Home" icon={<HomeIcon />} href="/" />
-      <BottomNavigationAction label="Wishlist" icon={<FavoriteIcon />} />
+      <BottomNavigationAction
+        label="Wishlist"
+        icon={<FavoriteIcon />}
+        href="/wishlist"
+      />
       <BottomNavigationAction label="Ordini" icon={<ShoppingBagIcon />} />
 
       <BottomNavigationAction

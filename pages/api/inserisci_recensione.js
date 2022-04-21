@@ -13,16 +13,13 @@ export default async function handler(req, res) {
     var user = await db.collection("users").findOne({
       email: data.email,
     });
-    console.log(user["_id"]);
     let yourId = mongoose.Types.ObjectId(data.id_product);
-    console.log(yourId);
     var collection = db.collection("reviews"); //Seleziono la collection
     var reviews = await collection.findOne({
       id_product: yourId,
       id_user: user["_id"],
     });
     //Inserisco nella collection
-    console.log(reviews);
 
     if (!reviews) {
       var obj = {

@@ -28,14 +28,52 @@ const Card = forwardRef(function Card(props, ref) {
     if (wishlistProducts) {
       if (wishlistProducts.includes(props.id)) {
         setHeartClicked(true);
+      } else {
+        setHeartClicked(false);
       }
+    }
+    if (session) {
+      const obj = {
+        email: session.user.email,
+        name: "Wishlist",
+      };
+      axios.post("/api/getWishlist", obj).then((res) => {
+        const wishlist = res.data;
+        const wishlistIds = [];
+        wishlist.products.map((product) => {
+          wishlistIds.push(product.id);
+        });
+
+        if (wishlistIds.includes(props.id)) {
+          setHeartClicked(true);
+        } else {
+          setHeartClicked(false);
+        }
+
+        if (wishlist.status) {
+          dispatch({
+            type: "ADD_WISHLISTPRODUCTS",
+            wishlistProducts: wishlistIds,
+          });
+        }
+      });
     }
   }, [router.asPath]);
 
-  const content = (
+  return (
     <div className={`${classes.card} ${props.className}`}>
       {!props.isLoading ? (
-        props.path && (
+        props.path && props.id ? (
+          <Link href={`/product/${props.id}`} passHref>
+            <Image
+              src={props.path}
+              alt={`Picture of ${props.name}`}
+              width={150}
+              height={150}
+              layout="responsive"
+            ></Image>
+          </Link>
+        ) : (
           <Image
             src={props.path}
             alt={`Picture of ${props.name}`}
@@ -100,7 +138,7 @@ const Card = forwardRef(function Card(props, ref) {
                       axios
                         .post("/api/elimina_product_wishlist", obj)
                         .then((res) => {
-                          console.log(res);
+                          // console.log(res);
                         });
                     }}
                   />
@@ -115,7 +153,7 @@ const Card = forwardRef(function Card(props, ref) {
                       };
 
                       axios.post("/api/inserisci_wishlist", obj).then((res) => {
-                        console.log(res);
+                        // console.log(res);
                       });
                     }}
                   />
@@ -125,15 +163,6 @@ const Card = forwardRef(function Card(props, ref) {
         </div>
       </div>
     </div>
-  );
-
-  if (!props.id) {
-    return <>{content}</>;
-  }
-  return (
-    <Link href={`/product/${props.id}`} passHref>
-      {content}
-    </Link>
   );
 });
 

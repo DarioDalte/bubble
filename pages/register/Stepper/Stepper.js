@@ -273,7 +273,6 @@ export default function CustomizedSteppers() {
       password: enteredPassword,
     });
 
-    console.log(result);
     if (!result.error) {
       setMsgError("");
       router.push("../");
