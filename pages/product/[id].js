@@ -134,9 +134,9 @@ function Product(props) {
     };
 
     console.log(obj);
-    axios.post('/api/inserimento_carrello', obj).then((res) =>{
-      console.log(res)
-    })
+    axios.post("/api/inserimento_carrello", obj).then((res) => {
+      console.log(res);
+    });
   };
 
   return (
@@ -147,11 +147,13 @@ function Product(props) {
 
       <div className={classes.header}>
         <BackArrow path={props.prevPath} classes={classes.backArrow} />
-        <IconButton>
-          <ShoppingCartOutlinedIcon
-            className={`${classes.cart} ${isAdding ? classes.bump : ""}`}
-          />
-        </IconButton>
+        <Link href={props.session ? "/cart" : "/login"} passHref>
+          <IconButton>
+            <ShoppingCartOutlinedIcon
+              className={`${classes.cart} ${isAdding ? classes.bump : ""}`}
+            />
+          </IconButton>
+        </Link>
       </div>
 
       {isLoading && (
@@ -227,6 +229,7 @@ function Product(props) {
                       quantity={quantity}
                       setQuantity={setQuantity}
                       addToCartHandler={addToCartHandler}
+                      productId={data.prodotto["_id"]}
                     />
                   </div>
                 )}
@@ -244,6 +247,7 @@ function Product(props) {
                   quantity={quantity}
                   setQuantity={setQuantity}
                   addToCartHandler={addToCartHandler}
+                  productId={data.prodotto["_id"]}
                 />
               </div>
             )}
@@ -348,6 +352,7 @@ function Product(props) {
                     quantity={quantity}
                     setQuantity={setQuantity}
                     addToCartHandler={addToCartHandler}
+                    productId={data.prodotto["_id"]}
                   />
                 </div>
               )}

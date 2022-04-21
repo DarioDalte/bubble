@@ -5,6 +5,7 @@ import { IconButton } from "@mui/material";
 import Link from "next/link";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import axios from "axios";
 function AddToCart(props) {
   const incrementQntHandler = () => {
     window.navigator.vibrate(100);
@@ -38,7 +39,7 @@ function AddToCart(props) {
             <AddIcon className={classes["qnt-icon"]} />
           </IconButton>
         </div>
-        <div>
+        <div className={classes["heart-btn-container"]}>
           {!props.session ? (
             <>
               <Link href={"/login"} passHref>
@@ -54,9 +55,37 @@ function AddToCart(props) {
             <>
               <IconButton onClick={props.onHeartClick}>
                 {props.heartClicked ? (
-                  <FavoriteIcon className={classes.heart} />
+                  <FavoriteIcon
+                    className={classes.heart}
+                    onClick={() => {
+                      const obj ={
+                        id: props.productId,
+                        email: props.session.user.email,
+                        name: 'Wishlist'
+
+                      }
+                      
+                      axios.post('/api/elimina_product_wishlist', obj).then(res=>{
+                        console.log(res);
+                      })
+                    }}
+                  />
                 ) : (
-                  <FavoriteBorderIcon className={classes.heart} />
+                  <FavoriteBorderIcon
+                    className={classes.heart}
+                    onClick={() => {
+                      const obj ={
+                        id: props.productId,
+                        email: props.session.user.email,
+                        name: 'Wishlist'
+
+                      }
+                      
+                      axios.post('/api/inserisci_wishlist', obj).then(res=>{
+                        console.log(res);
+                      })
+                    }}
+                  />
                 )}
               </IconButton>
               <span className={classes["btn"]} onClick={props.addToCartHandler}>

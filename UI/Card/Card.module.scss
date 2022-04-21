@@ -6,7 +6,7 @@
   width: 90%;
   padding: 0.6rem 0;
   cursor: pointer;
-  transition: all .5s;
+  transition: all 0.5s;
 
   .image-container {
     padding: 1rem;
@@ -24,7 +24,7 @@
     font-weight: 600;
 
     @media (max-width: 25rem) {
-      font-size: .9rem;
+      font-size: 0.9rem;
     }
   }
 
@@ -33,7 +33,7 @@
     margin-bottom: 0.5rem;
     color: #0000009f;
     @media (max-width: 25rem) {
-      font-size: .7rem;
+      font-size: 0.7rem;
     }
   }
 
@@ -42,7 +42,7 @@
     font-weight: 600;
     margin-bottom: 0.3rem;
     @media (max-width: 25rem) {
-      font-size: .9rem;
+      font-size: 0.9rem;
     }
   }
 
@@ -54,46 +54,44 @@
     display: flex;
     flex-direction: column;
     margin-top: 0.5rem;
-
-    .footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 0.5rem;
-
-      .star {
-        margin: 0 !important;
-        font-size: 1.4rem;
-
-
-
-        @media (max-width: 25rem) {
-          font-size: 1.1rem;
-        }
-
-        @media (max-width: 21rem) {
-          font-size: 0.8rem;
-        }
-      }
-
-      .heart {
-        color: #3669c9;
-        cursor: pointer;
-        //transition: all .3s;
-
-
-        @media (max-width: 25rem) {
-          font-size: 1.3rem;
-        }
-
-        @media (max-width: 21rem) {
-          font-size: 1.1rem;
-        }
-      }
-    }
   }
 
   @media (min-width: 62rem) {
     min-width: 13rem;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+  z-index: 100;
+
+  .star {
+    margin: 0 !important;
+    font-size: 1.4rem;
+
+    @media (max-width: 25rem) {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 21rem) {
+      font-size: 0.8rem;
+    }
+  }
+
+  .heart {
+    color: #3669c9;
+    cursor: pointer;
+    //transition: all .3s;
+
+    @media (max-width: 25rem) {
+      font-size: 1.3rem;
+    }
+
+    @media (max-width: 21rem) {
+      font-size: 1.1rem;
+    }
   }
 }
