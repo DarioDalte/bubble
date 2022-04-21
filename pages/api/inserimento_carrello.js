@@ -65,6 +65,16 @@ export default async function handler(req, res) {
       res.json({ message: "Aggiunto un nuovo prodotto" });
       return;
     } else if (array.length == 3) {
+      Object.keys(cart.products).map((product, index) => {
+        Object.keys(cart.products[product]).map((key, index) => {
+          if (
+            String(cart.products[product][key]) ==
+            String(mongoose.Types.ObjectId(data.id))
+          ) {
+          }
+        });
+      });
+
       res.json({ message: "Incrementato" });
       return;
     } else {
