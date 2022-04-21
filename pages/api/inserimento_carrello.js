@@ -17,17 +17,12 @@ export default async function handler(req, res) {
     const db = client.db(); //Inserts db into the variable db
 
     var cart = await db.collection("cart").findOne({ email: data.email }); //Selects documents from collection product
-    var prova = [];
     var a = 0;
     var entra = [];
     var array = [];
     if (data.variant) {
       Object.keys(cart.products).map((product, index) => {
         Object.keys(cart.products[product]).map((key, index) => {
-          console.log("11111111111111111111111111111111");
-          console.log(key);
-          console.log(String(cart.products[product][key]));
-          console.log(String(mongoose.Types.ObjectId(data.id)));
           if (
             String(cart.products[product][key]) ==
             String(mongoose.Types.ObjectId(data.id))
@@ -36,9 +31,6 @@ export default async function handler(req, res) {
           }
           if (a == 1) {
             Object.keys(cart.products[product][key]).map((key_1, index) => {
-              console.log("2222222222222222222222222222222");
-              console.log(cart.products[product][key][key_1]);
-              console.log(mongoose.Types.ObjectId(data.variant[key_1]));
               if (
                 String(cart.products[product][key][key_1]) ==
                 String(mongoose.Types.ObjectId(data.variant[key_1]))
@@ -58,26 +50,85 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log("SONO FUORI");
+
     if (entra.length == 2) {
-      res.json({ message: "Incrementato" });
-      return;
+      await Promise.all(
+        Object.keys(cart.products).map(async (product, index) => {
+          if (cart.products[product]["id"] == data.id) {
+            cart.products[product]["qnt"] =
+              parseFloat(cart.products[product]["qnt"]) + 1;
+            console.log(cart.products);
+            var myquery = { email: data.email };
+            var newvalues = { $set: { products: cart.products } };
+            await db.collection("cart").updateOne(myquery, newvalues);
+            res.json({ message: "Incrementato" });
+            return;
+          }
+        })
+      );
     } else if (entra.length == 1) {
+      var d = 0;
+
+      await Promise.all(
+        Object.keys(cart.products).map(async (product, index) => {
+          if (d == 0) {
+            data.id = mongoose.Types.ObjectId(data.id);
+            d = 1;
+            //delete data.email;
+            cart.products.push(data);
+            console.log(cart.products);
+            var myquery = { email: data.email };
+            var newvalues = { $set: { products: cart.products } };
+            await db.collection("cart").updateOne(myquery, newvalues);
+            d = 1;
+          }
+        })
+      );
+
       res.json({ message: "Aggiunto un nuovo prodotto" });
       return;
     } else if (array.length == 3) {
-      Object.keys(cart.products).map((product, index) => {
-        Object.keys(cart.products[product]).map((key, index) => {
-          if (
-            String(cart.products[product][key]) ==
-            String(mongoose.Types.ObjectId(data.id))
-          ) {
-          }
-        });
-      });
-
+      await Promise.all(
+        Object.keys(cart.products).map(async (product, index) => {
+          await Promise.all(
+            Object.keys(cart.products[product]).map(async (key, index) => {
+              if (
+                String(cart.products[product][key]) ==
+                String(mongoose.Types.ObjectId(data.id))
+              ) {
+                cart.products[product]["qnt"] =
+                  parseFloat(cart.products[product]["qnt"]) + 1;
+                console.log(cart.products);
+                var myquery = { email: data.email };
+                var newvalues = { $set: { products: cart.products } };
+                await db.collection("cart").updateOne(myquery, newvalues);
+              }
+            })
+          );
+        })
+      );
       res.json({ message: "Incrementato" });
       return;
     } else {
+      var d = 0;
+      console.log("sonoqui");
+
+      if (d == 0) {
+        Object.keys(data.variant).map(async (key, index) => {
+          data.id = mongoose.Types.ObjectId(data.id);
+          data.variant[key] = mongoose.Types.ObjectId(data.variant[key]);
+        });
+        d = 1;
+        //delete data.email;
+        cart.products.push(data);
+        console.log(cart.products);
+        var myquery = { email: data.email };
+        var newvalues = { $set: { products: cart.products } };
+        await db.collection("cart").updateOne(myquery, newvalues);
+        d = 1;
+      }
+
       res.json({ message: "Aggiunto un nuovo prodotto" });
       return;
     }
