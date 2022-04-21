@@ -22,7 +22,7 @@ function AddToCart(props) {
 
   return (
     <>
-      <div className={style.container}>
+      <div className={classes.container}>
         <div className={classes["qnt-container"]}>
           <IconButton
             className={classes["qnt-icon-container"]}
