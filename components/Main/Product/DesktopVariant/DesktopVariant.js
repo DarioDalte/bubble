@@ -18,12 +18,15 @@ function DesktopVariant(props) {
                     marginRight: ".5rem",
                   }}
                 >
-                  {key}:
+                  {key.charAt(0).toUpperCase() + key.slice(1)}:
                 </span>
                 <span>
                   {props.variant.map((ourVariant) => {
                     if (ourVariant.type == key) {
-                      return ourVariant.name;
+                      return (
+                        ourVariant.name.charAt(0).toUpperCase() +
+                        ourVariant.name.slice(1)
+                      );
                     }
                   })}
                 </span>
@@ -77,7 +80,10 @@ function DesktopVariant(props) {
                         props.setPrice(props.initialPrice + totalIncrease);
                       }}
                     >
-                      <div className={classes.name}>{element.name}</div>
+                      <div className={classes.name}>
+                        {element.name.charAt(0).toUpperCase() +
+                          element.name.slice(1)}
+                      </div>
                       <Divider />
                       <div className={classes.price}>
                         {(parseFloat(props.initialPrice) + increase).toFixed(2)}{" "}

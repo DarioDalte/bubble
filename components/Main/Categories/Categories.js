@@ -69,7 +69,7 @@ function Categories(props) {
       ),
     },
     {
-      title: "Acessori",
+      title: "Accessori",
       color: "#E4F3EA",
       icon: (
         <SportsVolleyballOutlinedIcon

@@ -82,7 +82,7 @@ function MobileVariant(props) {
                     props.setPrice(props.initialPrice + totalIncrease);
                   }}
                 >
-                  <div className={classes.name}>{element.name}</div>
+                  <div className={classes.name}>{element.name.charAt(0).toUpperCase()+element.name.slice(1)}</div>
                   <Divider />
                   <div className={classes.price}>
                     <p>
