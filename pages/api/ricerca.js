@@ -1,4 +1,3 @@
-
 const databaseConnection = require("./middlewares/database.js");
 const mongoose = require("mongoose");
 
@@ -76,7 +75,6 @@ export default async function handler(req, res) {
         }
       }
     }
-    var a = 0;
 
     for (var i = 0; i < result.length; i++) {
       var boh = result[i]["category"].toLowerCase();
@@ -88,38 +86,36 @@ export default async function handler(req, res) {
           //Selects documents f
           //result[i]["orderdetails"][z]["brand"] = brand["name"];
           prodotti_ricerca.push(result[i]["orderdetails"][z]);
-          a = 1;
         }
       }
     }
-    if (a == 0) {
-      for (var i = 0; i < result.length; i++) {
-        if (result[i]["sub_category"]) {
-          var keys = Object.keys(result[i]["sub_category"]);
-          var values = Object.values(result[i]["sub_category"]);
 
-          for (var f = 0; f < keys.length; f++) {
-            if (keys[f].toLowerCase().includes(data.stringa)) {
-              for (var z = 0; z < result[i]["orderdetails"].length; z++) {
-                var variabile = result[i]["orderdetails"][z]["sub_categories"];
-                if (variabile) {
-                  for (var r = 0; r < variabile.length; r++) {
-                    variabile[r] = variabile[r]
-                      .toString()
-                      .replace(/ObjectId\("(.*)"\)/, "$1");
+    for (var i = 0; i < result.length; i++) {
+      if (result[i]["sub_category"]) {
+        var keys = Object.keys(result[i]["sub_category"]);
+        var values = Object.values(result[i]["sub_category"]);
 
-                    values[f] = values[f]
-                      .toString()
-                      .replace(/ObjectId\("(.*)"\)/, "$1");
+        for (var f = 0; f < keys.length; f++) {
+          if (keys[f].toLowerCase().includes(data.stringa)) {
+            for (var z = 0; z < result[i]["orderdetails"].length; z++) {
+              var variabile = result[i]["orderdetails"][z]["sub_categories"];
+              if (variabile) {
+                for (var r = 0; r < variabile.length; r++) {
+                  variabile[r] = variabile[r]
+                    .toString()
+                    .replace(/ObjectId\("(.*)"\)/, "$1");
 
-                    if (variabile[r] == values[f]) {
-                      //var brand = await db.collection("companies").findOne({
-                      //  _id: result[i]["orderdetails"][z]["brand"],
-                      //});
-                      //Selects documents f
-                      //result[i]["orderdetails"][z]["brand"] = brand["name"];
-                      prodotti_ricerca.push(result[i]["orderdetails"][z]);
-                    }
+                  values[f] = values[f]
+                    .toString()
+                    .replace(/ObjectId\("(.*)"\)/, "$1");
+
+                  if (variabile[r] == values[f]) {
+                    //var brand = await db.collection("companies").findOne({
+                    //  _id: result[i]["orderdetails"][z]["brand"],
+                    //});
+                    //Selects documents f
+                    //result[i]["orderdetails"][z]["brand"] = brand["name"];
+                    prodotti_ricerca.push(result[i]["orderdetails"][z]);
                   }
                 }
               }
