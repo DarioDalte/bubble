@@ -14,7 +14,10 @@ export default async function handler(req, res) {
   const cartProducts = [];
   let totalPrice = 0;
   if (cart.products) {
+    let sumQnt = 0;
     cart.products.map(async (product, i) => {
+      sumQnt += product.qnt;
+
       const dbProduct = await db
         .collection("products")
         .findOne({ _id: product.id });
@@ -42,6 +45,7 @@ export default async function handler(req, res) {
         const obj = {
           products: cartProducts,
           totalPrice: totalPrice,
+          totalProducts: sumQnt
         };
 
         res.json(obj);

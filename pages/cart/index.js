@@ -16,19 +16,23 @@ function Cart(props) {
   const [products, setProducts] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState();
+  const [totalProducts, setTotalProducts] = useState();
 
   useEffect(() => {
-    console.log("carico...");
     axios
       .post("/api/getCart", { email: props.session.user.email })
       .then((res) => {
         console.log(res.data);
         setProducts(res.data.products);
-        setTotalPrice((res.data.totalPrice).toFixed(2));
+        setTotalPrice(res.data.totalPrice.toFixed(2));
         setIsLoading(false);
-      }).catch(e =>{
-        console.log(e);
+        setTotalProducts(res.data.totalProducts);
       })
+      .catch((e) => {
+        setIsLoading(false);
+
+        console.log(e);
+      });
   }, []);
 
   const incrementQntHandler = () => {
@@ -99,7 +103,7 @@ function Cart(props) {
           </div>
           <div className={classes["bottom-nav"]}>
             <div className={classes["text-container"]}>
-              <span>Totale prodotti </span>
+              <span>Num prodotti {totalProducts} </span>
               <span>€ {totalPrice}</span>
             </div>
             <span className={classes["btn"]}>
