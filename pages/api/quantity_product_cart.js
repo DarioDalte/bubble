@@ -14,15 +14,14 @@ export default async function handler(req, res) {
 
     await client.connect(); //Connect to our cluster
     const db = client.db(); //Inserts db into the variable db
-    var id = mongoose.Types.ObjectId(data.prodotto["_id"]);
 
-    var product = await db.collection("products").findOne({ _id: id }); //Selects documents from collection product
     var cart = await db.collection("cart").findOne({ email: data.email }); //Selects documents from collection product
 
     var entra = [];
     var array = [];
     var funziaaaa;
     var pos;
+    var a = 0;
     if (data.variant) {
       var non_funzia;
       var arr = [];
@@ -86,21 +85,33 @@ export default async function handler(req, res) {
 
     var prova = [];
     if (entra.length == 2) {
-      await Promise.all(
-        Object.keys(cart.products).map(async (product, index) => {
-          if (cart.products[product]["id"] == data.id) {
-            cart.products[product]["qnt"] =
-              parseFloat(cart.products[product]["qnt"]) + 1;
-            console.log(cart.products);
-            var myquery = { email: data.email };
-            var newvalues = { $set: { products: cart.products } };
-            await db.collection("cart").updateOne(myquery, newvalues);
-            res.json({ message: "Incrementato" });
-            return;
-          }
-        })
-      );
-      entra = [];
+      if (parseFloat(data.aumenta) == 0) {
+        cart.products[pos]["qnt"] = parseFloat(cart.products[pos]["qnt"]) - 1;
+        console.log(cart.products[pos]["qnt"]);
+        prova = cart["products"];
+
+        var myquery = { email: data.email };
+        var newvalues = { $set: { products: prova } };
+        console.log(prova);
+        await db.collection("cart").updateOne(myquery, newvalues);
+        res.json({
+          prodotto: "decrementato",
+        });
+        return;
+      } else {
+        cart.products[pos]["qnt"] = parseFloat(cart.products[pos]["qnt"]) + 1;
+        console.log(cart.products[pos]["qnt"]);
+        prova = cart["products"];
+
+        var myquery = { email: data.email };
+        var newvalues = { $set: { products: prova } };
+        console.log(prova);
+        await db.collection("cart").updateOne(myquery, newvalues);
+        res.json({
+          prodotto: "incrementato",
+        });
+        return;
+      }
     } else if (array.length == 3) {
       if (parseFloat(data.aumenta) == 0) {
         cart.products[funziaaaa]["qnt"] =
@@ -111,7 +122,7 @@ export default async function handler(req, res) {
         var myquery = { email: data.email };
         var newvalues = { $set: { products: prova } };
         console.log(prova);
-        //await db.collection("cart").updateOne(myquery, newvalues);
+        await db.collection("cart").updateOne(myquery, newvalues);
         res.json({
           prodotto: "decrementato",
         });
@@ -125,7 +136,7 @@ export default async function handler(req, res) {
         var myquery = { email: data.email };
         var newvalues = { $set: { products: prova } };
         console.log(prova);
-        //await db.collection("cart").updateOne(myquery, newvalues);
+        await db.collection("cart").updateOne(myquery, newvalues);
         res.json({
           prodotto: "incrementato",
         });
