@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 90%;
+  margin: auto;
+  margin-top: 2rem;
+
+  .product-container {
+    display: flex;
+    gap: 1rem;
+
+    .image-container {
+      max-width: 250px;
+      position: relative;
+      width: 35%;
+    }
+
+    .detail-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 65%;
+    }
+
+    .icon-container {
+      display: flex;
+      justify-content: space-between;
+      .qnt-container {
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
+.delete-icon {
+  color: #b8222f;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 1rem 2rem;
+  width: 100%;
+
+  .text-container {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+  }
+
+  .btn {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+    padding: 1rem;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    background: #3669c9;
+    color: white;
+    border-radius: 12px;
+  }
+}

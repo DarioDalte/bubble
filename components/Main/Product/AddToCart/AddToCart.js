@@ -15,14 +15,14 @@ function AddToCart(props) {
     if (props.quantity > 1) {
       window.navigator.vibrate(100);
       props.setQuantity((prevQnt) => prevQnt - 1);
-    }else{
+    } else {
       window.navigator.vibrate(200);
     }
   };
 
   return (
     <>
-      <div className={classes.container}>
+      <div className={style.container}>
         <div className={classes["qnt-container"]}>
           <IconButton
             className={classes["qnt-icon-container"]}

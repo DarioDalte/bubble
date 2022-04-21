@@ -242,14 +242,16 @@ function Product(props) {
             <div className={classes.container}>
               {!isMobile && <ShopLine brand={data.prodotto.brand} />}
 
-              <AddReview
-                setMyReview={setMyReview}
-                reviews={reviews}
-                session={props.session}
-                id={id}
-                setRatingAverage={setRatingAverage}
-                setReviewNumber={setReviewNumber}
-              />
+              {!myReview && (
+                <AddReview
+                  setMyReview={setMyReview}
+                  reviews={reviews}
+                  session={props.session}
+                  id={id}
+                  setRatingAverage={setRatingAverage}
+                  setReviewNumber={setReviewNumber}
+                />
+              )}
 
               {!reviews.length == 0 || myReview ? (
                 <div className={classes["rating-container"]}>

@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       dbProduct.price = parseFloat(dbProduct.price);
 
       if (product.variant) {
-        Object.keys(product.variant).map((key, index) => {
+        Object.keys(product.variant).map((key) => {
           dbProduct.varianti[key].map((variant) => {
             if (variant.id.toString() === product.variant[key].toString()) {
               dbProduct.price += parseFloat(variant.increase);
