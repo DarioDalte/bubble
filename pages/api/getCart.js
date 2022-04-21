@@ -33,24 +33,8 @@ export default async function handler(req, res) {
           });
         });
         delete dbProduct.varianti;
-      }
-      dbProduct["qnt"] = product.qnt;
-      dbProduct.price *= product.qnt;
-      totalPrice += dbProduct.price;
-      cartProducts.push(dbProduct);
-      if (i + 1 === cart.products.length) {
-        const obj = {
-          products: cartProducts,
-          totalPrice: totalPrice,
-        };
-
-        res.json(obj);
-
-        await client.close();
-
-      }
-    });
+      
   } else {
     res.json({ message: "Non hai prodotti nel carrello" });
   }
-}
+    }
