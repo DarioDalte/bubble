@@ -115,6 +115,7 @@ function Product(props) {
 
   const addToCartHandler = () => {
     setIsAdding(true);
+    window.navigator.vibrate(100);
 
     setTimeout(() => {
       setIsAdding(false);
@@ -133,7 +134,9 @@ function Product(props) {
     };
 
     console.log(obj);
-    window.navigator.vibrate(100);
+    axios.post('/api/inserimento_carrello', obj).then((res) =>{
+      console.log(res)
+    })
   };
 
   return (
@@ -175,9 +178,14 @@ function Product(props) {
                 }`}
               >
                 <div>
-                  <h2 className={classes.title}>{data.prodotto.name.charAt(0).toUpperCase()+data.prodotto.name.slice(1)}</h2>
+                  <h2 className={classes.title}>
+                    {data.prodotto.name.charAt(0).toUpperCase() +
+                      data.prodotto.name.slice(1)}
+                  </h2>
                   <div className={classes["price-rating-container"]}>
-                    <p className={classes.price}>€ {parseFloat(price).toFixed(2)}</p>
+                    <p className={classes.price}>
+                      € {parseFloat(price).toFixed(2)}
+                    </p>
                     <div className={classes.rating}>
                       <div className={classes["rating-average"]}>
                         <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
