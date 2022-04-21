@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
     var cart = await db.collection("cart").findOne({ email: data.email }); //Selects documents from collection product
     var prova = [];
-
+    var a = 0;
     var entra = [];
     var array = [];
     if (data.variant) {
@@ -32,7 +32,9 @@ export default async function handler(req, res) {
             String(cart.products[product][key]) ==
             String(mongoose.Types.ObjectId(data.id))
           ) {
-            console.log("cciao");
+            a = 1;
+          }
+          if (a == 1) {
             Object.keys(cart.products[product][key]).map((key_1, index) => {
               console.log("2222222222222222222222222222222");
               console.log(cart.products[product][key][key_1]);
@@ -63,6 +65,16 @@ export default async function handler(req, res) {
       res.json({ message: "Aggiunto un nuovo prodotto" });
       return;
     } else if (array.length == 3) {
+      Object.keys(cart.products).map((product, index) => {
+        Object.keys(cart.products[product]).map((key, index) => {
+          if (
+            String(cart.products[product][key]) ==
+            String(mongoose.Types.ObjectId(data.id))
+          ) {
+          }
+        });
+      });
+
       res.json({ message: "Incrementato" });
       return;
     } else {
