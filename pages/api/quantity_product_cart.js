@@ -18,26 +18,129 @@ export default async function handler(req, res) {
 
     var product = await db.collection("products").findOne({ _id: id }); //Selects documents from collection product
     var cart = await db.collection("cart").findOne({ email: data.email }); //Selects documents from collection product
-    var prezzo_prodotto = product["price"];
+
+    var entra = [];
+    var array = [];
+    var funziaaaa;
+    var pos;
+    if (data.variant) {
+      var non_funzia;
+      var arr = [];
+      console.log("HA VARIANTII");
+      Object.keys(cart.products).map((product, index) => {
+        console.log("PRODUCT: ");
+        console.log(product);
+        Object.keys(cart.products[product]).map((key, index) => {
+          console.log("KEY: ");
+          console.log(key);
+          if (
+            String(cart.products[product][key]) ==
+            String(mongoose.Types.ObjectId(data.id))
+          ) {
+            console.log("IDENTICOO: ");
+            console.log(String(cart.products[product][key]));
+            console.log(String(mongoose.Types.ObjectId(data.id)));
+            a = 1;
+          }
+          if (a == 1) {
+            console.log("a = 1: ");
+            console.log("KEY: ");
+            console.log(key);
+            Object.keys(cart.products[product][key]).map((key_1, index) => {
+              if (
+                String(cart.products[product][key][key_1]) ==
+                String(mongoose.Types.ObjectId(data.variant[key_1]))
+              ) {
+                console.log("IDENTICOO: ");
+                console.log(String(cart.products[product][key][key_1]));
+                console.log(
+                  String(mongoose.Types.ObjectId(data.variant[key_1]))
+                );
+                arr.push(1);
+                non_funzia = product;
+              }
+            });
+          }
+        });
+        if (arr.length == 3) {
+          array = arr;
+          funziaaaa = product;
+        }
+        arr = [];
+      });
+    } else {
+      entra.push(1);
+      Object.keys(cart.products).map((key, index) => {
+        if (cart.products[key]["id"] == data.id) {
+          entra.push(1);
+          pos = key;
+        }
+      });
+    }
+
+    console.log("SONO FUORI");
+    console.log("ARRAY");
+    console.log(array);
+    console.log("ENTRA");
+    console.log(entra);
+
     var prova = [];
-    var image = data.prodotto["image"];
-    if (product) {
-      for (var x = 0; x < cart["products"].length; x++) {
-        if (cart["products"][x]["id"] == data.prodotto["_id"]) {
-          for (var i = 0; i < product["varianti"]["colors"].length; i++) {
-            if (
-              product["varianti"]["colors"][i]["name"] == data.prodotto["color"]
-            ) {
-              for (var i = 0; i < product["varianti"]["RAM"].length; i++) {
-                if (
-                  product["varianti"]["RAM"][i]["gb"] == data.prodotto["RAM"]
-                ) {
-                  for (var i = 0; i < product["varianti"]["SSD"].length; i++) {
-                    if (
-                      product["varianti"]["SSD"][i]["size"] ==
-                      data.prodotto["SSD"]
-                    ) {
-                      if (parseFloat(data.aumenta) == 0) {
+    if (entra.length == 2) {
+      await Promise.all(
+        Object.keys(cart.products).map(async (product, index) => {
+          if (cart.products[product]["id"] == data.id) {
+            cart.products[product]["qnt"] =
+              parseFloat(cart.products[product]["qnt"]) + 1;
+            console.log(cart.products);
+            var myquery = { email: data.email };
+            var newvalues = { $set: { products: cart.products } };
+            await db.collection("cart").updateOne(myquery, newvalues);
+            res.json({ message: "Incrementato" });
+            return;
+          }
+        })
+      );
+      entra = [];
+    } else if (array.length == 3) {
+      if (parseFloat(data.aumenta) == 0) {
+        cart.products[funziaaaa]["qnt"] =
+          parseFloat(cart.products[funziaaaa]["qnt"]) - 1;
+        console.log(cart.products[funziaaaa]["qnt"]);
+        prova = cart["products"];
+
+        var myquery = { email: data.email };
+        var newvalues = { $set: { products: prova } };
+        console.log(prova);
+        //await db.collection("cart").updateOne(myquery, newvalues);
+        res.json({
+          prodotto: "decrementato",
+        });
+        return;
+      } else {
+        cart.products[funziaaaa]["qnt"] =
+          parseFloat(cart.products[funziaaaa]["qnt"]) + 1;
+        console.log(cart.products[funziaaaa]["qnt"]);
+        prova = cart["products"];
+
+        var myquery = { email: data.email };
+        var newvalues = { $set: { products: prova } };
+        console.log(prova);
+        //await db.collection("cart").updateOne(myquery, newvalues);
+        res.json({
+          prodotto: "incrementato",
+        });
+        return;
+      }
+    }
+  } finally {
+    // Close the connection to the MongoDB cluster
+    await client.close();
+  }
+}
+
+/*
+
+                  if (parseFloat(data.aumenta) == 0) {
                         cart["products"][x]["quantity"] =
                           parseFloat(cart["products"][x]["quantity"]) - 1;
                         console.log(cart["products"][x]["quantity"]);
@@ -68,22 +171,5 @@ export default async function handler(req, res) {
                         });
                         return;
                       }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    } else {
-      res.json({
-        message: "Nessun prodotto",
-      });
-      return;
-    }
-  } finally {
-    // Close the connection to the MongoDB cluster
-    await client.close();
-  }
-}
+                      
+                      */

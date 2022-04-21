@@ -21,6 +21,7 @@ export default async function handler(req, res) {
     var entra = [];
     var array = [];
     var funziaaaa;
+    var pos;
     if (data.variant) {
       var non_funzia;
       var arr = [];
@@ -70,22 +71,25 @@ export default async function handler(req, res) {
       entra.push(1);
       Object.keys(cart.products).map((key, index) => {
         if (cart.products[key]["id"] == data.id) {
-          cart["products"].splice(index, 1);
-          console.log(cart["products"]);
-          var myquery = { email: data.email };
-          var newvalues = { $set: { products: cart["products"] } };
-          await db.collection("cart").updateOne(myquery, newvalues);
-          res.json({
-            prodotto: "eliminato",
-          });
-          a = 1;
-          return;
+          entra.push(1);
+          pos = index;
         }
       });
     }
 
     console.log(cart["products"]);
-
+    if (entra.length == 2) {
+      cart["products"].splice(pos, 1);
+      console.log(cart["products"]);
+      var myquery = { email: data.email };
+      var newvalues = { $set: { products: cart["products"] } };
+      await db.collection("cart").updateOne(myquery, newvalues);
+      res.json({
+        prodotto: "eliminato",
+      });
+      a = 1;
+      return;
+    }
     if (array.length == 3) {
       cart["products"].splice(funziaaaa, 1);
       console.log(cart["products"]);
