@@ -18,7 +18,7 @@ function Cart(props) {
   const [totalPrice, setTotalPrice] = useState();
 
   useEffect(() => {
-    setIsLoading(true);
+    console.log("carico...");
     axios
       .post("/api/getCart", { email: props.session.user.email })
       .then((res) => {
@@ -26,7 +26,9 @@ function Cart(props) {
         setProducts(res.data.products);
         setTotalPrice((res.data.totalPrice).toFixed(2));
         setIsLoading(false);
-      });
+      }).catch(e =>{
+        console.log(e);
+      })
   }, []);
 
   const incrementQntHandler = () => {
@@ -51,9 +53,9 @@ function Cart(props) {
       {!isLoading && (
         <>
           <div className={classes.container}>
-            {products.map((product) => {
+            {products.map((product, i) => {
               return (
-                <div className={classes["product-container"]}>
+                <div className={classes["product-container"]} key={i}>
                   <div className={classes["image-container"]}>
                     <Image
                       src={`/${product.image}`}
