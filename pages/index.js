@@ -69,13 +69,19 @@ export default function Home(props) {
   );
 }
 
-export async function getStaticProps() {
-  const res = await fetch("http://localhost:3000/api/best_sellers");
+export async function getStaticProps(ctx) {
+  console.log(ctx);
+  const axios = require("axios");
+  const res = await axios.get(
+    "https://bubble-three.vercel.app/api/best_sellers"
+  );
   console.log("aaaa");
-  const res1 = await fetch("http://localhost:3000/api/best_sellers");
+  const res1 = await axios.get(
+    "https://bubble-three.vercel.app/api/random_elements"
+  );
 
-  const bestSeller = await res.json();
-  const randomEelements = await res1.json();
+  const bestSeller = res.data;
+  const randomEelements = res1.data;
 
   console.log(bestSeller);
   console.log(randomEelements);
