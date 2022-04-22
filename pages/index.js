@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/client";
+import { getSession, useSession } from "next-auth/client";
 import { useEffect, useState } from "react";
 
 import MyHead from "../UI/MyHead/MyHead";
@@ -17,7 +17,7 @@ export default function Home(props) {
 
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const [session, status] = useSession();
   const bestSellers = useSelector((state) => state.bestSeller);
   const randomElements = useSelector((state) => state.randomElements);
 
@@ -45,19 +45,6 @@ export default function Home(props) {
       });
     }
     if (!bestSellers && !randomElements) {
-      axios.get("/api/best_sellers").then((res) => {
-        const bestSellers = res.data;
-        dispatch({ type: "ADD_BESTSELLER", bestSeller: bestSellers });
-        setBestSellersIsLoading(false);
-      });
-
-      axios.get("/api/random_elements").then((res) => {
-        const randomElements = res.data;
-        dispatch({
-          type: "ADD_RANDOMELEMENTS",
-          randomElements: randomElements,
-        });
-      });
     } else {
       setBestSellersIsLoading(false);
     }
@@ -69,12 +56,12 @@ export default function Home(props) {
   return (
     <>
       <MyHead title={"Homepage"} />
-      <Header session={props.session} />
+      <Header session={session} />
 
       <Main
-        bestSellers={bestSellers}
-        randomElements={randomElements}
-        bestSellersIsLoading={bestSellersIsLoading}
+        bestSellers={props.bestSellers}
+        randomElements={props.randomElements}
+        bestSellersIsLoading={false}
       />
 
       {isMobile && <BottomNav navValue={0} />}
@@ -82,12 +69,20 @@ export default function Home(props) {
   );
 }
 
-export async function getServerSideProps(ctx) {
-  const session = await getSession({ req: ctx.req });
+export async function getStaticProps() {
+  const res = await fetch("http://localhost:3000/api/best_sellers");
+  console.log("aaaa");
+  const res1 = await fetch("http://localhost:3000/api/best_sellers");
 
+  const bestSeller = await res.json();
+  const randomEelements = await res1.json();
+
+  console.log(bestSeller);
+  console.log(randomEelements);
   return {
     props: {
-      session: session,
+      bestSellers: bestSeller,
+      randomEelements: randomEelements,
     }, // will be passed to the page component as props
   };
 }
