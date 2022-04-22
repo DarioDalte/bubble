@@ -53,6 +53,7 @@ export default function Home(props) {
   // const data = useSelector((state) => state.homeProducts);
   // console.log(data);
 
+  console.log(props.bestSellers);
   return (
     <>
       <MyHead title={"Homepage"} />
@@ -69,19 +70,17 @@ export default function Home(props) {
   );
 }
 
-export async function getStaticProps(ctx) {
-  console.log(ctx);
-  const axios = require("axios");
-  const res = await axios.get(
-    "https://bubble-three.vercel.app/api/best_sellers"
-  );
-  console.log("aaaa");
-  const res1 = await axios.get(
-    "https://bubble-three.vercel.app/api/random_elements"
-  );
+export async function getStaticProps() {
+  const databaseConnection = require("./api/middlewares/database.js");
 
-  const bestSeller = res.data;
-  const randomEelements = res1.data;
+  const getBestSeller = require("./api/staticProps/getBestSeller");
+  const getRandomEelements = require("./api/staticProps/getRandomEelements");
+  const client = await databaseConnection(); //Mi connetto al db
+  await client.connect();
+  const db = client.db(); //Boh
+
+  const bestSeller = await getBestSeller(db);
+  const randomEelements = await getRandomEelements(db);
 
   console.log(bestSeller);
   console.log(randomEelements);

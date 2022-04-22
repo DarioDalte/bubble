@@ -17,7 +17,7 @@ function BestSeller(props) {
   let bestSellers;
   if (!props.isLoading) {
     bestSellers = props.bestSeller;
-    bestSeller = bestSellers[0].prodotto;
+    bestSeller = bestSellers[0];
   } else {
     for (let i = 0; i < 5; i++) {
       loadingContent.push(
@@ -87,13 +87,13 @@ function BestSeller(props) {
           {bestSellers.slice(1).map((bestSeller, i) => (
             <Card
               key={i}
-              id={bestSeller.prodotto["_id"]}
+              id={bestSeller["_id"]}
               className={!isMobile && classes["card-desktop"]}
-              name={bestSeller.prodotto.name}
-              price={bestSeller.prodotto.price}
-              brand={bestSeller.prodotto.brand}
+              name={bestSeller.name}
+              price={bestSeller.price}
+              brand={bestSeller.brand}
               star={bestSeller.star}
-              path={`/${bestSeller.prodotto.image}`}
+              path={`/${bestSeller.image}`}
             />
           ))}
         </Carousel>
