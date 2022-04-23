@@ -55,6 +55,7 @@ export default function Home(props) {
         bestSellers={bestSellers}
         randomElements={randomElements}
         bestSellersIsLoading={bestSellersIsLoading}
+        homePath={router.asPath}
       />
 
       {isMobile && <BottomNav navValue={0} />}

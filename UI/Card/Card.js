@@ -64,7 +64,17 @@ const Card = forwardRef(function Card(props, ref) {
     <div className={`${classes.card} ${props.className}`}>
       {!props.isLoading ? (
         props.path && props.id ? (
-          <Link href={`/product/${props.id}`} passHref>
+          <Link
+            href={{
+              pathname: "/product/[id]",
+              query: {
+                id: props.id,
+                prevPath: props.prevPath,
+              },
+            }}
+            as={`/product/${props.id}`}
+            passHref
+          >
             <Image
               src={props.path}
               alt={`Picture of ${props.name}`}

@@ -42,7 +42,14 @@ function BestSeller(props) {
 
           <div className={classes["subtitle-container"]}>
             <Link
-              href={props.isLoading ? "/" : `/product/${bestSeller["_id"]}`}
+              href={{
+                pathname: "/product/[id]",
+                query: {
+                  id: bestSeller["_id"],
+                  prevPath: props.homePath,
+                },
+              }}
+              as={props.isLoading ? "/" : `/product/${bestSeller["_id"]}`}
             >
               <a className={classes.subtitle}>Compra ora</a>
             </Link>
@@ -51,7 +58,17 @@ function BestSeller(props) {
         </div>
         <div className={classes["photo-container"]}>
           {!props.isLoading ? (
-            <Link href={`/product/${bestSeller["_id"]}`} passHref>
+            <Link
+              href={{
+                pathname: "/product/[id]",
+                query: {
+                  id: bestSeller["_id"],
+                  prevPath: props.homePath,
+                },
+              }}
+              as={props.isLoading ? "/" : `/product/${bestSeller["_id"]}`}
+              passHref
+            >
               <Image
                 src={`/${bestSeller.image}`}
                 alt="Picture of the Best Seller"
@@ -84,6 +101,7 @@ function BestSeller(props) {
               brand={bestSeller.prodotto.brand}
               star={bestSeller.prodotto.star}
               path={`/${bestSeller.prodotto.image}`}
+              prevPath={'/'}
             />
           ))}
         </Carousel>

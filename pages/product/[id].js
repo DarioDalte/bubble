@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getSession } from "next-auth/client";
+import { getSession, useSession } from "next-auth/client";
+
 import { useRouter } from "next/router";
 import Image from "next/image";
 import classes from "./product.module.scss";
@@ -31,8 +32,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 function Product(props) {
   const router = useRouter();
-  const { id } = router.query;
-  const [isLoading, setIsLoading] = useState(true);
+  const { id, prevPath } = router.query;
   const [data, setData] = useState();
   const [heartClicked, setHeartClicked] = useState(false);
   const [variant, setVariant] = useState([]);
@@ -46,55 +46,54 @@ function Product(props) {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const dispatch = useDispatch();
+  const [session, status] = useSession();
+  const { loadedProduct } = props;
 
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
+
   const wishlistProducts = useSelector((state) => state.wishlistProducts);
   useEffect(() => {
-    axios.post("/api/single_product", { id: id }).then((res) => {
-      setData(res.data);
-
+    if (loadedProduct.prodotto) {
       let arr = [];
-      if (res.data.prodotto.varianti) {
-        Object.keys(res.data.prodotto.varianti).map((key, index) => {
+      if (loadedProduct.prodotto.varianti) {
+        Object.keys(loadedProduct.prodotto.varianti).map((key, index) => {
           arr.push({
-            id: res.data.prodotto.varianti[key][0].id,
+            id: loadedProduct.prodotto.varianti[key][0].id,
             type: key,
-            name: res.data.prodotto.varianti[key][0].name,
+            name: loadedProduct.prodotto.varianti[key][0].name,
             increase: 0,
           });
         });
       }
 
-      if (res.data.recensioni.length != 0) {
+      if (loadedProduct.recensioni.length != 0) {
         let ratingSomma = 0;
-        let ratingNumber = res.data.recensioni.length;
+        let ratingNumber = loadedProduct.recensioni.length;
 
-        res.data.recensioni.map((review) => (ratingSomma += review.value));
+        loadedProduct.recensioni.map((review) => (ratingSomma += review.value));
 
-        if (props.session) {
-          for (let i = 0; i < res.data.recensioni.length; i++) {
-            if (res.data.recensioni[i].email === props.session.user.email) {
-              setMyReview(res.data.recensioni[i]);
-              res.data.recensioni.splice(i, 1);
+        if (session) {
+          for (let i = 0; i < loadedProduct.recensioni.length; i++) {
+            if (loadedProduct.recensioni[i].email === session.user.email) {
+              setMyReview(loadedProduct.recensioni[i]);
+              loadedProduct.recensioni.splice(i, 1);
             }
           }
         }
 
         setRatingAverage((ratingSomma / ratingNumber).toFixed(1));
-        setReviews(res.data.recensioni);
-        setReviewNumber(parseInt(res.data.numero_recensioni));
+        setReviews(loadedProduct.recensioni);
+        setReviewNumber(parseInt(loadedProduct.numero_recensioni));
       }
       setVariant(arr);
-      setInitialPrice(res.data.prodotto.price);
-      setPrice(parseFloat(res.data.prodotto.price));
-      setIsLoading(false);
-    });
-  }, []);
+      setInitialPrice(loadedProduct.prodotto.price);
+      setPrice(parseFloat(loadedProduct.prodotto.price));
+    }
+  }, [session]);
 
   useEffect(() => {
-
     if (wishlistProducts) {
       if (wishlistProducts.includes(id)) {
         setHeartClicked(true);
@@ -102,9 +101,9 @@ function Product(props) {
         setHeartClicked(false);
       }
     }
-    if (props.session) {
+    if (session) {
       const obj = {
-        email: props.session.user.email,
+        email: session.user.email,
         name: "Wishlist",
       };
       axios.post("/api/getWishlist", obj).then((res) => {
@@ -145,7 +144,7 @@ function Product(props) {
     }
     axios
       .post("/api/elimina_recensione", {
-        email: props.session.user.email,
+        email: session.user.email,
         id_product: id,
       })
       .then((res) => {
@@ -168,7 +167,7 @@ function Product(props) {
 
     const obj = {
       id: id,
-      email: props.session.user.email,
+      email: session.user.email,
       variant: productVariant,
       qnt: quantity,
     };
@@ -180,13 +179,13 @@ function Product(props) {
 
   return (
     <>
-      <MyHead title={isLoading ? "Prodotto" : data.prodotto.name} />
+      <MyHead title={loadedProduct.prodotto.name} />
 
-      {/* <Header session={props.session} /> */}
+      {/* <Header session={session} /> */}
 
       <div className={classes.header}>
-        <BackArrow path={props.prevPath} classes={classes.backArrow} />
-        <Link href={props.session ? "/cart" : "/login"} passHref>
+        <BackArrow path={prevPath} classes={classes.backArrow} />
+        <Link href={session ? "/cart" : "/login"} passHref>
           <IconButton>
             <ShoppingCartOutlinedIcon
               className={`${classes.cart} ${isAdding ? classes.bump : ""}`}
@@ -195,222 +194,249 @@ function Product(props) {
         </Link>
       </div>
 
-      {isLoading && (
-        <div className={classes.loading}>
-          <CircularProgress className={classes.loading} />
-        </div>
-      )}
-      {!isLoading && (
-        <>
-          <div className={classes.main}>
-            <div className={classes["top-container"]}>
-              <div className={classes["image-container"]}>
-                <Image
-                  src={`/${data.prodotto.image}`}
-                  alt={`Image of ${data.prodotto.name}`}
-                  layout={"responsive"}
-                  width={100}
-                  height={100}
-                />
-              </div>
-              <div
-                className={`${classes.product} ${
-                  !data.prodotto.varianti && !isMobile && classes["empty"]
-                }`}
-              >
-                <div>
-                  <h2 className={classes.title}>
-                    {data.prodotto.name.charAt(0).toUpperCase() +
-                      data.prodotto.name.slice(1)}
-                  </h2>
-                  <div className={classes["price-rating-container"]}>
-                    <p className={classes.price}>
-                      € {parseFloat(price).toFixed(2)}
-                    </p>
-                    <div className={classes.rating}>
-                      <div className={classes["rating-average"]}>
-                        <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
-                      </div>
-                      <div className={classes["rating-number"]}>
-                        <p>{reviewNumber}</p>
-                        <p>
-                          {reviewNumber === 1 ? "Recensione" : "Recensioni"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {isMobile && <ShopLine brand={data.prodotto.brand} />}
-                {data.prodotto.varianti && isMobile && (
-                  <MobileVariant
-                    varianti={data.prodotto.varianti}
-                    variant={variant}
-                    initialPrice={initialPrice}
-                    setVariant={setVariant}
-                    setPrice={setPrice}
-                  />
-                )}
-                {data.prodotto.varianti && !isMobile && (
-                  <DesktopVariant
-                    varianti={data.prodotto.varianti}
-                    variant={variant}
-                    initialPrice={initialPrice}
-                    setVariant={setVariant}
-                    setPrice={setPrice}
-                  />
-                )}
-                {!data.prodotto.varianti && !isMobile && (
-                  <div className={classes["btn-container"]}>
-                    <AddToCart
-                      session={props.session}
-                      onHeartClick={onHeartClick}
-                      heartClicked={heartClicked}
-                      quantity={quantity}
-                      setQuantity={setQuantity}
-                      addToCartHandler={addToCartHandler}
-                      productId={data.prodotto["_id"]}
-                    />
-                  </div>
-                )}
-              </div>
+      <>
+        <div className={classes.main}>
+          <div className={classes["top-container"]}>
+            <div className={classes["image-container"]}>
+              <Image
+                src={`/${loadedProduct.prodotto.image}`}
+                alt={`Image of ${loadedProduct.prodotto.name}`}
+                layout={"responsive"}
+                width={100}
+                height={100}
+              />
             </div>
-            {data.prodotto.varianti && !isMobile && (
-              <div
-                style={{ margin: "4rem 0" }}
-                className={classes["btn-container"]}
-              >
-                <AddToCart
-                  session={props.session}
-                  onHeartClick={onHeartClick}
-                  heartClicked={heartClicked}
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                  addToCartHandler={addToCartHandler}
-                  productId={data.prodotto["_id"]}
-                />
-              </div>
-            )}
-            <div className={classes.container}>
-              {!isMobile && <ShopLine brand={data.prodotto.brand} />}
-
-              {!myReview && (
-                <AddReview
-                  setMyReview={setMyReview}
-                  reviews={reviews}
-                  session={props.session}
-                  id={id}
-                  setRatingAverage={setRatingAverage}
-                  setReviewNumber={setReviewNumber}
-                />
-              )}
-
-              {!reviews.length == 0 || myReview ? (
-                <div className={classes["rating-container"]}>
-                  <div className={classes["rating-number"]}>
-                    <div className={classes["rating-left"]}>
-                      Recensioni ({reviewNumber})
-                    </div>
+            <div
+              className={`${classes.product} ${
+                !loadedProduct.prodotto.varianti &&
+                !isMobile &&
+                classes["empty"]
+              }`}
+            >
+              <div>
+                <h2 className={classes.title}>
+                  {loadedProduct.prodotto.name.charAt(0).toUpperCase() +
+                    loadedProduct.prodotto.name.slice(1)}
+                </h2>
+                <div className={classes["price-rating-container"]}>
+                  <p className={classes.price}>
+                    € {parseFloat(price).toFixed(2)}
+                  </p>
+                  <div className={classes.rating}>
                     <div className={classes["rating-average"]}>
                       <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
                     </div>
+                    <div className={classes["rating-number"]}>
+                      <p>{reviewNumber}</p>
+                      <p>{reviewNumber === 1 ? "Recensione" : "Recensioni"}</p>
+                    </div>
                   </div>
-
-                  {myReview && (
-                    <>
-                      <div className={classes["my-reviw-container"]}>
-                        <div className={classes.review}>
-                          <span className={classes.title}>
-                            {`${myReview["id_user"].split(" ")[0]} ${
-                              myReview["id_user"].split(" ")[1]
-                            }`}
-                          </span>
-                          <Rating
-                            name="read-only"
-                            value={myReview.value}
-                            readOnly
-                            className={classes.rating}
-                          />
-                          <span className={classes.subtitle}>
-                            {myReview.title}
-                          </span>
-                          <p className={classes.text}>{myReview.text}</p>
-                        </div>
-                        <div className={classes["icon-container"]}>
-                          <IconButton>
-                            <DeleteIcon
-                              className={classes["delete-icon"]}
-                              onClick={deleteReviewHandler}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                      <Divider sx={{ marginTop: "1rem" }} />
-                    </>
-                  )}
-
-                  {reviews.map((recensione, i) => {
-                    const [name, surname] = recensione["id_user"].split(" ");
-                    return (
-                      <div key={i} className={classes.review}>
-                        <span className={classes.title}>
-                          {name} {surname[0]}.{" "}
-                          <Divider orientation="vertical" />
-                        </span>
-                        <Rating
-                          name="read-only"
-                          value={recensione.value}
-                          readOnly
-                          className={classes.rating}
-                        />
-                        <span className={classes.subtitle}>
-                          {recensione.title}
-                        </span>
-                        <p className={classes.text}>{recensione.text}</p>
-                      </div>
-                    );
-                  })}
                 </div>
-              ) : (
-                <p
-                  style={{
-                    textAlign: "center",
-                    marginTop: "3rem",
-                    fontWeight: "600",
-                  }}
-                >
-                  Non ci sono recensioni per questo prodotto
-                </p>
+              </div>
+              {isMobile && <ShopLine brand={loadedProduct.prodotto.brand} />}
+              {loadedProduct.prodotto.varianti && isMobile && (
+                <MobileVariant
+                  varianti={loadedProduct.prodotto.varianti}
+                  variant={variant}
+                  initialPrice={initialPrice}
+                  setVariant={setVariant}
+                  setPrice={setPrice}
+                />
               )}
-
-              {isMobile && (
-                <div className={classes["bottom-nav"]}>
+              {loadedProduct.prodotto.varianti && !isMobile && (
+                <DesktopVariant
+                  varianti={loadedProduct.prodotto.varianti}
+                  variant={variant}
+                  initialPrice={initialPrice}
+                  setVariant={setVariant}
+                  setPrice={setPrice}
+                />
+              )}
+              {!loadedProduct.prodotto.varianti && !isMobile && (
+                <div className={classes["btn-container"]}>
                   <AddToCart
-                    session={props.session}
+                    session={session}
                     onHeartClick={onHeartClick}
                     heartClicked={heartClicked}
                     quantity={quantity}
                     setQuantity={setQuantity}
                     addToCartHandler={addToCartHandler}
-                    productId={data.prodotto["_id"]}
+                    productId={loadedProduct.prodotto["_id"]}
                   />
                 </div>
               )}
             </div>
           </div>
-        </>
-      )}
+          {loadedProduct.prodotto.varianti && !isMobile && (
+            <div
+              style={{ margin: "4rem 0" }}
+              className={classes["btn-container"]}
+            >
+              <AddToCart
+                session={session}
+                onHeartClick={onHeartClick}
+                heartClicked={heartClicked}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                addToCartHandler={addToCartHandler}
+                productId={loadedProduct.prodotto["_id"]}
+              />
+            </div>
+          )}
+          <div className={classes.container}>
+            {!isMobile && <ShopLine brand={loadedProduct.prodotto.brand} />}
+
+            {!myReview && (
+              <AddReview
+                setMyReview={setMyReview}
+                reviews={reviews}
+                session={session}
+                id={id}
+                setRatingAverage={setRatingAverage}
+                setReviewNumber={setReviewNumber}
+              />
+            )}
+
+            {!reviews.length == 0 || myReview ? (
+              <div className={classes["rating-container"]}>
+                <div className={classes["rating-number"]}>
+                  <div className={classes["rating-left"]}>
+                    Recensioni ({reviewNumber})
+                  </div>
+                  <div className={classes["rating-average"]}>
+                    <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
+                  </div>
+                </div>
+
+                {myReview && (
+                  <>
+                    <div className={classes["my-reviw-container"]}>
+                      <div className={classes.review}>
+                        <span className={classes.title}>
+                          {`${myReview["id_user"].split(" ")[0]} ${
+                            myReview["id_user"].split(" ")[1]
+                          }`}
+                        </span>
+                        <Rating
+                          name="read-only"
+                          value={myReview.value}
+                          readOnly
+                          className={classes.rating}
+                        />
+                        <span className={classes.subtitle}>
+                          {myReview.title}
+                        </span>
+                        <p className={classes.text}>{myReview.text}</p>
+                      </div>
+                      <div className={classes["icon-container"]}>
+                        <IconButton>
+                          <DeleteIcon
+                            className={classes["delete-icon"]}
+                            onClick={deleteReviewHandler}
+                          />
+                        </IconButton>
+                      </div>
+                    </div>
+                    <Divider sx={{ marginTop: "1rem" }} />
+                  </>
+                )}
+
+                {reviews.map((recensione, i) => {
+                  const [name, surname] = recensione["id_user"].split(" ");
+                  return (
+                    <div key={i} className={classes.review}>
+                      <span className={classes.title}>
+                        {name} {surname[0]}. <Divider orientation="vertical" />
+                      </span>
+                      <Rating
+                        name="read-only"
+                        value={recensione.value}
+                        readOnly
+                        className={classes.rating}
+                      />
+                      <span className={classes.subtitle}>
+                        {recensione.title}
+                      </span>
+                      <p className={classes.text}>{recensione.text}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p
+                style={{
+                  textAlign: "center",
+                  marginTop: "3rem",
+                  fontWeight: "600",
+                }}
+              >
+                Non ci sono recensioni per questo prodotto
+              </p>
+            )}
+
+            {isMobile && (
+              <div className={classes["bottom-nav"]}>
+                <AddToCart
+                  session={session}
+                  onHeartClick={onHeartClick}
+                  heartClicked={heartClicked}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  addToCartHandler={addToCartHandler}
+                  productId={loadedProduct.prodotto["_id"]}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </>
     </>
   );
 }
 
-export default Product;
+export async function getStaticProps(context) {
+  const databaseConnection = require("../api/middlewares/database.js");
+  const getSingleProduct = require("../api/staticProps/getSingleProduct.js");
 
-export async function getServerSideProps(ctx) {
-  const session = await getSession({ req: ctx.req });
+  const { params } = context;
+  const productId = params.id;
+
+  const client = await databaseConnection();
+  await client.connect();
+  const db = client.db();
+  const product = await getSingleProduct(db, productId);
+
+  client.close;
+
   return {
     props: {
-      prevPath: ctx.req.headers.referer ? ctx.req.headers.referer : null,
-      session: session,
-    }, // will be passed to the page component as props
+      loadedProduct: JSON.parse(JSON.stringify(product)),
+    },
+    revalidate: 10,
   };
 }
+
+export async function getStaticPaths() {
+  const databaseConnection = require("../api/middlewares/database.js");
+  const client = await databaseConnection();
+  await client.connect();
+  const db = client.db();
+
+  const products = await db.collection("products").find().toArray();
+  const productIds = products.map((product) => {
+    return {
+      params: {
+        id: product["_id"].toString().replace(/ObjectId\("(.*)"\)/, "$1"),
+      },
+    };
+  });
+
+  client.close();
+
+  return {
+    paths: productIds,
+    fallback: false,
+  };
+}
+
+export default Product;
