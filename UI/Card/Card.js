@@ -75,13 +75,15 @@ const Card = forwardRef(function Card(props, ref) {
             as={`/product/${props.id}`}
             passHref
           >
-            <Image
-              src={props.path}
-              alt={`Picture of ${props.name}`}
-              width={150}
-              height={150}
-              layout="responsive"
-            ></Image>
+            <a>
+              <Image
+                src={props.path}
+                alt={`Picture of ${props.name}`}
+                width={150}
+                height={150}
+                layout="responsive"
+              />
+            </a>
           </Link>
         ) : (
           <Image
@@ -90,7 +92,7 @@ const Card = forwardRef(function Card(props, ref) {
             width={150}
             height={150}
             layout="responsive"
-          ></Image>
+          />
         )
       ) : (
         <Skeleton height={150} width="100%" />

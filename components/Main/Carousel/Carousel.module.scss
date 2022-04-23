@@ -1,103 +1,101 @@
- .carousel {
-   display: flex;
-   justify-content: center;
-   margin-top: 3rem;
-   height: 12.5rem;
+.carousel {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  height: 12.5rem;
 
-   @media (min-width: 50rem) {
-     height: 15.625rem;
+  @media (min-width: 50rem) {
+    height: 15.625rem;
+  }
 
-   }
+  @media (min-width: 60rem) {
+    height: 18.75rem;
+  }
 
-   @media (min-width: 60rem) {
-     height: 18.75rem;
+  @media (min-width: 70rem) {
+    height: 21.875rem;
+  }
 
-   }
+  @media (min-width: 80rem) {
+    height: 25rem;
+  }
+}
 
-   @media (min-width: 70rem) {
-     height: 21.875rem;
+.container {
+  height: 100%;
+  background-size: cover;
+  background-position: right;
+  display: flex;
+  background-color: #dd4d5b;
+  position: relative;
 
-   }
+  .left-item {
+    border-radius: 0 30% 30% 0;
+  }
 
-   @media (min-width: 80rem) {
-     height: 25rem;
+  .right-item {
+    border-radius: 30% 0 0 30%;
+  }
 
-   }
+  .left-item,
+  .right-item {
+    height: 100%;
+    width: 60%;
+    background: #3669c9;
+    z-index: 100;
+    position: absolute;
 
- }
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
- .container {
+    .text {
+      color: white;
+      font-weight: 600;
+      font-size: 2.2rem;
 
-   height: 100%;
-   background-size: cover;
-   background-position: right;
-   display: flex;
-   background-color: #dd4d5b;
-   position: relative;
+      @media (max-width: 56rem) {
+        font-size: 1.6rem;
+      }
 
-   .left-item {
-     border-radius: 0 30% 30% 0;
-   }
+      @media (max-width: 36rem) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
 
-   .right-item {
-     border-radius: 30% 0 0 30%;
-   }
+.container {
+  justify-content: flex-end;
+}
 
+.left-container {
+  display: flex;
+  background-color: rgb(177, 168, 168);
+  justify-content: flex-start;
+}
 
-   .left-item,
-   .right-item {
-     height: 100%;
-     width: 60%;
-     background: #3669C9;
-     z-index: 100;
+.background,
+.background-left {
+  position: relative;
+  height: 100%;
+}
+.right-item {
+  right: 0;
+}
 
+.left-item{
+  left: 0;
+}
 
-     display: flex;
-     justify-content: center;
-     align-items: center;
+.background {
+  width: 60%;
 
-     .text {
-       color: white;
-       font-weight: 600;
-       font-size: 2.2rem;
+  right: 0;
+}
 
-       @media (max-width: 56rem) {
-         font-size: 1.6rem;
+.background-left {
+  width: 50%;
 
-       }
-
-       @media (max-width: 36rem) {
-         font-size: 1.2rem;
-
-       }
-     }
-   }
-
-
- }
-
- .left-container {
-   display: flex;
-   justify-content: flex-end;
-   background-color: rgb(177, 168, 168);
-
- }
-
- .background,
- .background-left {
-   position: absolute;
-   height: 100%;
-
- }
-
- .background {
-   width: 60%;
-
-   right: 0;
- }
-
- .background-left {
-   width: 50%;
-
-   left: 0;
- }
+  left: 0;
+}

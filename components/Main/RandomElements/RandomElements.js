@@ -16,7 +16,7 @@ const RandomElements = (props) => {
               {category.prodotti.map((element, i) => {
                 return (
                   <Card
-                    id={element.prodotto['_id']}
+                    id={element.prodotto["_id"]}
                     className={!isMobile && classes["card-desktop"]}
                     key={i}
                     name={
@@ -30,6 +30,7 @@ const RandomElements = (props) => {
                     }
                     star={element.star}
                     path={`/${element.prodotto.image}`}
+                    prevPath={"/"}
                   />
                 );
               })}

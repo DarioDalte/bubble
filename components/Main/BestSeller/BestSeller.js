@@ -9,86 +9,65 @@ import Carousel from "../../../UI/Carousel/Carousel";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function BestSeller(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
   let bestSeller;
-  const loadingContent = [];
   let bestSellers;
 
   bestSellers = props.bestSeller;
   bestSeller = bestSellers[0].prodotto;
+  const router = useRouter();
 
   return (
     <div className={classes.container}>
       <span className={classes.text}>Best Seller</span>
       <div className={classes["best-seller"]}>
         <div className={classes["title-container"]}>
-          {!props.isLoading ? (
-            <>
-              <span className={classes.title}>{bestSeller.brand}</span>
-              <span className={classes.title}>{bestSeller.name}</span>
-            </>
-          ) : (
-            <SkeletonTheme
-              baseColor="#5294e0"
-              highlightColor="#96c7ff"
-              borderRadius="0.5rem"
-              duration={3}
-            >
-              <Skeleton width={50} count={2} height={12} />
-            </SkeletonTheme>
-          )}
-
-          <div className={classes["subtitle-container"]}>
-            <Link
-              href={{
-                pathname: "/product/[id]",
-                query: {
-                  id: bestSeller["_id"],
-                  prevPath: props.homePath,
-                },
-              }}
-              as={props.isLoading ? "/" : `/product/${bestSeller["_id"]}`}
-            >
+          <span className={classes.title}>{bestSeller.brand}</span>
+          <span className={classes.title}>{bestSeller.name}</span>
+          <Link
+            href={{
+              pathname: "/product/[id]",
+              query: {
+                id: bestSeller["_id"],
+                prevPath: "/",
+              },
+            }}
+            as={`/product/${bestSeller["_id"]}`}
+            passHref
+          >
+            <div className={classes["subtitle-container"]}>
               <a className={classes.subtitle}>Compra ora</a>
-            </Link>
-            <ArrowForwardIcon className={classes.arrowIcon} />
-          </div>
+
+              <ArrowForwardIcon className={classes.arrowIcon} />
+            </div>
+          </Link>
         </div>
-        <div className={classes["photo-container"]}>
-          {!props.isLoading ? (
-            <Link
-              href={{
-                pathname: "/product/[id]",
-                query: {
-                  id: bestSeller["_id"],
-                  prevPath: props.homePath,
-                },
-              }}
-              as={props.isLoading ? "/" : `/product/${bestSeller["_id"]}`}
-              passHref
-            >
-              <Image
-                src={`/${bestSeller.image}`}
-                alt="Picture of the Best Seller"
-                layout="fill"
-                className={classes.photo}
-              />
-            </Link>
-          ) : (
-            <SkeletonTheme
-              baseColor="#5294e0"
-              highlightColor="#96c7ff"
-              borderRadius="0.5rem"
-              duration={3}
-            >
-              <Skeleton height="100%" containerClassName="avatar-skeleton" />
-            </SkeletonTheme>
-          )}
-        </div>
+
+        <Link
+          href={{
+            pathname: "/product/[id]",
+            query: {
+              id: bestSeller["_id"],
+              prevPath: "/",
+            },
+          }}
+          as={`/product/${bestSeller["_id"]}`}
+          passHref
+        >
+          <a className={classes["photo-container"]}>
+            <Image
+              src={`/${bestSeller.image}`}
+              alt="Picture of the Best Seller"
+              layout="fill"
+              className={classes.photo}
+              priority
+            />
+          </a>
+        </Link>
       </div>
-      {console.log(bestSellers)}
 
       <Carousel>
         {bestSellers.slice(1).map((bestSeller, i) => (

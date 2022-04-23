@@ -42,19 +42,12 @@ export default function Home(props) {
     }
   }, [router.asPath, session]);
 
-  // const data = useSelector((state) => state.homeProducts);
-  // console.log(data);
-
   return (
     <>
       <MyHead title={"Homepage"} />
       <Header session={session} />
 
-      <Main
-        bestSellers={bestSellers}
-        randomElements={randomElements}
-        homePath={router.asPath}
-      />
+      <Main bestSellers={bestSellers} randomElements={randomElements} />
 
       {isMobile && <BottomNav navValue={0} />}
     </>

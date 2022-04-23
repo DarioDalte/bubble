@@ -19,13 +19,15 @@ function Header(props) {
       <header className={classes.header}>
         <div className={classes.logo}>
           <Link href={"/"} passHref>
-            <Image
-              className={classes.image}
-              src={"/logo.png"}
-              width={58}
-              height={65}
-              alt={"Bubble logo"}
-            />
+            <a>
+              <Image
+                className={classes.image}
+                src={"/logo.png"}
+                width={58}
+                height={65}
+                alt={"Bubble logo"}
+              />
+            </a>
           </Link>
         </div>
         <div className={classes.title}>

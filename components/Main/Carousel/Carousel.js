@@ -24,11 +24,11 @@ function myCarousel() {
       </div>
 
       <div className={`${classes.container} ${classes["left-container"]}`}>
-        <div className={classes["right-item"]}>
-          <p className={classes.text}>Sconti di pasqua!</p>
-        </div>
         <div className={classes["background-left"]}>
           <Image src="/tizio.png" alt="Picture" layout="fill" />
+        </div>
+        <div className={classes["right-item"]}>
+          <p className={classes.text}>Sconti di pasqua!</p>
         </div>
       </div>
     </Carousel>

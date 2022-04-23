@@ -49,9 +49,6 @@ function Product(props) {
   const [session, status] = useSession();
   const { loadedProduct } = props;
 
-  console.log(session);
-  console.log(status);
-
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
@@ -81,7 +78,6 @@ function Product(props) {
           for (let i = 0; i < loadedProduct.recensioni.length; i++) {
             if (loadedProduct.recensioni[i].email === session.user.email) {
               setMyReview(loadedProduct.recensioni[i]);
-              loadedProduct.recensioni.splice(i, 1);
             }
           }
         }
@@ -207,6 +203,7 @@ function Product(props) {
                 layout={"responsive"}
                 width={100}
                 height={100}
+                priority
               />
             </div>
             <div
@@ -346,23 +343,27 @@ function Product(props) {
 
                 {reviews.map((recensione, i) => {
                   const [name, surname] = recensione["id_user"].split(" ");
-                  return (
-                    <div key={i} className={classes.review}>
-                      <span className={classes.title}>
-                        {name} {surname[0]}. <Divider orientation="vertical" />
-                      </span>
-                      <Rating
-                        name="read-only"
-                        value={recensione.value}
-                        readOnly
-                        className={classes.rating}
-                      />
-                      <span className={classes.subtitle}>
-                        {recensione.title}
-                      </span>
-                      <p className={classes.text}>{recensione.text}</p>
-                    </div>
-                  );
+
+                  if (!session || recensione.email != session.user.email) {
+                    return (
+                      <div key={i} className={classes.review}>
+                        <span className={classes.title}>
+                          {name} {surname[0]}.{" "}
+                          <Divider orientation="vertical" />
+                        </span>
+                        <Rating
+                          name="read-only"
+                          value={recensione.value}
+                          readOnly
+                          className={classes.rating}
+                        />
+                        <span className={classes.subtitle}>
+                          {recensione.title}
+                        </span>
+                        <p className={classes.text}>{recensione.text}</p>
+                      </div>
+                    );
+                  }
                 })}
               </div>
             ) : (
