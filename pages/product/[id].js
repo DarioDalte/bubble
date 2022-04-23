@@ -49,6 +49,9 @@ function Product(props) {
   const [session, status] = useSession();
   const { loadedProduct } = props;
 
+  console.log(session);
+  console.log(status);
+
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
@@ -91,7 +94,7 @@ function Product(props) {
       setInitialPrice(loadedProduct.prodotto.price);
       setPrice(parseFloat(loadedProduct.prodotto.price));
     }
-  }, [session]);
+  }, [session, router.asPath]);
 
   useEffect(() => {
     if (wishlistProducts) {

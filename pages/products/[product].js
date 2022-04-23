@@ -435,6 +435,7 @@ function Products(props) {
                       brand={product.brand}
                       star={product.star}
                       path={`/${product.image}`}
+                      prevPath={`/products/${router.query.product}`}
                     />
                   );
                 }
