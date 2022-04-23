@@ -13,7 +13,6 @@ import { useRouter } from "next/router";
 
 export default function Home(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
-  const [bestSellersIsLoading, setBestSellersIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -54,7 +53,6 @@ export default function Home(props) {
       <Main
         bestSellers={bestSellers}
         randomElements={randomElements}
-        bestSellersIsLoading={bestSellersIsLoading}
         homePath={router.asPath}
       />
 

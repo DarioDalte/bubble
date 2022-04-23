@@ -88,26 +88,23 @@ function BestSeller(props) {
           )}
         </div>
       </div>
+      {console.log(bestSellers)}
 
-      {!props.isLoading ? (
-        <Carousel>
-          {bestSellers.slice(1).map((bestSeller, i) => (
-            <Card
-              key={i}
-              id={bestSeller.prodotto["_id"]}
-              className={!isMobile && classes["card-desktop"]}
-              name={bestSeller.prodotto.name}
-              price={bestSeller.prodotto.price}
-              brand={bestSeller.prodotto.brand}
-              star={bestSeller.prodotto.star}
-              path={`/${bestSeller.prodotto.image}`}
-              prevPath={'/'}
-            />
-          ))}
-        </Carousel>
-      ) : (
-        <Carousel>{loadingContent}</Carousel>
-      )}
+      <Carousel>
+        {bestSellers.slice(1).map((bestSeller, i) => (
+          <Card
+            key={i}
+            id={bestSeller.prodotto["_id"]}
+            className={!isMobile && classes["card-desktop"]}
+            name={bestSeller.prodotto.name}
+            price={bestSeller.prodotto.price}
+            brand={bestSeller.prodotto.brand}
+            star={bestSeller.star}
+            path={`/${bestSeller.prodotto.image}`}
+            prevPath={"/"}
+          />
+        ))}
+      </Carousel>
     </div>
   );
 }

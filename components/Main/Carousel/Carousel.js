@@ -16,7 +16,7 @@ function myCarousel() {
     >
       <div className={classes.container}>
         <div className={classes["left-item"]}>
-          <p className={classes.text}>Sconti di pasqua!</p>
+          <p className={classes.text}>Sconti di Pasqua!</p>
         </div>
         <div className={classes.background}>
           <Image src="/tizia.png" alt="Picture" layout="fill" />
