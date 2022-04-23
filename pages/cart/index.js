@@ -21,6 +21,7 @@ function Cart(props) {
   const [totalPrice, setTotalPrice] = useState();
   const [totalProducts, setTotalProducts] = useState();
   const isMobile = useMediaQuery("(max-width:62.5rem)");
+  console.log(classes);
 
   useEffect(() => {
     axios

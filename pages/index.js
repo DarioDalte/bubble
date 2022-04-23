@@ -13,20 +13,17 @@ import { useRouter } from "next/router";
 
 export default function Home(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
-  const [bestSellersIsLoading, setBestSellersIsLoading] = useState(true);
+  const [bestSellersIsLoading, setBestSellersIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const [session, status] = useSession();
-  const bestSellers = useSelector((state) => state.bestSeller);
-  const randomElements = useSelector((state) => state.randomElements);
+  const [session, stauts] = useSession();
+  const {bestSellers, randomElements} = props;
 
   useEffect(() => {
-    // const bestSellers = await getBestSeller(db);
-    // const randomEelements = await getRandomEelements(db);
-    if (props.session) {
+    if (session) {
       const obj = {
-        email: props.session.user.email,
+        email: session.user.email,
         name: "Wishlist",
       };
       axios.post("/api/getWishlist", obj).then((res) => {
@@ -44,25 +41,20 @@ export default function Home(props) {
         }
       });
     }
-    if (!bestSellers && !randomElements) {
-    } else {
-      setBestSellersIsLoading(false);
-    }
-  }, [router.asPath]);
+  }, [router.asPath, session]);
 
   // const data = useSelector((state) => state.homeProducts);
   // console.log(data);
 
-  console.log(props.bestSellers);
   return (
     <>
       <MyHead title={"Homepage"} />
       <Header session={session} />
 
       <Main
-        bestSellers={props.bestSellers}
-        randomElements={props.randomElements}
-        bestSellersIsLoading={false}
+        bestSellers={bestSellers}
+        randomElements={randomElements}
+        bestSellersIsLoading={bestSellersIsLoading}
       />
 
       {isMobile && <BottomNav navValue={0} />}
@@ -70,24 +62,24 @@ export default function Home(props) {
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(context) {
+  const getBestSeller = require("./api/staticProps/getBestSeller.js");
+  const getRandomEelements = require("./api/staticProps/getRandomEelements.js");
   const databaseConnection = require("./api/middlewares/database.js");
-
-  const getBestSeller = require("./api/staticProps/getBestSeller");
-  const getRandomEelements = require("./api/staticProps/getRandomEelements");
-  const client = await databaseConnection(); //Mi connetto al db
-  await client.connect();
+  const client = await databaseConnection();
+  await client.connect(); //To connect to our cluster
   const db = client.db(); //Boh
 
   const bestSeller = await getBestSeller(db);
-  const randomEelements = await getRandomEelements(db);
+  const randomElements = await getRandomEelements(db);
 
-  console.log(bestSeller);
-  console.log(randomEelements);
+  client.close();
+
   return {
     props: {
-      bestSellers: bestSeller,
-      randomEelements: randomEelements,
-    }, // will be passed to the page component as props
+      bestSellers: JSON.parse(JSON.stringify(bestSeller)),
+      randomElements: JSON.parse(JSON.stringify(randomElements)),
+    },
+    revalidate: 10,
   };
 }

@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project created by Dario D'Alterio, Arslan Shaukat, Paul Dragoi Theodor and Singh Navraj.
+This is a [Next.js](https://nextjs.org/) project created by Dario D'Alterio, Arslan Shaukat, Paul Dragoi Theodor, Singh Navraj and Alessandro Marzola.
 
 ## Getting Started
 
