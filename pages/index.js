@@ -18,7 +18,7 @@ export default function Home(props) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [session, stauts] = useSession();
-  const {bestSellers, randomElements} = props;
+  const { bestSellers, randomElements } = props;
 
   useEffect(() => {
     if (session) {

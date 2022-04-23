@@ -15,20 +15,9 @@ function BestSeller(props) {
   let bestSeller;
   const loadingContent = [];
   let bestSellers;
-  if (!props.isLoading) {
-    bestSellers = props.bestSeller;
-    bestSeller = bestSellers[0];
-  } else {
-    for (let i = 0; i < 5; i++) {
-      loadingContent.push(
-        <Card
-          className={!isMobile && classes["card-desktop"]}
-          key={i}
-          isLoading={props.isLoading}
-        />
-      );
-    }
-  }
+
+  bestSellers = props.bestSeller;
+  bestSeller = bestSellers[0].prodotto;
 
   return (
     <div className={classes.container}>
@@ -52,7 +41,9 @@ function BestSeller(props) {
           )}
 
           <div className={classes["subtitle-container"]}>
-            <Link href={props.isLoading ? '/' : `/product/${bestSeller["_id"]}`}>
+            <Link
+              href={props.isLoading ? "/" : `/product/${bestSeller["_id"]}`}
+            >
               <a className={classes.subtitle}>Compra ora</a>
             </Link>
             <ArrowForwardIcon className={classes.arrowIcon} />
@@ -81,19 +72,18 @@ function BestSeller(props) {
         </div>
       </div>
 
-      {/* //TODO: ADD .charAt(0).toUpperCase() + props.name.slice(1) */}
       {!props.isLoading ? (
         <Carousel>
           {bestSellers.slice(1).map((bestSeller, i) => (
             <Card
               key={i}
-              id={bestSeller["_id"]}
+              id={bestSeller.prodotto["_id"]}
               className={!isMobile && classes["card-desktop"]}
-              name={bestSeller.name}
-              price={bestSeller.price}
-              brand={bestSeller.brand}
-              star={bestSeller.star}
-              path={`/${bestSeller.image}`}
+              name={bestSeller.prodotto.name}
+              price={bestSeller.prodotto.price}
+              brand={bestSeller.prodotto.brand}
+              star={bestSeller.prodotto.star}
+              path={`/${bestSeller.prodotto.image}`}
             />
           ))}
         </Carousel>
