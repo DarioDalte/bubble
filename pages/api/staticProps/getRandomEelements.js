@@ -29,7 +29,7 @@ module.exports = async function (db) {
      * then chek if a is 0, if it is, it means that it is a new number and so add tu numeri_random
      * otherwise assing 0 to a and repeat
      */
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < 1; i++) {
       var numero_random = getRandomInt(result.length);
       for (var x = 0; x < numeri_random.length; x++) {
         if (numero_random == numeri_random[x]) {
@@ -101,7 +101,7 @@ module.exports = async function (db) {
                 };
                 cart.push(oggetto);
                 b = 1;
-                if (cart.length == 8) {
+                if (cart.length == 5) {
                   break;
                 }
               }

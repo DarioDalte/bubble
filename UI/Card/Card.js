@@ -1,5 +1,5 @@
 import classes from "./Card.module.scss";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
@@ -7,13 +7,12 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useSelector, useDispatch } from "react-redux";
 import { IconButton, Rating } from "@mui/material";
-import Skeleton from "react-loading-skeleton";
 import { useSession } from "next-auth/client";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-const Card = forwardRef(function Card(props, ref) {
+function Card(props) {
   const [heartClicked, setHeartClicked] = useState(false);
   const dispatch = useDispatch();
   const wishlistProducts = useSelector((state) => state.wishlistProducts);
@@ -32,7 +31,11 @@ const Card = forwardRef(function Card(props, ref) {
         setHeartClicked(false);
       }
     }
+    console.log("fuori ");
+
+    //TODO: SCHIFO, DA CAMBIARE
     if (session) {
+      console.log("aooo si sess");
       const obj = {
         email: session.user.email,
         name: "Wishlist",
@@ -62,61 +65,43 @@ const Card = forwardRef(function Card(props, ref) {
 
   return (
     <div className={`${classes.card} ${props.className}`}>
-      {!props.isLoading ? (
-        props.path && props.id ? (
-          <Link
-            href={{
-              pathname: "/product/[id]",
-              query: {
-                id: props.id,
-                prevPath: props.prevPath,
-              },
-            }}
-            as={`/product/${props.id}`}
-            passHref
-          >
-            <a>
-              <Image
-                src={props.path}
-                alt={`Picture of ${props.name}`}
-                width={150}
-                height={150}
-                layout="responsive"
-              />
-            </a>
-          </Link>
-        ) : (
-          <Image
-            src={props.path}
-            alt={`Picture of ${props.name}`}
-            width={150}
-            height={150}
-            layout="responsive"
-          />
-        )
+      {props.path && props.id ? (
+        <Link
+          href={{
+            pathname: "/product/[id]",
+            query: {
+              id: props.id,
+              prevPath: props.prevPath,
+            },
+          }}
+          as={`/product/${props.id}`}
+          passHref
+        >
+          <a>
+            <Image
+              src={props.path}
+              alt={`Picture of ${props.name}`}
+              width={150}
+              height={150}
+              layout="responsive"
+            />
+          </a>
+        </Link>
       ) : (
-        <Skeleton height={150} width="100%" />
+        <Image
+          src={props.path}
+          alt={`Picture of ${props.name}`}
+          width={150}
+          height={150}
+          layout="responsive"
+        />
       )}
       <div className={classes.container}>
-        <span className={classes.title}>
-          {!props.isLoading ? (
-            props.name
-          ) : (
-            <Skeleton width={"60%"} height={25} />
-          )}
-        </span>
-        <span className={classes.subtitle}>
-          {!props.isLoading ? (
-            props.brand
-          ) : (
-            <Skeleton width={"40%"} height={15} />
-          )}
-        </span>
-        <span className={classes.price}>
-          {!props.isLoading ? "€" + props.price : <Skeleton width={"30%"} />}
-        </span>
+        <span className={classes.title}>{props.name}</span>
+        <span className={classes.subtitle}>{props.brand}</span>
+        <span className={classes.price}>{"€" + props.price}</span>
         <div className={classes.footer}>
-          {!props.isLoading ? (
+          {
             <Rating
               className={classes.star}
               name="half-rating-read"
@@ -124,58 +109,55 @@ const Card = forwardRef(function Card(props, ref) {
               precision={0.1}
               readOnly
             />
+          }
+
+          {!session ? (
+            <Link href={"/login"} passHref>
+              <IconButton>
+                <FavoriteBorderIcon className={classes.heart} />
+              </IconButton>
+            </Link>
           ) : (
-            <Skeleton width={130} />
-          )}
+            <IconButton onClick={onHeartClick}>
+              {heartClicked ? (
+                <FavoriteIcon
+                  className={classes.heart}
+                  onClick={() => {
+                    const obj = {
+                      id: props.id,
+                      email: session.user.email,
+                      name: "Wishlist",
+                    };
 
-          {!props.isLoading &&
-            (!session ? (
-              <Link href={"/login"} passHref>
-                <IconButton>
-                  <FavoriteBorderIcon className={classes.heart} />
-                </IconButton>
-              </Link>
-            ) : (
-              <IconButton onClick={onHeartClick}>
-                {heartClicked ? (
-                  <FavoriteIcon
-                    className={classes.heart}
-                    onClick={() => {
-                      const obj = {
-                        id: props.id,
-                        email: session.user.email,
-                        name: "Wishlist",
-                      };
-
-                      axios
-                        .post("/api/elimina_product_wishlist", obj)
-                        .then((res) => {
-                          // console.log(res);
-                        });
-                    }}
-                  />
-                ) : (
-                  <FavoriteBorderIcon
-                    className={classes.heart}
-                    onClick={() => {
-                      const obj = {
-                        id: props.id,
-                        email: session.user.email,
-                        name: "Wishlist",
-                      };
-
-                      axios.post("/api/inserisci_wishlist", obj).then((res) => {
+                    axios
+                      .post("/api/elimina_product_wishlist", obj)
+                      .then((res) => {
                         // console.log(res);
                       });
-                    }}
-                  />
-                )}
-              </IconButton>
-            ))}
+                  }}
+                />
+              ) : (
+                <FavoriteBorderIcon
+                  className={classes.heart}
+                  onClick={() => {
+                    const obj = {
+                      id: props.id,
+                      email: session.user.email,
+                      name: "Wishlist",
+                    };
+
+                    axios.post("/api/inserisci_wishlist", obj).then((res) => {
+                      // console.log(res);
+                    });
+                  }}
+                />
+              )}
+            </IconButton>
+          )}
         </div>
       </div>
     </div>
   );
-});
+}
 
 export default Card;
