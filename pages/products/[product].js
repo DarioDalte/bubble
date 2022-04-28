@@ -526,7 +526,7 @@ export async function getStaticPaths() {
       Object.keys(product["sub_category"]).map((key) => {
         categories.push({
           params: {
-            product: key,
+            product: key.toLowerCase(),
           },
         });
       });
@@ -534,12 +534,13 @@ export async function getStaticPaths() {
 
     categories.push({
       params: {
-        product: product.category,
+        product: product.category.toLowerCase(),
       },
     });
   });
 
   client.close();
+  console.log(categories);
 
   return {
     paths: categories,

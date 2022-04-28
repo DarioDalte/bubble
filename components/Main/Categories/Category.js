@@ -6,7 +6,7 @@ function Category(props) {
   const isMobile = useMediaQuery("(max-width:47rem)");
 
   return (
-    <Link href={`/products/${props.title}`} passHref>
+    <Link href={`/products/${props.title.toLowerCase()}`} passHref>
       <div className={`${classes.container} ${props.classes} `}>
         <div
           className={` ${classes.category} ${!isMobile && classes.hover}`}

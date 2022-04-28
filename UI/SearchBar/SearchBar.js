@@ -11,7 +11,7 @@ export default function SearchBar() {
 
   const onSearchHandler = () => {
     if (enteredText.trim().length > 0) {
-      router.push(`/products/${enteredText}`);
+      router.push(`/products/${enteredText.toLowerCase()}`);
     }
   };
 
@@ -33,7 +33,7 @@ export default function SearchBar() {
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && enteredText) {
-            router.push(`/products/${enteredText}`);
+            router.push(`/products/${enteredText.toLowerCase()}`);
           }
         }}
       />
