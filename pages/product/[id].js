@@ -410,7 +410,7 @@ export async function getStaticProps(context) {
   const db = client.db();
   const product = await getSingleProduct(db, productId);
 
-  client.close;
+  client.close();
 
   return {
     props: {

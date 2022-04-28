@@ -6,8 +6,7 @@ import Header from "../../components/Header/Header";
 import Card from "../../UI/Card/Card";
 import BottomNav from "../../components/BottomNav/BottomNav";
 
-import { getSession } from "next-auth/client";
-
+import { useSession } from "next-auth/client";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -44,12 +43,19 @@ function Products(props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [session, status] = useSession();
+  const { loadedProducts } = props;
 
   const router = useRouter();
+
   const { product } = router.query;
+
   useEffect(() => {
-    enterHandler();
-  }, [product]);
+    if (loadedProducts) {
+      setProducts(loadedProducts.prodotti);
+      setInitialProducts(loadedProducts.prodotti);
+    }
+  }, [loadedProducts]);
 
   const enterHandler = () => {
     setIsLoading(true);
@@ -173,10 +179,7 @@ function Products(props) {
               </div>
             </TabPanel>
             <TabPanel value="2" sx={{ padding: 0, marginTop: "1.5rem" }}>
-              <RadioGroup
-                onChange={filterHandler}
-                value={filter}
-              >
+              <RadioGroup onChange={filterHandler} value={filter}>
                 <FormControlLabel
                   className={classes.radio}
                   value={0}
@@ -297,7 +300,7 @@ function Products(props) {
           </TabContext>
         </div>
       </Modal>
-      <Header session={props.session} />
+      <Header session={session} />
       <div
         className={classes.body}
         style={isMobile ? { marginTop: "3rem", flexDirection: "column" } : {}}
@@ -408,7 +411,7 @@ function Products(props) {
         )}
 
         <div className={classes["products-container"]}>
-          {!isLoading ? (
+          {!router.isFallback ? (
             products.length === 0 ? (
               <div className={classes["nothing-container"]}>
                 <span className={classes.text}>
@@ -424,7 +427,7 @@ function Products(props) {
                 ) {
                   return (
                     <Card
-                    id={product['_id']}
+                      id={product["_id"]}
                       key={i}
                       className={classes.card}
                       name={
@@ -453,12 +456,63 @@ function Products(props) {
 
 export default Products;
 
-export async function getServerSideProps(ctx) {
-  const session = await getSession({ req: ctx.req });
+export async function getStaticProps(context) {
+  const databaseConnection = require("../api/middlewares/database.js");
+  const research = require("../api/staticProps/research.js");
+
+  const { params } = context;
+  const category = params.product;
+
+  const client = await databaseConnection();
+  await client.connect();
+  const db = client.db();
+  const loadedProducts = await research(db, category);
+
+  client.close();
 
   return {
     props: {
-      session: session,
-    }, // will be passed to the page component as props
+      loadedProducts: loadedProducts
+        ? JSON.parse(JSON.stringify(loadedProducts))
+        : 0,
+    },
+    revalidate: 10,
+  };
+}
+
+export async function getStaticPaths() {
+  const databaseConnection = require("../api/middlewares/database.js");
+  const client = await databaseConnection();
+  await client.connect();
+  const db = client.db();
+
+  const catgoriesData = await db.collection("categories").find().toArray();
+
+  const categories = [];
+  catgoriesData.map((product) => {
+    if (product["sub_category"]) {
+      Object.keys(product["sub_category"]).map((key) => {
+        categories.push({
+          params: {
+            product: key,
+          },
+        });
+      });
+    }
+
+    categories.push({
+      params: {
+        product: product.category,
+      },
+    });
+  });
+
+ 
+
+  client.close();
+
+  return {
+    paths: categories,
+    fallback: true,
   };
 }

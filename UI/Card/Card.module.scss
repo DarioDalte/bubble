@@ -8,6 +8,21 @@
   cursor: pointer;
   transition: all 0.5s;
   position: relative;
+  max-height: 425px;
+
+  @media (max-width: 97rem) {
+    max-height: 400px;
+  }
+  @media (max-width: 71.8rem) {
+    max-height: 380px;
+  }
+
+  @media (max-width: 59.375rem) {
+    max-height: 340px;
+  }
+  @media (max-width: 47rem) {
+    max-height: 380px;
+  }
 
   .image-container {
     padding: 1rem;
