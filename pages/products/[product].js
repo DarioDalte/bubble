@@ -37,16 +37,22 @@ function Products(props) {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(false);
 
-  const [products, setProducts] = useState([]);
-  const [initialProducts, setInitialProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [session, status] = useSession();
   const { loadedProducts } = props;
+  const [products, setProducts] = useState(
+    loadedProducts ? loadedProducts.prodotti : []
+  );
+  const [initialProducts, setInitialProducts] = useState(
+    loadedProducts ? loadedProducts.prodotti : []
+  );
+  console.log(loadedProducts);
 
   const router = useRouter();
+  console.log(router.isFallback);
 
   const { product } = router.query;
 
@@ -56,6 +62,32 @@ function Products(props) {
       setInitialProducts(loadedProducts.prodotti);
     }
   }, [loadedProducts]);
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      setIsLoading(true);
+      console.log(
+        `App is changing to ${url} `
+      )
+    }
+
+    const handleRouteComplete = (url) => {
+      setIsLoading(false);
+      console.log(
+        `App changed to ${url} `
+      )
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+    router.events.on('routeChangeComplete', handleRouteComplete)
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+      router.events.off('routeChangeComplete', handleRouteComplete)
+    }
+  }, [])
+
+
 
   const enterHandler = () => {
     setIsLoading(true);
@@ -411,7 +443,7 @@ function Products(props) {
         )}
 
         <div className={classes["products-container"]}>
-          {!router.isFallback ? (
+          {!isLoading ? (
             products.length === 0 ? (
               <div className={classes["nothing-container"]}>
                 <span className={classes.text}>
@@ -506,8 +538,6 @@ export async function getStaticPaths() {
       },
     });
   });
-
- 
 
   client.close();
 
