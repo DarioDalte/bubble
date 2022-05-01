@@ -342,14 +342,22 @@ function Product(props) {
                 )}
 
                 {reviews.map((recensione, i) => {
+                  console.log(recensione["id_user"]);
                   const [name, surname] = recensione["id_user"].split(" ");
+                  let displayedName = name + " " + surname[0] + ".";
+                  if (recensione["id_user"] === "Utente eliminato") {
+                    displayedName =
+                      name +
+                      " " +
+                      surname.charAt(0).toUpperCase() +
+                      surname.slice(1);
+                  }
 
                   if (!session || recensione.email != session.user.email) {
                     return (
                       <div key={i} className={classes.review}>
                         <span className={classes.title}>
-                          {name} {surname[0]}.{" "}
-                          <Divider orientation="vertical" />
+                          {displayedName} <Divider orientation="vertical" />
                         </span>
                         <Rating
                           name="read-only"
