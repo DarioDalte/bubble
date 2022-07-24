@@ -28,11 +28,12 @@ export default function Home(props) {
       axios.post("/api/getWishlist", obj).then((res) => {
         const wishlist = res.data;
         const wishlistIds = [];
-        wishlist.products.map((product) => {
-          wishlistIds.push(product.id);
-        });
 
         if (wishlist.status) {
+          wishlist.products.map((product) => {
+            wishlistIds.push(product.id);
+          });
+
           dispatch({
             type: "ADD_WISHLISTPRODUCTS",
             wishlistProducts: wishlistIds,

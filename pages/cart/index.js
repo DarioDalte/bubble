@@ -14,6 +14,7 @@ import Image from "next/image";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Link from "next/link";
 import CircularProgress from "@mui/material/CircularProgress";
+import { buildUrl } from "cloudinary-build-url";
 
 function Cart(props) {
   const [products, setProducts] = useState();
@@ -21,7 +22,8 @@ function Cart(props) {
   const [totalPrice, setTotalPrice] = useState();
   const [totalProducts, setTotalProducts] = useState();
   const isMobile = useMediaQuery("(max-width:62.5rem)");
-  console.log(classes);
+
+  console.log(products);
 
   useEffect(() => {
     axios
@@ -63,11 +65,25 @@ function Cart(props) {
                       <div className={classes["image-container"]}>
                         <Link href={`/product/${product.id}`} passHref>
                           <Image
-                            src={`/${product.image}`}
+                            src={
+                              product.images
+                                ? buildUrl(images[selectedImage], {
+                                    cloud: {
+                                      cloudName: "bubblemarketplace",
+                                    },
+                                  })
+                                : buildUrl(
+                                    product.variant["Colore"].images[0],
+                                    {
+                                      cloud: {
+                                        cloudName: "bubblemarketplace",
+                                      },
+                                    }
+                                  )
+                            }
                             alt={`Image of ${product.name}`}
-                            layout={"responsive"}
-                            width={100}
-                            height={100}
+                            layout={"fill"}
+                            objectFit={"contain"}
                           />
                         </Link>
                       </div>
@@ -140,7 +156,7 @@ function Cart(props) {
                                 };
 
                                 axios
-                                  .post("/api/elimina_carrello", obj)
+                                  .post("/api/deleteFromCart", obj)
                                   .then((res) => {
                                     // console.log(res);
                                   });

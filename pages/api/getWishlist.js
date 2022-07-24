@@ -1,5 +1,5 @@
 const databaseConnection = require("./middlewares/database.js");
-const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -14,13 +14,14 @@ export default async function handler(req, res) {
     .findOne({ email: data.email, name: data.name });
 
   const wishlistProducts = [];
-  if (wishlist.products) {
+  if (wishlist && wishlist.products) {
     for (var i = 0; i < wishlist["products"].length; i++) {
       const dbProduct = await db
         .collection("products")
-        .findOne({ _id: wishlist["products"][i] });
+        .findOne({ _id: ObjectId(wishlist["products"][i]) });
 
-      const brandId = mongoose.Types.ObjectId(dbProduct["brand"]);
+
+      const brandId = ObjectId(dbProduct["brand"]);
       var brand = await db.collection("companies").findOne({ _id: brandId });
       brand = brand.name;
       var price = parseFloat(dbProduct.price);

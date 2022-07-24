@@ -1,15 +1,8 @@
-import { Response } from "@sendgrid/helpers/classes";
-import { json } from "micro";
-import { sep } from "path";
-import { hashPassowrd, verifyPassword } from "./middlewares/auth.js";
+import { hashPassowrd } from "./middlewares/auth.js";
 const databaseConnection = require("./middlewares/database.js");
-const EmailTemplate = require("email-templates").EmailTemplate;
 const nodemailer = require("nodemailer");
-const hbs = require("nodemailer-express-handlebars");
-const path = require("path");
-const sgMail = require("@sendgrid/mail");
-const API_KEY =
-  "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";
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+const fs = require("fs");
 
 export default async function handler(req, res) {
   const client = await databaseConnection(); //Calls the function databaseConnection
@@ -31,103 +24,62 @@ export default async function handler(req, res) {
       return;
     }
 
-    var collection = "";
-    //        const result = await collection.insertMany(data); //Inserisco nella collection
-
     await client.connect(); //Connect to our cluster
+    const db = client.db(); //Boh
 
-    const usersCollection = client.db().collection("users");
+    const usersCollection = db.collection("users");
     const user = await usersCollection.findOne({
       email: data.email,
     });
 
-    const companiesCollection = client.db().collection("companies");
+    const companiesCollection = db.collection("companies");
     const company = await companiesCollection.findOne({
       email: data.email,
     });
 
     if (!user && !company) {
+      const transporter = nodemailer.createTransport(
+        sendgridTransport({
+          auth: {
+            api_key:
+              "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",
+          },
+        })
+      );
       data.password = await hashPassowrd(data.password); //encrypt the password
       if (data.company) {
         await companiesCollection.insertOne(data);
       } else {
         let separato = data.name.split(" ");
-        data.name = separato[0];
-        data.cognome = separato[1];
+        data.name = separato[0][0].toUpperCase() + separato[0].substring(1);
+        data.cognome = separato[1][0].toUpperCase() + separato[1].substring(1);
+
         await usersCollection.insertOne(data);
-        const db = client.db(); //Boh
-        var obj = { email: data.email, products: [] };
-        // obj = JSON.parse(obj);
 
-        await db.collection("cart").insert(obj);
+        const cartObject = { email: data.email, products: [] };
 
-        var obj = { email: data.email, name: "Wishlist", products: [] };
-        // obj = JSON.parse(obj);
+        await db.collection("cart").insert(cartObject);
 
-        await db.collection("wishlist").insert(obj);
+        const wishlistObject = {
+          email: data.email,
+          name: "Wishlist",
+          products: [],
+        };
+        await db.collection("wishlist").insert(wishlistObject);
       }
 
-      sgMail.setApiKey(API_KEY);
-      const message = {
-        to: data.email,
-        from: "bubblebubbleproject@gmail.com",
-        template_id: "d-7de973dc3b4449729f2c76d881f0377b",
-        personalizations: [
-          {
-            to: [
-              {
-                email: data.email,
-              },
-            ],
-            subject: "REGISTRAZIONE",
-            dynamic_template_data: {
-              name: data.name,
-            },
-          },
-        ],
-      };
-
-      sgMail
-        .send(message)
-        .then((response) => console.log("Email inviata"))
-        .catch((error) => console.log(error.message));
-      /*
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "bubblebubbleproject@gmail.com",
-          pass: "Bubble123!",
-        },
+      fs.readFile("email/welcome/welcome.html", "utf8", function (err, mail) {
+        if (err) throw err;
+        const template = String(mail).replace("username", data.name);
+        transporter.sendMail({
+          to: data.email,
+          from: "bubble.mailing@gmail.com",
+          fromname: "Bubble",
+          subject: "Benvenuto su bubble!",
+          html: template,
+        });
       });
 
-      const handlebarOptions = {
-        viewEngine: {
-          partialsDir: path.resolve("../bubble/email/welcome"),
-          defaultLayout: false,
-        },
-        viewPath: path.resolve("../bubble/email/welcome"),
-      };
-      transporter.use("compile", hbs(handlebarOptions));
-
-      let mailOption = {
-        from: "bubblebubbleproject@gmail.com",
-        to: data.email,
-        subject: "Welcome",
-        template: "email",
-        context: {
-          name: data.name, // replace {{name}} with Adebola
-          company: "Bubble", // replace {{company}} with My Company
-        },
-      };
-
-      transporter.sendMail(mailOption, function (err, success) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Email inviata");
-        }
-      });
-*/
       res
         .status(201)
         .json({ message: "Registrazione effettuata con successo", status: 1 });

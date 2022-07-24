@@ -1,5 +1,6 @@
 import classes from "./Card.module.scss";
 import { useEffect, useState } from "react";
+import { buildUrl } from "cloudinary-build-url";
 
 import Image from "next/image";
 
@@ -18,6 +19,18 @@ function Card(props) {
   const wishlistProducts = useSelector((state) => state.wishlistProducts);
   const [session, status] = useSession();
 
+  let url;
+  
+  if(props.buildUrl){
+    url = buildUrl(props.path, {
+      cloud: {
+        cloudName: "bubblemarketplace",
+      },
+    });
+  }else{
+    url = props.path;
+  }
+
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
   };
@@ -31,29 +44,23 @@ function Card(props) {
         setHeartClicked(false);
       }
     }
-    console.log("fuori ");
 
     //TODO: SCHIFO, DA CAMBIARE
     if (session) {
-      console.log("aooo si sess");
       const obj = {
         email: session.user.email,
         name: "Wishlist",
       };
-      axios.post("/api/getWishlist", obj).then((res) => {
-        const wishlist = res.data;
-        const wishlistIds = [];
-        wishlist.products.map((product) => {
-          wishlistIds.push(product.id);
-        });
+      axios.post("/api/getWishlistId", obj).then((res) => {
+        const wishlistIds = res.data.products;
 
-        if (wishlistIds.includes(props.id)) {
+        if (wishlistIds && wishlistIds.includes(props.id)) {
           setHeartClicked(true);
         } else {
           setHeartClicked(false);
         }
 
-        if (wishlist.status) {
+        if (wishlistIds && wishlistIds.length != 0) {
           dispatch({
             type: "ADD_WISHLISTPRODUCTS",
             wishlistProducts: wishlistIds,
@@ -61,7 +68,7 @@ function Card(props) {
         }
       });
     }
-  }, [router.asPath]);
+  }, [router.asPath, session]);
 
   return (
     <div className={`${classes.card} ${props.className}`}>
@@ -87,15 +94,15 @@ function Card(props) {
             />
           </a>
         </Link>
-      ) : (
+      ) :  (
         <Image
-          src={props.path}
+          src={url}
           alt={`Picture of ${props.name}`}
           width={150}
           height={150}
           layout="responsive"
         />
-      )}
+      ) }
       <div className={classes.container}>
         <span className={classes.title}>{props.name}</span>
         <span className={classes.subtitle}>{props.brand}</span>
@@ -129,11 +136,9 @@ function Card(props) {
                       name: "Wishlist",
                     };
 
-                    axios
-                      .post("/api/elimina_product_wishlist", obj)
-                      .then((res) => {
-                        // console.log(res);
-                      });
+                    axios.post("/api/deleteFromWishList", obj).then((res) => {
+                      // console.log(res);
+                    });
                   }}
                 />
               ) : (
@@ -146,7 +151,7 @@ function Card(props) {
                       name: "Wishlist",
                     };
 
-                    axios.post("/api/inserisci_wishlist", obj).then((res) => {
+                    axios.post("/api/insertIntoWishList", obj).then((res) => {
                       // console.log(res);
                     });
                   }}

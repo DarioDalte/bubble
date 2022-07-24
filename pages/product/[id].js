@@ -15,6 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Rating from "@mui/material/Rating";
 import Link from "next/link";
+import { buildUrl } from "cloudinary-build-url";
+import EditIcon from "@mui/icons-material/Edit";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import AddReview from "../../components/Main/Product/AddReview/AddReview";
@@ -29,13 +31,17 @@ import MobileVariant from "../../components/Main/Product/MobileVariant/MobileVar
 import DesktopVariant from "../../components/Main/Product/DesktopVariant/DesktopVariant";
 import AddToCart from "../../components/Main/Product/AddToCart/AddToCart";
 import { useSelector, useDispatch } from "react-redux";
+import Characteristics from "../../components/Main/Product/Characteristics/Characteristics";
+import RatingLine from "../../components/Main/Product/RatingLine/RatingLine";
+import ThumbNail from "../../components/Main/Product/ThumbNail/ThumbNail";
+import MobileCarousel from "../../components/Main/Product/MobileCarousel/MobileCarousel";
 
 function Product(props) {
   const router = useRouter();
   const { id, prevPath } = router.query;
   const [data, setData] = useState();
   const [heartClicked, setHeartClicked] = useState(false);
-  const [variant, setVariant] = useState([]);
+  const [variant, setVariant] = useState({});
   const [initialPrice, setInitialPrice] = useState();
   const [price, setPrice] = useState(0);
   const isMobile = useMediaQuery("(max-width:62rem)");
@@ -44,10 +50,27 @@ function Product(props) {
   const [myReview, setMyReview] = useState();
   const [reviewNumber, setReviewNumber] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [cartJump, setCartJump] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [showBottomNav, setShowBottomNav] = useState(true);
+  const [images, setImages] = useState([]);
   const dispatch = useDispatch();
   const [session, status] = useSession();
   const { loadedProduct } = props;
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [url, setUrl] = useState("");
+
+  // if (images.length != 0) {
+  //   const tempUrl = buildUrl(images[selectedImage], {
+  //     cloud: {
+  //       cloudName: "bubblemarketplace",
+  //     },
+  //   });
+
+  //   setUrl(tempUrl);
+  // }
+
+  // console.log(loadedProduct.prodotto.varianti['Colore'][0]['images'][0]);
 
   const onHeartClick = () => {
     setHeartClicked((heartClicked) => !heartClicked);
@@ -56,15 +79,29 @@ function Product(props) {
   const wishlistProducts = useSelector((state) => state.wishlistProducts);
   useEffect(() => {
     if (loadedProduct.prodotto) {
-      let arr = [];
+      //!CONTROLLARE CON PRODOTTI SENZA VARIANTI
+      setImages(loadedProduct.prodotto.varianti["Colore"][0].images);
+
+      // setImages(loadedProduct.prodotto.varianti["Colore"][0].images);
+
+      let obj = {};
       if (loadedProduct.prodotto.varianti) {
         Object.keys(loadedProduct.prodotto.varianti).map((key, index) => {
-          arr.push({
-            id: loadedProduct.prodotto.varianti[key][0].id,
-            type: key,
-            name: loadedProduct.prodotto.varianti[key][0].name,
-            increase: 0,
-          });
+          if (key === "Colore") {
+            obj[key] = {
+              id: loadedProduct.prodotto.varianti[key][0].id,
+              name: loadedProduct.prodotto.varianti[key][0].name,
+              increase: 0,
+              hex: loadedProduct.prodotto.varianti[key][0].hex,
+              images: loadedProduct.prodotto.varianti[key][0].images,
+            };
+          } else {
+            obj[key] = {
+              id: loadedProduct.prodotto.varianti[key][0].id,
+              name: loadedProduct.prodotto.varianti[key][0].name,
+              increase: 0,
+            };
+          }
         });
       }
 
@@ -86,7 +123,7 @@ function Product(props) {
         setReviews(loadedProduct.recensioni);
         setReviewNumber(parseInt(loadedProduct.numero_recensioni));
       }
-      setVariant(arr);
+      setVariant(obj);
       setInitialPrice(loadedProduct.prodotto.price);
       setPrice(parseFloat(loadedProduct.prodotto.price));
     }
@@ -108,38 +145,56 @@ function Product(props) {
       axios.post("/api/getWishlist", obj).then((res) => {
         const wishlist = res.data;
         const wishlistIds = [];
-        wishlist.products.map((product) => {
-          wishlistIds.push(product.id);
-        });
-
-        if (wishlistIds.includes(id)) {
-          setHeartClicked(true);
-        } else {
-          setHeartClicked(false);
-        }
-
-        if (wishlist.status) {
-          dispatch({
-            type: "ADD_WISHLISTPRODUCTS",
-            wishlistProducts: wishlistIds,
+        if (wishlist.status === 1) {
+          wishlist.products.map((product) => {
+            wishlistIds.push(product.id);
           });
+
+          if (wishlistIds.includes(id)) {
+            setHeartClicked(true);
+          } else {
+            setHeartClicked(false);
+          }
+
+          if (wishlist.status) {
+            dispatch({
+              type: "ADD_WISHLISTPRODUCTS",
+              wishlistProducts: wishlistIds,
+            });
+          }
         }
       });
     }
   }, [router.asPath]);
 
+  useEffect(() => {
+    if (variant["Colore"]) {
+      setImages(variant["Colore"].images);
+    }
+  }, [variant["Colore"]]);
+
   const deleteReviewHandler = () => {
-    setReviewNumber((prevReviewNumber) => prevReviewNumber - 1);
+    let myReviewIndex;
+    reviews.map((review, index) => {
+      if (myReview.id_user === review.id_user) {
+        myReviewIndex = index;
+      }
+    });
+
+    const tempReviews = [...reviews];
+    tempReviews.splice(myReviewIndex, 1);
 
     setMyReview("");
-    if (reviews.length != 0) {
+    if (reviewNumber - 1 != 0) {
       let ratingSomma = 0;
-      reviews.map((review) => {
+      tempReviews.map((review, index) => {
         ratingSomma += review.value;
       });
-      setRatingAverage((ratingSomma / reviews.length).toFixed(1));
+      setRatingAverage((ratingSomma / (reviewNumber - 1)).toFixed(1));
+      setReviews(tempReviews);
     } else {
       setRatingAverage(0);
+      setReviews([]);
     }
     axios
       .post("/api/elimina_recensione", {
@@ -149,20 +204,26 @@ function Product(props) {
       .then((res) => {
         // console.log(res);
       });
+
+    setReviewNumber((prevReviewNumber) => prevReviewNumber - 1);
   };
 
   const addToCartHandler = () => {
+    setCartJump(true);
     setIsAdding(true);
     window.navigator.vibrate(100);
 
     setTimeout(() => {
-      setIsAdding(false);
+      setCartJump(false);
     }, 300);
 
     const productVariant = {};
-    variant.map((variant) => {
-      productVariant[variant["type"]] = variant.id;
+
+    Object.keys(variant).map((key) => {
+      productVariant[key] = variant[key].id;
     });
+
+    console.log(productVariant);
 
     const obj = {
       id: id,
@@ -171,8 +232,9 @@ function Product(props) {
       qnt: quantity,
     };
 
-    axios.post("/api/inserimento_carrello", obj).then((res) => {
+    axios.post("/api/insertIntoCart", obj).then((res) => {
       // console.log(res);
+      setIsAdding(false);
     });
   };
 
@@ -187,7 +249,7 @@ function Product(props) {
         <Link href={session ? "/cart" : "/login"} passHref>
           <IconButton>
             <ShoppingCartOutlinedIcon
-              className={`${classes.cart} ${isAdding ? classes.bump : ""}`}
+              className={`${classes.cart} ${cartJump ? classes.bump : ""}`}
             />
           </IconButton>
         </Link>
@@ -196,15 +258,34 @@ function Product(props) {
       <>
         <div className={classes.main}>
           <div className={classes["top-container"]}>
-            <div className={classes["image-container"]}>
-              <Image
-                src={`/${loadedProduct.prodotto.image}`}
-                alt={`Image of ${loadedProduct.prodotto.name}`}
-                layout={"responsive"}
-                width={100}
-                height={100}
-                priority
+            {!isMobile && (
+              <ThumbNail
+                images={images}
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
               />
+            )}
+            <div className={classes["image-container"]}>
+              {!isMobile ? (
+                <Image
+                  // src={`/${loadedProduct.prodotto.image}`}
+                  src={
+                    images[selectedImage]
+                      ? buildUrl(images[selectedImage], {
+                          cloud: {
+                            cloudName: "bubblemarketplace",
+                          },
+                        })
+                      : "/temp"
+                  }
+                  alt={`Image of ${loadedProduct.prodotto.name}`}
+                  layout={"fill"}
+                  objectFit={"contain"}
+                  priority
+                />
+              ) : (
+                <MobileCarousel images={images} />
+              )}
             </div>
             <div
               className={`${classes.product} ${
@@ -222,15 +303,10 @@ function Product(props) {
                   <p className={classes.price}>
                     € {parseFloat(price).toFixed(2)}
                   </p>
-                  <div className={classes.rating}>
-                    <div className={classes["rating-average"]}>
-                      <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
-                    </div>
-                    <div className={classes["rating-number"]}>
-                      <p>{reviewNumber}</p>
-                      <p>{reviewNumber === 1 ? "Recensione" : "Recensioni"}</p>
-                    </div>
-                  </div>
+                  <RatingLine
+                    reviewNumber={reviewNumber}
+                    ratingAverage={ratingAverage}
+                  />
                 </div>
               </div>
               {isMobile && <ShopLine brand={loadedProduct.prodotto.brand} />}
@@ -250,6 +326,7 @@ function Product(props) {
                   initialPrice={initialPrice}
                   setVariant={setVariant}
                   setPrice={setPrice}
+                  price={price}
                 />
               )}
               {!loadedProduct.prodotto.varianti && !isMobile && (
@@ -262,6 +339,7 @@ function Product(props) {
                     setQuantity={setQuantity}
                     addToCartHandler={addToCartHandler}
                     productId={loadedProduct.prodotto["_id"]}
+                    isAdding={isAdding}
                   />
                 </div>
               )}
@@ -280,13 +358,21 @@ function Product(props) {
                 setQuantity={setQuantity}
                 addToCartHandler={addToCartHandler}
                 productId={loadedProduct.prodotto["_id"]}
+                isAdding={isAdding}
               />
             </div>
           )}
           <div className={classes.container}>
             {!isMobile && <ShopLine brand={loadedProduct.prodotto.brand} />}
 
-            {!myReview && (
+            <div className={classes.characteristicsContainer}>
+              <Characteristics
+                list={loadedProduct.prodotto.characteristics}
+                variant={variant}
+              />
+
+              {!isMobile && <Divider orientation="vertical" flexItem="true" />}
+
               <AddReview
                 setMyReview={setMyReview}
                 reviews={reviews}
@@ -294,21 +380,46 @@ function Product(props) {
                 id={id}
                 setRatingAverage={setRatingAverage}
                 setReviewNumber={setReviewNumber}
+                setReviews={setReviews}
+                reviewNumber={reviewNumber}
+                ratingAverage={ratingAverage}
+                myReview={myReview}
+                isMobile={isMobile}
+                onDelete={deleteReviewHandler}
+                setShowBottomNav={setShowBottomNav}
               />
-            )}
+            </div>
 
-            {!reviews.length == 0 || myReview ? (
+            {!reviews.length == 0 ? (
               <div className={classes["rating-container"]}>
                 <div className={classes["rating-number"]}>
                   <div className={classes["rating-left"]}>
                     Recensioni ({reviewNumber})
                   </div>
-                  <div className={classes["rating-average"]}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: ".3rem",
+                    }}
+                  >
                     <StarIcon sx={{ color: "#faaf00" }} /> {ratingAverage}
                   </div>
                 </div>
 
-                {myReview && (
+                {reviews.length == 1 && myReview && (
+                  <p
+                    style={{
+                      textAlign: "center",
+                      marginTop: "5rem",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Solo tu hai recensito questo prodotto!
+                  </p>
+                )}
+
+                {myReview && isMobile && (
                   <>
                     <div className={classes["my-reviw-container"]}>
                       <div className={classes.review}>
@@ -330,6 +441,12 @@ function Product(props) {
                       </div>
                       <div className={classes["icon-container"]}>
                         <IconButton>
+                          <EditIcon
+                            style={{ color: "#3669c9" }}
+                            onClick={props.onChange}
+                          />
+                        </IconButton>
+                        <IconButton>
                           <DeleteIcon
                             className={classes["delete-icon"]}
                             onClick={deleteReviewHandler}
@@ -342,7 +459,6 @@ function Product(props) {
                 )}
 
                 {reviews.map((recensione, i) => {
-                  console.log(recensione["id_user"]);
                   const [name, surname] = recensione["id_user"].split(" ");
                   let displayedName = name + " " + surname[0] + ".";
                   if (recensione["id_user"] === "Utente eliminato") {
@@ -378,7 +494,7 @@ function Product(props) {
               <p
                 style={{
                   textAlign: "center",
-                  marginTop: "3rem",
+                  marginTop: "5rem",
                   fontWeight: "600",
                 }}
               >
@@ -386,7 +502,7 @@ function Product(props) {
               </p>
             )}
 
-            {isMobile && (
+            {isMobile && showBottomNav && (
               <div className={classes["bottom-nav"]}>
                 <AddToCart
                   session={session}
@@ -396,6 +512,7 @@ function Product(props) {
                   setQuantity={setQuantity}
                   addToCartHandler={addToCartHandler}
                   productId={loadedProduct.prodotto["_id"]}
+                  isAdding={isAdding}
                 />
               </div>
             )}

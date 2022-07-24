@@ -1,4 +1,7 @@
 import classes from "./AddToCart.module.scss";
+
+import { useState } from "react";
+
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
@@ -6,6 +9,8 @@ import Link from "next/link";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
+
 function AddToCart(props) {
   const incrementQntHandler = () => {
     window.navigator.vibrate(100);
@@ -58,38 +63,44 @@ function AddToCart(props) {
                   <FavoriteIcon
                     className={classes.heart}
                     onClick={() => {
-                      const obj ={
+                      const obj = {
                         id: props.productId,
                         email: props.session.user.email,
-                        name: 'Wishlist'
+                        name: "Wishlist",
+                      };
 
-                      }
-                      
-                      axios.post('/api/elimina_product_wishlist', obj).then(res=>{
+                      axios.post("/api/deleteFromWishList", obj).then((res) => {
                         // console.log(res);
-                      })
+                      });
                     }}
                   />
                 ) : (
                   <FavoriteBorderIcon
                     className={classes.heart}
                     onClick={() => {
-                      const obj ={
+                      const obj = {
                         id: props.productId,
                         email: props.session.user.email,
-                        name: 'Wishlist'
+                        name: "Wishlist",
+                      };
 
-                      }
-                      
-                      axios.post('/api/inserisci_wishlist', obj).then(res=>{
+                      axios.post("/api/insertIntoWishList", obj).then((res) => {
                         // console.log(res);
-                      })
+                      });
                     }}
                   />
                 )}
               </IconButton>
-              <span className={classes["btn"]} onClick={props.addToCartHandler}>
-                Aggiungi al carrello
+
+              <span
+                className={classes["btn"]}
+                onClick={!props.isAdding ? props.addToCartHandler : () => {}}
+              >
+                {!props.isAdding ? (
+                  "Aggiungi al carrello"
+                ) : (
+                  <CircularProgress size={35} style={{ color: "inherit" }} />
+                )}
               </span>
             </>
           )}

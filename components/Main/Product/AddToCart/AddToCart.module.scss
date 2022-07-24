@@ -4,18 +4,28 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  width: 90%;
+  max-width: 260px;
   .heart {
     font-size: 2rem !important;
     color: #3669c9;
   }
 
   .btn {
-    padding: 0.8rem 1rem;
+   
     border-radius: 8px;
     background-color: #3669c9;
     color: white;
     font-weight: 600;
     cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    display: block;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &:hover {
       background-color: #34599d;
     }
@@ -39,5 +49,6 @@
 
 .heart-btn-container{
   display: flex;
+  width: 100%;
   gap: 1rem;
 }

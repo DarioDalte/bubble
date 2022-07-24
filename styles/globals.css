@@ -37,3 +37,6 @@ a {
   height: 20px;
 }
 
+.swiper-pagination-horizontal{
+  position: static !important;
+}

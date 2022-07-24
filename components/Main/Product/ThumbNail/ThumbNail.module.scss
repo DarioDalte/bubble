@@ -1,0 +1,22 @@
+.thumbnail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+
+  .item-container {
+    border: 1px solid #8d9096;
+    padding: 4px;
+    cursor: pointer;
+
+    .item {
+      height: 66px;
+      width: 50px;
+      padding: 2.5px;
+      position: relative;
+    }
+  }
+  .selected {
+    border: 2.5px solid #3669c9;
+  }
+}

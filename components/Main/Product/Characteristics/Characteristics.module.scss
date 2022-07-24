@@ -1,0 +1,39 @@
+.main {
+  width: 50%;
+  margin-bottom: 3rem;
+  max-width: 500px;
+
+  @media (max-width: 62rem) {
+    width: 90%;
+  }
+
+  .container {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: space-between;
+    align-items: center;
+
+    .right,
+    .left {
+      width: 45%;
+    }
+  }
+}
+
+.title {
+  margin: 2rem 0 ;
+}
+.subtitle {
+  font-weight: bold;
+  font-size: 1.2rem;
+  @media (max-width: 62rem) {
+    font-size: 1.1rem;
+  }
+}
+
+.text {
+  font-size: 1.1rem;
+  @media (max-width: 62rem) {
+    font-size: 1rem;
+  }
+}

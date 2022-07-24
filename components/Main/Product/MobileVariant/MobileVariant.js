@@ -5,9 +5,29 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Divider } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
 
 function MobileVariant(props) {
+  const onVariantClicked = (key, element) => {
+    window.navigator.vibrate(100);
+    if (props.variant[key]) {
+      props.setVariant((prevState) => ({ ...prevState, [key]: element }));
+
+      let totalIncrease = 0;
+      Object.keys(props.variant).map((variantKey, index) => {
+        if (variantKey === key) {
+          totalIncrease += parseFloat(element.increase);
+        } else {
+          totalIncrease += parseFloat(props.variant[variantKey].increase);
+        }
+      });
+
+      props.setPrice(parseFloat(props.initialPrice) + totalIncrease);
+    }
+  };
+
   return Object.keys(props.varianti).map((key, index) => {
+    const color = key === "Colore" ? true : false;
     return (
       <Accordion key={index}>
         <AccordionSummary
@@ -15,82 +35,98 @@ function MobileVariant(props) {
           sx={{ alignItems: "center" }}
         >
           <div className={classes["menu-container"]}>
-            <span
-              style={{
-                fontWeight: "600",
-                fontSize: "1.2rem",
-                marginRight: ".5rem",
-              }}
-            >
-              {key}:
-            </span>
-            <span>
-              {props.variant.map((ourVariant) => {
-                if (ourVariant.type == key) {
-                  return ourVariant.name;
-                }
-              })}
-            </span>
+            <div>
+              <span
+                style={{
+                  fontWeight: "600",
+                  fontSize: "1.2rem",
+                  marginRight: ".5rem",
+                }}
+              >
+                {key}:
+              </span>
+              <span>{props.variant[key].name}</span>
+            </div>
+
+            {color && (
+              <div
+                className={`${classes.mobileCircle}`}
+                style={{
+                  backgroundColor: `#${props.variant[key].hex}`,
+                  width: "33px",
+                  height: "33px",
+                  margin: "0 1rem 0 0",
+                }}
+              ></div>
+            )}
           </div>
         </AccordionSummary>
         <AccordionDetails sx={{ display: "flex", gap: "1rem" }}>
           <div className={classes["scrolling-wrapper"]}>
             {props.varianti[key].map((element, i) => {
               let isSelected = false;
-              props.variant.map(
-                (ourVariant) =>
-                  ourVariant.type == key &&
-                  ourVariant.name == element.name &&
-                  (isSelected = true)
-              );
+
+              if (props.variant[key]) {
+                if (element.name === props.variant[key].name) {
+                  isSelected = true;
+                }
+              }
 
               let increase = parseFloat(element.increase);
 
-              props.variant.map((element) => {
-                if (element.type != key) {
-                  increase += parseFloat(element.increase);
-                }
-              });
-
-              return (
-                <div
-                  key={i}
-                  className={`${classes.variant} ${
-                    isSelected ? classes.selected : ""
-                  }`}
-                  onClick={() => {
-                    let arr = [];
-                    window.navigator.vibrate(100);
-
-                    props.variant.map((obj) => {
-                      const clone = JSON.parse(JSON.stringify(obj));
-
-                      if (clone.type == key) {
-                        clone.id = element.id;
-                        clone.name = element.name;
-                        clone.increase = element.increase;
-                      }
-                      arr.push(clone);
-                    });
-
-                    props.setVariant(arr);
-
-                    let totalIncrease = 0;
-                    arr.map((element) => {
-                      totalIncrease += parseFloat(element.increase);
-                    });
-                    props.setPrice(props.initialPrice + totalIncrease);
-                  }}
-                >
-                  <div className={classes.name}>{element.name.charAt(0).toUpperCase()+element.name.slice(1)}</div>
-                  <Divider />
-                  <div className={classes.price}>
-                    <p>
-                      {(parseFloat(props.initialPrice) + increase).toFixed(2)} €
-                    </p>
-                  </div>
-                </div>
+              const dynamicIncrease = parseFloat(
+                element.increase -
+                  (props.variant[key] ? props.variant[key].increase : 0)
               );
+
+              if (!color) {
+                return (
+                  <div
+                    key={i}
+                    className={`${classes.variant} ${
+                      isSelected ? classes.selected : ""
+                    }`}
+                    onClick={() => {
+                      onVariantClicked(key, element);
+                    }}
+                  >
+                    <div className={classes.name}>
+                      {element.name.charAt(0).toUpperCase() +
+                        element.name.slice(1)}
+                    </div>
+                    <Divider />
+                    <div className={classes.price}>
+                      {dynamicIncrease === 0 ? (
+                        isSelected ? (
+                          <DoneIcon />
+                        ) : (
+                          ""
+                        )
+                      ) : dynamicIncrease > 0 ? (
+                        "+ "
+                      ) : (
+                        "- "
+                      )}
+                      {dynamicIncrease != 0
+                        ? Math.abs(dynamicIncrease) + "€"
+                        : ""}
+                    </div>
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={i}
+                    className={`${classes.mobileCircle} ${
+                      isSelected ? classes.selected : ""
+                    }`}
+                    style={{ backgroundColor: `#${element.hex}` }}
+                    onClick={() => {
+                      onVariantClicked(key, element);
+                    }}
+                  ></div>
+                );
+              }
             })}
           </div>
         </AccordionDetails>

@@ -11,6 +11,7 @@ function useInput(validateValue) {
 
 
 
+
     const valueHandler = (event) => {
         setEnteredValue(event.target.value)
       };
@@ -37,7 +38,8 @@ function useInput(validateValue) {
         inputBlur,
         inputFocus,
         reset,
-        focussing
+        focussing,
+        setValue: setEnteredValue
     }
 }
 

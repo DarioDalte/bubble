@@ -1,0 +1,28 @@
+.container {
+  width: 50%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+
+  .author {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+  }
+
+  .review-container {
+    margin-top: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4rem;
+
+    .options{
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+  }
+}
